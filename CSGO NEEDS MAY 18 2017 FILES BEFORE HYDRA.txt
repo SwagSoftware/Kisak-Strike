@@ -1,9 +1,1 @@
-lwss- going to make assets depot
-
-
-In steam console type
-download_depot 730 731 7043469183016184477
-download_depot 730 732 4047004309608881181
-
-Then move those directories to the appropriate place
 

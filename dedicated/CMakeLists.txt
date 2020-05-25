@@ -91,7 +91,7 @@ else()
     message(FATAL_ERROR "CMake steam_api integration is disabled.")
 endif()
 
-target_link_libraries(${OUTBINNAME} appframework_client dmxloader_client mathlib_client tier2_client tier3_client vstdlib_client vpklib_client)
+target_link_libraries(${OUTBINNAME} appframework_client dmxloader_client mathlib_client tier2_client tier3_client libvstdlib_client vpklib_client)
 
 if( WINDOWS OR OSXALL )
     target_link_libraries(${OUTBINNAME} vgui_controls_client)

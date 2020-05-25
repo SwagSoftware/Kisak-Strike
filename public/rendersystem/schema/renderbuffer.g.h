@@ -20,7 +20,7 @@ struct RenderBufferBits_t;
 //-----------------------------------------------------------------------------
 // Enum definitions
 //-----------------------------------------------------------------------------
-schema enum RenderBufferType_t
+valveschema enum RenderBufferType_t
 {
 	RENDER_BUFFER_TYPE_STATIC = 0, // GPU can read from it only, CPU can only write once
 	RENDER_BUFFER_TYPE_SEMISTATIC , // GPU can read, writes are infrequent from CPU
@@ -30,7 +30,7 @@ schema enum RenderBufferType_t
 	RENDER_BUFFER_TYPE_COUNT_PLUS_1, // Ignore the man behind the curtain (used to silence a warning in rendersystem)
 };
 
-schema enum RenderBufferClass_t
+valveschema enum RenderBufferClass_t
 {
 	RENDER_BUFFER_CLASS_VERTEX_BUFFER = 0,// (explicit)
 	RENDER_BUFFER_CLASS_INDEX_BUFFER,
@@ -38,14 +38,14 @@ schema enum RenderBufferClass_t
 	RENDER_BUFFER_CLASS_RESERVED_VALUE_2,
 };
 
-schema enum RenderSlotType_t
+valveschema enum RenderSlotType_t
 {
 	RENDER_SLOT_INVALID = -1,
 	RENDER_SLOT_PER_VERTEX = 0,
 	RENDER_SLOT_PER_INSTANCE = 1,
 };
 
-schema enum MaxInputLayoutSemanticNameSize_t
+valveschema enum MaxInputLayoutSemanticNameSize_t
 {
 	RENDER_INPUT_LAYOUT_FIELD_SEMANTIC_NAME_SIZE2 = 32,
 };
@@ -54,7 +54,7 @@ schema enum MaxInputLayoutSemanticNameSize_t
 //-----------------------------------------------------------------------------
 // Structure definitions
 //-----------------------------------------------------------------------------
-schema struct RenderInputLayoutField2_t
+valveschema struct RenderInputLayoutField2_t
 {
 	uint8            m_SemanticName[32];
 	int32            m_nSemanticIndex; // TODO: Change to ColorFormat_t and make bitmap/colorformat.h depend on ColorFormat.sch
@@ -66,7 +66,7 @@ schema struct RenderInputLayoutField2_t
 	int32            m_nInstanceStepRate;
 };
 
-schema struct RenderBufferDesc_t
+valveschema struct RenderBufferDesc_t
 {
 	int32            m_nElementCount;
 	uint16           m_nElementSizeInBytes;	// Assume no single element is over 65k in size
@@ -76,7 +76,7 @@ schema struct RenderBufferDesc_t
 };
 
 //! uncacheableStruct = RenderBufferDesc_t
-schema struct RenderBufferBits_t
+valveschema struct RenderBufferBits_t
 {
 	// Empty like texture bits... Just a bag of bits with no reflection data...
 };

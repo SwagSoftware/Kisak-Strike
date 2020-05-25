@@ -25,10 +25,16 @@ bld/
 
 
 # Idea IDE
-.idea/*
+.idea/
 
 # Ignore cmake-build, but keep placeholder.
 cmake-build/*
 !cmake-build/placeholder.txt
 
+#Ignore rebuilt static libs
+lib/public/linux64/*.a
+lib/common/linux64/*.a
 
+#Ignore crypto++ built files
+external/crypto++-5.61/*.o
+external/crypto++-5.61/libcryptopp.a

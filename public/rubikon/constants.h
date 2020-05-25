@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2012, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2012, Valve Corporation, All rights reserved. ============//
 #ifndef CONSTANTS_HDR
 #define CONSTANTS_HDR
 
@@ -171,7 +171,7 @@
 
 
 // dummy schema data: workaround for a build dependency issue
-schema struct RnDummy_t  
+valveschema struct RnDummy_t
 {
 	int32 m_nDummy;
 };

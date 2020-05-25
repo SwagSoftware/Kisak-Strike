@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2006, Valve LLC, All rights reserved. ============
+//========= Copyright ï¿½ 1996-2006, Valve LLC, All rights reserved. ============
 //
 // Purpose: Low level byte swapping routines.
 //
@@ -9,6 +9,13 @@
 #if defined(_WIN32)
 #pragma once
 #endif
+
+//lwss- byteswap.h is also a standard linux include. Not good, but I don't want to start renaming files.
+// I did in fact rename this to byteswapper, but changed it back in favor of this hack I saw valve use in net_ws.cpp
+#define bswap_16 __bswap_16
+#define bswap_32 __bswap_32
+#define bswap_64 __bswap_64
+//lwss end
 
 #include "tier0/dbg.h"
 #include "datamap.h"	// needed for typedescription_t.  note datamap.h is tier1 as well.

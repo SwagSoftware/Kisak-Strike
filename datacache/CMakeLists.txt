@@ -30,4 +30,4 @@ target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/public/studio_virtualmodel.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/common/studiobyteswap.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/utils/common/datalinker.cpp")
 
-target_link_libraries(${OUTBINNAME} tier2_client tier3_client mathlib_client vstdlib_client)
+target_link_libraries(${OUTBINNAME} tier2_client tier3_client mathlib_client libvstdlib_client)

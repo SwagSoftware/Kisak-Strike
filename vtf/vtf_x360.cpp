@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: The 360 VTF file format I/O class to help simplify access to 360 VTF files.
 // 360 Formatted VTF's are stored ascending 1x1 up to NxN. Disk format and unserialized

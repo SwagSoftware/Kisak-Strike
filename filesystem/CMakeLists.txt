@@ -28,4 +28,4 @@ if( POSIX )
     target_sources(${OUTBINNAME} PRIVATE "linux_support.cpp")
 endif()
 
-target_link_libraries(${OUTBINNAME} tier2_client vpklib_client vstdlib_client)
+target_link_libraries(${OUTBINNAME} tier2_client vpklib_client libvstdlib_client)

@@ -216,7 +216,7 @@ target_sources(${OUTBINNAME} PRIVATE "${STDSHADERSDIR}/writez_dx9.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${STDSHADERSDIR}/writestencil_dx9.cpp")
 
 
-target_link_libraries(${OUTBINNAME} mathlib_client shaderlib_client vstdlib_client)
+target_link_libraries(${OUTBINNAME} mathlib_client shaderlib_client libvstdlib_client)
 
 
 #This is missing some of the shader-building code... See stdshader_dx9.vpc.

@@ -22,7 +22,7 @@ target_compile_definitions(${OUTBINNAME} PRIVATE -DNO_STRING_T -DVECTOR -DVERSIO
 target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/libsteam_api.so) # link to proprietary steamapi
 #[!$X360 && !$PS3]
 target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/gcsdk_client.a) #link to evil game coordinator lib
-target_link_libraries(${OUTBINNAME} tier3_client vstdlib_client)
+target_link_libraries(${OUTBINNAME} tier3_client libvstdlib_client)
 #############################
 
 #$Folder "cstrike15"

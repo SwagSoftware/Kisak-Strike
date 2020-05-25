@@ -21,13 +21,13 @@ class CResourceIntrospection;
 //-----------------------------------------------------------------------------
 // Enum definitions
 //-----------------------------------------------------------------------------
-schema enum ResourceIntrospectionVersion_t
+valveschema enum ResourceIntrospectionVersion_t
 {
 	RESOURCE_INTROSPECTION_VERSION = 2,
 };
 
 // NOTE: If you add to this enum, you'll need to update s_pFieldTypes in resourceintrospection.cpp
-schema enum ResourceFieldType_t
+valveschema enum ResourceFieldType_t
 {
 	RESOURCE_FIELD_TYPE_UNKNOWN,
 
@@ -82,7 +82,7 @@ schema enum ResourceFieldType_t
 	RESOURCE_FIELD_TYPE_COUNT,
 };
 
-schema enum ResourceIntrospectionMetadataType_t
+valveschema enum ResourceIntrospectionMetadataType_t
 {
 	RESOURCE_META_TYPE_NAMEONLY,
 	RESOURCE_META_TYPE_STRING,
@@ -131,7 +131,7 @@ struct ResourceFieldProperties_t
 
 //-----------------------------------------------------------------------------
 
-schema class CResourceFieldIntrospection
+valveschema class CResourceFieldIntrospection
 {
 	DECLARE_SCHEMA_DATA_CLASS( CResourceFieldIntrospection );
 
@@ -182,12 +182,12 @@ public:
 	uint32 m_nTypeChain;
 };
 
-schema enum ResourceStructFlags_t
+valveschema enum ResourceStructFlags_t
 {
 	RESOURCE_STRUCT_HAS_VTABLE = 1,
 };
 
-schema class CResourceStructIntrospection
+valveschema class CResourceStructIntrospection
 {
 	DECLARE_SCHEMA_DATA_CLASS( CResourceStructIntrospection );
 
@@ -232,7 +232,7 @@ public:
 // Enums
 //-----------------------------------------------------------------------------
 
-schema class CResourceEnumValueIntrospection
+valveschema class CResourceEnumValueIntrospection
 {
 	DECLARE_SCHEMA_DATA_CLASS( CResourceEnumValueIntrospection );
 
@@ -250,7 +250,7 @@ public:
 	int32 m_nEnumValue;
 };
 
-schema class CResourceEnumIntrospection
+valveschema class CResourceEnumIntrospection
 {
 	DECLARE_SCHEMA_DATA_CLASS( CResourceEnumIntrospection );
 
@@ -285,7 +285,7 @@ public:
 // Typedefs
 //-----------------------------------------------------------------------------
 
-schema class CResourceTypedefIntrospection
+valveschema class CResourceTypedefIntrospection
 {
 	DECLARE_SCHEMA_DATA_CLASS( CResourceTypedefIntrospection );
 
@@ -306,7 +306,7 @@ public:
 // Metadata
 //-----------------------------------------------------------------------------
 
-schema class CResourceIntrospectionMetadataElement
+valveschema class CResourceIntrospectionMetadataElement
 {
 	friend class CResourceIntrospectionMetadata;
 public:
@@ -319,7 +319,7 @@ private:
 	uint32 m_Value;
 };
 
-schema class CResourceIntrospectionChildMetadata
+valveschema class CResourceIntrospectionChildMetadata
 {
 	friend class CResourceIntrospectionMetadata;
 private:
@@ -327,7 +327,7 @@ private:
 	CResourceArray<CResourceIntrospectionMetadataElement> m_MetaElements;
 };
 
-schema class CResourceIntrospectionMetadata
+valveschema class CResourceIntrospectionMetadata
 {
 public:
 	DECLARE_SCHEMA_DATA_CLASS( CResourceIntrospectionMetadata );
@@ -342,7 +342,7 @@ protected:
 //-----------------------------------------------------------------------------
 
 //! resourceBlockType = "RESI"
-schema class CResourceIntrospection
+valveschema class CResourceIntrospection
 {
 	DECLARE_SCHEMA_DATA_CLASS( CResourceIntrospection );
 

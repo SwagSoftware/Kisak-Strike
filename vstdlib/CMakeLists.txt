@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.17)
-project(vstdlib_client)
+project(libvstdlib_client)
 set(SRCDIR "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH ${SRCDIR}/cmake)
-set(OUTBINNAME "vstdlib_client")
+set(OUTBINNAME "libvstdlib_client")
 set(OUTBINDIR ${SRCDIR}/../game/bin)
 
 include(${CMAKE_MODULE_PATH}/detect_platform.cmake)

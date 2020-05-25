@@ -35,14 +35,14 @@ enum RenderPrimitiveType_t
 // Structure definitions
 //-----------------------------------------------------------------------------
 
-schema struct RenderBufferBinding_t
+valveschema struct RenderBufferBinding_t
 {
 	CResourceReference< RenderBufferBits_t > m_pRenderBuffer;
 	uint32           m_nBindOffsetBytes;
 	uint8            m_padding[4];
 };
 
-schema struct MaterialDrawDescriptor_t
+valveschema struct MaterialDrawDescriptor_t
 {
 	int32            m_nBaseVertex;
 	int32            m_nVertexCount;
@@ -59,14 +59,14 @@ schema struct MaterialDrawDescriptor_t
 	void           *m_pMaterial;
 };
 
-schema struct PermRenderableBounds_t
+valveschema struct PermRenderableBounds_t
 {
 	Vector           m_MinBounds;
 	Vector           m_MaxBounds;
 };
 
 //! uncacheableStruct = PermRenderableBounds_t
-schema struct Renderable_t
+valveschema struct Renderable_t
 {
 	CResourceArray< MaterialDrawDescriptor_t > m_DrawCalls;
 };

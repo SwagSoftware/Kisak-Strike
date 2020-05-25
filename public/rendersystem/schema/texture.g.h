@@ -20,7 +20,7 @@ struct TextureBits_t;
 //-----------------------------------------------------------------------------
 // Enum definitions
 //-----------------------------------------------------------------------------
-schema enum TextureSpecificationFlags_t
+valveschema enum TextureSpecificationFlags_t
 {
 	TSPEC_FLAGS						= 0x0000,// (explicit)
 	TSPEC_RENDER_TARGET				= 0x0001,// (explicit)
@@ -33,7 +33,7 @@ schema enum TextureSpecificationFlags_t
 	TSPEC_NO_LOD					= 0x0080,	// Don't downsample on lower-level cards
 };
 
-schema enum RenderMultisampleType_t
+valveschema enum RenderMultisampleType_t
 {
 	RENDER_MULTISAMPLE_INVALID = -1,// (explicit)
 	RENDER_MULTISAMPLE_NONE = 0,// (explicit)
@@ -48,7 +48,7 @@ schema enum RenderMultisampleType_t
 //-----------------------------------------------------------------------------
 // Structure definitions
 //-----------------------------------------------------------------------------
-schema struct TextureDesc_t
+valveschema struct TextureDesc_t
 {
 	uint16           m_nWidth;
 	uint16           m_nHeight;
@@ -57,7 +57,7 @@ schema struct TextureDesc_t
 	uint8            m_nNumMipLevels;
 };
 
-schema struct TextureHeader_t : public TextureDesc_t
+valveschema struct TextureHeader_t : public TextureDesc_t
 {
 	uint16           m_nMultisampleType;	// See RenderMultisampleType_t
 	uint16           m_nFlags;	// See TextureSpecificationFlags_t
@@ -65,7 +65,7 @@ schema struct TextureHeader_t : public TextureDesc_t
 };
 
 //! uncacheableStruct = TextureHeader_t
-schema struct TextureBits_t
+valveschema struct TextureBits_t
 {
 };
 

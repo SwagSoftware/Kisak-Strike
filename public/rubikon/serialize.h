@@ -1,4 +1,4 @@
-//========= Copyright © Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ Valve Corporation, All rights reserved. ============//
 #ifndef SERIALIZE_HDR
 #define SERIALIZE_HDR	
 
@@ -14,7 +14,7 @@
 //---------------------------------------------------------------------------------------
 // Sphere serialization 
 //---------------------------------------------------------------------------------------
-schema struct RnSphere_t
+valveschema struct RnSphere_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnSphere_t );
@@ -56,7 +56,7 @@ inline RnSphere_t operator*( float flScale, const RnSphere_t& sphere )
 //---------------------------------------------------------------------------------------
 // Capsule serialization 
 //---------------------------------------------------------------------------------------
-schema struct RnCapsule_t
+valveschema struct RnCapsule_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnCapsule_t );
@@ -126,7 +126,7 @@ struct RnRay_t
 //---------------------------------------------------------------------------------------
 // Hull serialization 
 //---------------------------------------------------------------------------------------
-schema struct RnPlane_t
+valveschema struct RnPlane_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnPlane_t );
@@ -146,7 +146,7 @@ schema struct RnPlane_t
 	FORCEINLINE bool operator == ( const RnPlane_t &other )const			{ return m_vNormal == other.m_vNormal && m_flOffset == other.m_flOffset; }
 };
 
-schema struct RnHalfEdge_t
+valveschema struct RnHalfEdge_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnHalfEdge_t );
@@ -157,7 +157,7 @@ schema struct RnHalfEdge_t
 	uint8 m_nFace;															// Face index 
 };
 
-schema struct RnFace_t
+valveschema struct RnFace_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnFace_t );
@@ -165,7 +165,7 @@ schema struct RnFace_t
 	uint8 m_nEdge;															// Start edge index for CCW circular list around face 
 };
 
-schema struct RnHull_t
+valveschema struct RnHull_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnHull_t );
@@ -376,7 +376,7 @@ struct RnHullBox_t : public RnHull_t
 #define RN_TYPE_SPLIT_Z		2
 #define RN_TYPE_LEAF		3
 
-schema struct RnTriangle_t
+valveschema struct RnTriangle_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnTriangle_t );
@@ -385,7 +385,7 @@ schema struct RnTriangle_t
 };
 
 // TODO: this wants to be ALIGN32, but it's currently stored in CUtlVector and CResourceArray, which do not support this.
-schema struct ALIGN16 RnNode_t // node needs to not stride over cache line boundary and min/max vectors need to be aligned for easy SIMD loading
+valveschema struct ALIGN16 RnNode_t // node needs to not stride over cache line boundary and min/max vectors need to be aligned for easy SIMD loading
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnNode_t );	
@@ -426,7 +426,7 @@ schema struct ALIGN16 RnNode_t // node needs to not stride over cache line bound
 
 } ALIGN16_POST;
 
-schema struct RnMesh_t
+valveschema struct RnMesh_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnMesh_t );
@@ -472,7 +472,7 @@ schema struct RnMesh_t
 //--------------------------------------------------------------------------------------------------
 // Shape serialization
 //--------------------------------------------------------------------------------------------------
-schema struct RnShapeDesc_t
+valveschema struct RnShapeDesc_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnShapeDesc_t );
@@ -481,7 +481,7 @@ schema struct RnShapeDesc_t
 	uint32 m_nSurfacePropertyIndex;
 };
 
-schema struct RnSphereDesc_t : public RnShapeDesc_t
+valveschema struct RnSphereDesc_t : public RnShapeDesc_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnSphereDesc_t );
@@ -489,7 +489,7 @@ schema struct RnSphereDesc_t : public RnShapeDesc_t
 	RnSphere_t m_Sphere;
 };
 
-schema struct RnCapsuleDesc_t : public RnShapeDesc_t
+valveschema struct RnCapsuleDesc_t : public RnShapeDesc_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnCapsuleDesc_t );
@@ -497,7 +497,7 @@ schema struct RnCapsuleDesc_t : public RnShapeDesc_t
 	RnCapsule_t m_Capsule;
 };
 
-schema struct RnHullDesc_t : public RnShapeDesc_t
+valveschema struct RnHullDesc_t : public RnShapeDesc_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnHullDesc_t );
@@ -505,7 +505,7 @@ schema struct RnHullDesc_t : public RnShapeDesc_t
 	RnHull_t m_Hull;
 };
 
-schema struct RnMeshDesc_t : public RnShapeDesc_t
+valveschema struct RnMeshDesc_t : public RnShapeDesc_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnMeshDesc_t );
@@ -668,14 +668,14 @@ struct rnSpringDesc_t : public RnJointDesc_t
 	float32 m_flDampingRatio;
 };
 
-schema struct RnSoftbodyParticle_t
+valveschema struct RnSoftbodyParticle_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnSoftbodyParticle_t );
 	float32 m_flMassInv;
 };
 
-schema struct RnSoftbodySpring_t
+valveschema struct RnSoftbodySpring_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnSoftbodySpring_t );
@@ -683,7 +683,7 @@ schema struct RnSoftbodySpring_t
 	float32 m_flLength;
 };
 
-schema struct RnSoftbodyCapsule_t
+valveschema struct RnSoftbodyCapsule_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnSoftbodyCapsule_t );
@@ -693,7 +693,7 @@ schema struct RnSoftbodyCapsule_t
 };
 
 
-schema struct ALIGN16 RnBlendVertex_t
+valveschema struct ALIGN16 RnBlendVertex_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( RnBlendVertex_t );

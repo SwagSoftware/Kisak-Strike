@@ -510,7 +510,7 @@ target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/common/CegClientWrapper.cpp")
 #}
 
 
-target_link_libraries(${OUTBINNAME} bonesetup_client choreoobjects_client mathlib_client mathlib_extended_client vstdlib_client)
+target_link_libraries(${OUTBINNAME} bonesetup_client choreoobjects_client mathlib_client mathlib_extended_client libvstdlib_client)
 target_link_libraries(${OUTBINNAME} particles_client tier3_client vgui_controls_client responserules_runtime_client )
 target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/libsteam_api.so) # Link to proprietary steamapi
 target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/gcsdk_client.a) #evil game coordinator voodoo

@@ -60,4 +60,4 @@ target_sources(${OUTBINNAME} PRIVATE "VPanel.cpp")
 target_sources(${OUTBINNAME} PRIVATE "VPanelWrapper.cpp")
 target_sources(${OUTBINNAME} PRIVATE "keyrepeat.cpp")
 
-target_link_libraries(${OUTBINNAME} vgui_surfacelib_client tier2_client tier3_client vstdlib_client)
+target_link_libraries(${OUTBINNAME} vgui_surfacelib_client tier2_client tier3_client libvstdlib_client)

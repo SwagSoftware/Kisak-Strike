@@ -37,7 +37,7 @@ typedef const ResourceBinding_t< CSheet > *HSheet;
 typedef CStrongHandle< CSheet > HSheetStrong;
 #define SHEET_HANDLE_INVALID ( (HSheet)0 )
 
-schema struct SheetSequence_t
+valveschema struct SheetSequence_t
 {
 	uint32           m_nId;
 	bool             m_bClamp;
@@ -45,13 +45,13 @@ schema struct SheetSequence_t
 	float32          m_flTotalTime;
 };
 
-schema struct SheetSequenceFrame_t
+valveschema struct SheetSequenceFrame_t
 {
 	float32          m_flDisplayTime;
 	CResourceArray< SheetFrameImage_t > m_Images;
 };
 
-schema struct SheetFrameImage_t
+valveschema struct SheetFrameImage_t
 {
 	Vector2D         uv[2];
 };

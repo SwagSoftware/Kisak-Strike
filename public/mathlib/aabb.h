@@ -1,4 +1,4 @@
-//========= Copyright © Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ Valve Corporation, All rights reserved. ============//
 #ifndef MATHLIB_AABB_HDR
 #define MATHLIB_AABB_HDR
 
@@ -8,7 +8,7 @@
 
 
 /// Axis-aligned 3d bounding box.
-schema struct AABB_t
+valveschema struct AABB_t
 {
 public:
 	Vector				m_vMinBounds; 

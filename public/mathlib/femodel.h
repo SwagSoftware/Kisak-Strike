@@ -1,4 +1,4 @@
-//========= Copyright © Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ Valve Corporation, All rights reserved. ============//
 #ifndef RUBIKON_FEM_HIERARCHY_HDR
 #define RUBIKON_FEM_HIERARCHY_HDR
 
@@ -49,7 +49,7 @@ enum FeFlagEnum_t
 
 
 class CResourceString;
-schema class FourVectors2D
+valveschema class FourVectors2D
 {
 public:
 	TYPEMETA( MNoScatter );
@@ -91,7 +91,7 @@ inline FourVectors2D operator * ( const fltx4 &f4Scalar, const FourVectors2D & v
 
 
 
-schema struct FeEdgeDesc_t
+valveschema struct FeEdgeDesc_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( FeEdgeDesc_t );
@@ -102,7 +102,7 @@ schema struct FeEdgeDesc_t
 };
 
 
-schema struct OldFeEdge_t
+valveschema struct OldFeEdge_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( OldFeEdge_t );
@@ -123,7 +123,7 @@ schema struct OldFeEdge_t
 };
 
 
-schema struct FeKelagerBend_t
+valveschema struct FeKelagerBend_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( FeKelagerBend_t );
@@ -135,7 +135,7 @@ schema struct FeKelagerBend_t
 
 
 // the triangle has vertices (0,0), (x1,0), (x2,y2) and weights 1-w1-w2, w1, w2
-schema struct FeTri_t
+valveschema struct FeTri_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( FeTri_t );
@@ -146,7 +146,7 @@ schema struct FeTri_t
 	Vector2D v2;
 };
 
-schema struct FeSimdTri_t
+valveschema struct FeSimdTri_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( FeSimdTri_t );
@@ -158,7 +158,7 @@ schema struct FeSimdTri_t
 	void Init( const FeTri_t *pTris );
 };
 
-schema struct FeQuad_t
+valveschema struct FeQuad_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( FeQuad_t );
@@ -180,7 +180,7 @@ schema struct FeQuad_t
 	Vector4D vShape[ 4 ];
 };
 
-schema struct FeNodeBase_t
+valveschema struct FeNodeBase_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( FeNodeBase_t );
@@ -212,14 +212,14 @@ schema struct FeNodeBase_t
 };
 
 // after computing node bases (orientations), take node
-schema struct FeNodeReverseOffset_t
+valveschema struct FeNodeReverseOffset_t
 {
 	uint16 nBoneCtrl;   // the node that has orientation, but doesn't have position
 	uint16 nTargetNode; // the node whose position is known in the frame of nNodeBone
 	Vector vOffset;     // the position of nNodeTarget in the frame of nNodeBone
 };
 
-schema struct FeSimdQuad_t
+valveschema struct FeSimdQuad_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( FeSimdQuad_t );
@@ -246,7 +246,7 @@ schema struct FeSimdQuad_t
 // Sometimes node[2]== node[3], and/or node[4]==node[5], all the math works the same except the 4-5 and/or 2-3 edge is degenerate and the corresponding quads become triangles.
 // The signed distance is maintained by crossing edge and virtual edge and making sure the projection of the vector beween the points on the edge and virtual edge is positive. If not, we must flip the angle of edge bend.
 //
-schema struct FeAxialEdgeBend_t
+valveschema struct FeAxialEdgeBend_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( FeAxialEdgeBend_t );
@@ -260,7 +260,7 @@ schema struct FeAxialEdgeBend_t
 
 
 // double-quad bend limit
-schema struct FeBandBendLimit_t 
+valveschema struct FeBandBendLimit_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( FeBandBendLimit_t );
@@ -271,7 +271,7 @@ schema struct FeBandBendLimit_t
 
 
 // a very simple distance limit
-schema struct FeRodConstraint_t
+valveschema struct FeRodConstraint_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( FeRodConstraint_t );
@@ -288,7 +288,7 @@ schema struct FeRodConstraint_t
 	}
 };
 
-schema struct FeSimdRodConstraint_t
+valveschema struct FeSimdRodConstraint_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( FeSimdRodConstraint_t );
@@ -301,7 +301,7 @@ schema struct FeSimdRodConstraint_t
 };
 
 
-schema struct FeSimdNodeBase_t
+valveschema struct FeSimdNodeBase_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( FeSimdNodeBase_t );
@@ -315,7 +315,7 @@ schema struct FeSimdNodeBase_t
 	void Init( const FeNodeBase_t *pScalar );
 };
 
-schema struct FeNodeIntegrator_t
+valveschema struct FeNodeIntegrator_t
 {
 	TYPEMETA( MNoScatter )
 	DECLARE_SCHEMA_DATA_CLASS( FeNodeIntegrator_t );
@@ -333,7 +333,7 @@ schema struct FeNodeIntegrator_t
 	}
 };
 
-schema struct FeSpringIntegrator_t
+valveschema struct FeSpringIntegrator_t
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( FeSpringIntegrator_t );
@@ -347,7 +347,7 @@ schema struct FeSpringIntegrator_t
 
 /// 
 // Per-node effects that change velocity (and not position directly) are parametrized here 
-schema struct FeSimdSpringIntegrator_t
+valveschema struct FeSimdSpringIntegrator_t
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( FeSimdSpringIntegrator_t );
@@ -366,7 +366,7 @@ schema struct FeSimdSpringIntegrator_t
 // Some Ctrl points do not correspond to any bone, but to other control points
 // vOffset is the child Ctrl in the coordinate system of the parent ctrl
 //
-schema struct FeCtrlOffset_t
+valveschema struct FeCtrlOffset_t
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( FeCtrlOffset_t );
@@ -376,7 +376,7 @@ schema struct FeCtrlOffset_t
 };
 
 
-schema struct ALIGN4 FeCtrlOsOffset_t // the rope offset from S1, a horrible hack in S1 I need to replicate in the new cloth so that some ropes behave the way they do in S1
+valveschema struct ALIGN4 FeCtrlOsOffset_t // the rope offset from S1, a horrible hack in S1 I need to replicate in the new cloth so that some ropes behave the way they do in S1
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( FeCtrlOsOffset_t );
@@ -389,7 +389,7 @@ schema struct ALIGN4 FeCtrlOsOffset_t // the rope offset from S1, a horrible hac
 // Experimental, to try to remove lots of dynamic swing from jerky animations:
 // if children of an animated node blindly derive the parent's animation,
 // there will be less random swing
-schema struct FeFollowNode_t
+valveschema struct FeFollowNode_t
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( FeFollowNode_t );
@@ -399,7 +399,7 @@ schema struct FeFollowNode_t
 };
 
 
-schema struct FeCollisionSphere_t
+valveschema struct FeCollisionSphere_t
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( FeCollisionSphere_t );
@@ -410,7 +410,7 @@ schema struct FeCollisionSphere_t
 	float flStickiness;
 };
 
-schema struct FeCollisionPlane_t
+valveschema struct FeCollisionPlane_t
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( FeCollisionPlane_t );
@@ -422,7 +422,7 @@ schema struct FeCollisionPlane_t
 
 
 
-schema struct FeWorldCollisionParams_t
+valveschema struct FeWorldCollisionParams_t
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( FeWorldCollisionParams_t );
@@ -433,7 +433,7 @@ schema struct FeWorldCollisionParams_t
 };
 
 
-schema struct FeTreeChildren_t
+valveschema struct FeTreeChildren_t
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( FeTreeChildren_t );
@@ -441,7 +441,7 @@ schema struct FeTreeChildren_t
 };
 
 
-schema struct FeTaperedCapsuleRigid_t
+valveschema struct FeTaperedCapsuleRigid_t
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( FeTaperedCapsuleRigid_t );
@@ -486,7 +486,7 @@ schema struct FeTaperedCapsuleRigid_t
 	}
 };
 
-schema struct FeSphereRigid_t
+valveschema struct FeSphereRigid_t
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( FeSphereRigid_t );
@@ -529,7 +529,7 @@ schema struct FeSphereRigid_t
 	}
 };
 
-schema struct FeTaperedCapsuleStretch_t
+valveschema struct FeTaperedCapsuleStretch_t
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( FeTaperedCapsuleStretch_t );
@@ -572,7 +572,7 @@ schema struct FeTaperedCapsuleStretch_t
 
 
 
-schema class CovMatrix3
+valveschema class CovMatrix3
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( CovMatrix3 );
@@ -600,7 +600,7 @@ public:
 };
 
 
-schema class FourCovMatrices3
+valveschema class FourCovMatrices3
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( FourCovMatrices3 );
@@ -621,7 +621,7 @@ public:
 };
 
 
-schema struct FeFitWeight_t
+valveschema struct FeFitWeight_t
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( FeFitWeight_t );
@@ -630,7 +630,7 @@ schema struct FeFitWeight_t
 	uint16 nDummy;
 };
 
-schema struct FeFitInfluence_t // helper struct
+valveschema struct FeFitInfluence_t // helper struct
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( FeFitInfluence_t );
@@ -651,7 +651,7 @@ schema struct FeFitInfluence_t // helper struct
 };
 
 
-schema struct FeFitMatrix_t
+valveschema struct FeFitMatrix_t
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( FeFitMatrix_t );
@@ -670,7 +670,7 @@ schema struct FeFitMatrix_t
 	//uint16 nBegin; // not really needed, here for padding only
 };
 
-schema struct FeSimdFitMatrices_t
+valveschema struct FeSimdFitMatrices_t
 {
 	TYPEMETA( MNoScatter );
 	DECLARE_SCHEMA_DATA_CLASS( FeSimdFitMatrices_t );

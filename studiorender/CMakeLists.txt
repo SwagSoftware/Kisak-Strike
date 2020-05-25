@@ -29,4 +29,4 @@ target_sources(${OUTBINNAME} PRIVATE "r_studiosubd_patches.cpp")
 target_sources(${OUTBINNAME} PRIVATE "r_studiogettriangles.cpp")
 target_sources(${OUTBINNAME} PRIVATE "r_studiolight.cpp")
 
-target_link_libraries(${OUTBINNAME} vstdlib_client bitmap_client mathlib_client tier2_client tier3_client)
+target_link_libraries(${OUTBINNAME} libvstdlib_client bitmap_client mathlib_client tier2_client tier3_client)

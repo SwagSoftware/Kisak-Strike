@@ -52,4 +52,4 @@ else()
 endif()
 
 #Careful with link order here.
-target_link_libraries(${OUTBINNAME} tier3_client vgui_controls_client dmxloader_client vstdlib_client tier2_client mathlib_client)
+target_link_libraries(${OUTBINNAME} tier3_client vgui_controls_client dmxloader_client libvstdlib_client tier2_client mathlib_client)

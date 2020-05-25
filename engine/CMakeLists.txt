@@ -469,7 +469,7 @@ target_link_libraries(${OUTBINNAME} appframework_client bitmap_client dmxloader_
 if( NOT DEDICATED )
     target_link_libraries(${OUTBINNAME} matsys_controls_client soundsystem_lowlevel)
 endif()
-target_link_libraries(${OUTBINNAME} tier0_client tier2_client tier3_client vstdlib_client)
+target_link_libraries(${OUTBINNAME} tier0_client tier2_client tier3_client libvstdlib_client)
 if( WINDOWS OR OSXALL OR (LINUXALL AND NOT DEDICATED) )
     target_link_libraries(${OUTBINNAME} videocfg_client)
 endif()

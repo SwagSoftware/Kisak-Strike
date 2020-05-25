@@ -18,7 +18,7 @@ struct ResourceIdInfo_t;
 //-----------------------------------------------------------------------------
 // Enum definitions
 //-----------------------------------------------------------------------------
-schema enum ResourceIdListVersion_t
+valveschema enum ResourceIdListVersion_t
 {
 	RESOURCE_ID_LIST_VERSION = 1,// (explicit)
 };
@@ -28,7 +28,7 @@ schema enum ResourceIdListVersion_t
 // Structure definitions
 //-----------------------------------------------------------------------------
 //! resourceBlockType = "RIDL"
-schema struct ResourceIdList_t
+valveschema struct ResourceIdList_t
 {
 	uint32           m_nVersion;
 	CResourceArray< ResourceIdTypeList_t > m_ResourceTypeList;
@@ -36,13 +36,13 @@ schema struct ResourceIdList_t
 
 DEFINE_RESOURCE_BLOCK_TYPE( ResourceIdList_t, 'R', 'I', 'D', 'L' )
 
-schema struct ResourceIdTypeList_t
+valveschema struct ResourceIdTypeList_t
 {
 	uint32           m_nResourceType;	// see ResourceType_t
 	CResourceArray< ResourceIdInfo_t > m_Resources;
 };
 
-schema struct ResourceIdInfo_t
+valveschema struct ResourceIdInfo_t
 {
 	uint32           m_nId;	// see ResourceId_t
 	uint32           m_nEstimatedSize;

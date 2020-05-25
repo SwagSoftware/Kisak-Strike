@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -39,6 +39,12 @@
 #ifdef TYPE_BOOL
 #undef TYPE_BOOL
 #endif
+
+// lwss - eliminates a conflict with "Status" in protobuf
+#ifdef Status
+#undef Status
+#endif
+// lwss end
 
 #include "netmessages.pb.h"
 

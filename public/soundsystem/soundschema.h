@@ -17,7 +17,7 @@
 
 FORWARD_DECLARE_HANDLE( memhandle_t );
 
-schema struct CEmphasisSample_t
+valveschema struct CEmphasisSample_t
 {
 public:
 	TYPEMETA( MNoScatter );
@@ -27,7 +27,7 @@ public:
 	float32		value;
 };
 
-schema struct CBasePhonemeTag_t
+valveschema struct CBasePhonemeTag_t
 {
 public:
 	TYPEMETA( MNoScatter );
@@ -70,7 +70,7 @@ public:
 //-----------------------------------------------------------------------------
 // Purpose: A sentence is a box of words, and words contain phonemes
 //-----------------------------------------------------------------------------
-schema class CSentence_t
+valveschema class CSentence_t
 {
 public:
 	TYPEMETA( MNoScatter );
@@ -203,7 +203,7 @@ struct soundinfoheader_t
 	unsigned int				m_rate : 17; // 0 to 64 K
 };
 
-schema struct VSound_t
+valveschema struct VSound_t
 {
 	DECLARE_SCHEMA_DATA_CLASS(VSound_t)
 

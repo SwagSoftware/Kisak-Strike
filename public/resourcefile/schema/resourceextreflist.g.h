@@ -18,7 +18,7 @@ struct ResourceExtRefInfo_t;
 //-----------------------------------------------------------------------------
 // Enum definitions
 //-----------------------------------------------------------------------------
-schema enum ResourceExtRefistVersion_t
+valveschema enum ResourceExtRefistVersion_t
 {
 	RESOURCE_EXT_REF_LIST_VERSION = 1,// (explicit)
 };
@@ -29,7 +29,7 @@ schema enum ResourceExtRefistVersion_t
 //-----------------------------------------------------------------------------
 
 //!	resourceBlockType = "RERL"
-schema struct ResourceExtRefList_t
+valveschema struct ResourceExtRefList_t
 {
 	uint32           m_nVersion;
 	CResourceArray< ResourceExtRefTypeList_t > m_ResourceTypeList;
@@ -38,13 +38,13 @@ schema struct ResourceExtRefList_t
 
 DEFINE_RESOURCE_BLOCK_TYPE( ResourceExtRefList_t, 'R', 'E', 'R', 'L' )
 
-schema struct ResourceExtRefTypeList_t
+valveschema struct ResourceExtRefTypeList_t
 {
 	uint32           m_nResourceType;	// see ResourceType_t
 	CResourceArray< ResourceExtRefInfo_t > m_Resources;
 };
 
-schema struct ResourceExtRefInfo_t
+valveschema struct ResourceExtRefInfo_t
 {
 	uint32           m_nId;	// see ResourceId_t
 	uint32           m_nFileNameIndex;	// index into ResourceExtRefList_t::m_pFileNameList

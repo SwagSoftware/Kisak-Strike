@@ -40,7 +40,9 @@ endif()
 
 if( LINUXALL AND NOT DEDICATED )
     if( LINUX64 )
-        target_link_libraries(${OUTBINNAME} "${SRCDIR}/thirdparty/gperftools-2.0/.libs/x86_64/libtcmalloc_minimal.so")# [$LINUX64]
+        #target_link_libraries(${OUTBINNAME} "${SRCDIR}/thirdparty/gperftools-2.0/.libs/x86_64/libtcmalloc_minimal.so")# [$LINUX64]
+        #Switch to system package for tcmalloc_minimal ( gperftools-devel.x86_64 for fedora )
+        target_link_libraries(${OUTBINNAME} tcmalloc_minimal)
     else()
         #$ImpLibExternal	"$SRCDIR/thirdparty/gperftools-2.0/.libs/tcmalloc_minimal" [$LINUX32]
         message(FATAL_ERROR "linux32 not supported in cmake")

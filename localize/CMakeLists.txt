@@ -16,4 +16,4 @@ target_sources(${OUTBINNAME} PRIVATE "localize.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/public/registry.cpp")
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/public/UnicodeFileHelpers.cpp")
 
-target_link_libraries(${OUTBINNAME} tier2_client vstdlib_client)
+target_link_libraries(${OUTBINNAME} tier2_client libvstdlib_client)

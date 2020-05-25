@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 // Enum definitions
 //-----------------------------------------------------------------------------
-schema enum ResourceTypeEngine_t
+valveschema enum ResourceTypeEngine_t
 {
 	RESOURCE_TYPE_NONE = -1,
 

@@ -29,7 +29,7 @@ enum WorldNodeFlags_t
 	WORLD_NODE_MOST_DETAILED					= 0x0080,					// Node is the most detailed node containing the original geometry and textures
 };
 
-schema struct WorldBuilderParams_t
+valveschema struct WorldBuilderParams_t
 {
 	int32									m_nSizeBytesPerVoxel;		// target size per-voxel	
 	float									m_flMinDrawVolumeSize;		// minimum size of any draw call
@@ -52,7 +52,7 @@ schema struct WorldBuilderParams_t
 	uint8									m_padding[3];				// pad this structure out to a mutiple of 4 bytes
 };
 
-schema struct NodeData_t
+valveschema struct NodeData_t
 {
 	int32									m_Flags;					// One of WorldNodeFlags_t
 	int32									m_nParent;					// Parent node index
@@ -65,7 +65,7 @@ schema struct NodeData_t
 	CResourceReference< WorldNode_t >		m_hWorldNode;				// Handle to the world node
 };
 
-schema struct World_t
+valveschema struct World_t
 {
 	WorldBuilderParams_t					m_builderParams;			// Original build parameters ( so we can potentially remake this file )
 	CResourceArray< NodeData_t >			m_worldNodes;				// World nodes

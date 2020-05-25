@@ -1,0 +1,12 @@
+"vpc_cache"
+{
+	"CacheVersion"		"1"
+	"linux64"
+	{
+		"CRCFile"		"scenefilecache_linux64.mak.vpc_crc"
+		"OutputFiles"
+		{
+			"0"		"scenefilecache_linux64.mak"
+		}
+	}
+}

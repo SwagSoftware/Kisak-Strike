@@ -1,0 +1,12 @@
+"vpc_cache"
+{
+	"CacheVersion"		"1"
+	"linux64"
+	{
+		"CRCFile"		"server_linux64_csgo.mak.vpc_crc"
+		"OutputFiles"
+		{
+			"0"		"server_linux64_csgo.mak"
+		}
+	}
+}

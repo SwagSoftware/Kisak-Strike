@@ -1,0 +1,10 @@
+prefix=/usr/local
+exec_prefix=/usr/local
+libdir=/usr/local/lib
+includedir=/usr/local/include/libpng15
+
+Name: libpng
+Description: Loads and saves PNG files
+Version: 1.5.2
+Libs: -L${libdir} -lpng15 -lz -lm
+Cflags: -I${includedir}

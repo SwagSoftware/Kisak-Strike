@@ -1,0 +1,34 @@
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug_*/
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease_*/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Oo]bj/
+[Ll]og/
+
+# Solutions must be rebuilt by each user, per-machine
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.vpc_crc
+*.sln
+
+
+# Idea IDE
+.idea/*
+
+# Ignore cmake-build, but keep placeholder.
+cmake-build/*
+!cmake-build/placeholder.txt
+
+

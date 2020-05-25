@@ -1,0 +1,12 @@
+prefix=/home/lwss/Documents/cstrike15_src/external/SDL2_mixer-2.0.4/build
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: SDL2_mixer
+Description: mixer library for Simple DirectMedia Layer
+Version: 2.0.4
+Requires: sdl2 >= 2.0.7
+Libs: -L${libdir} -lSDL2_mixer
+Cflags: -I${includedir}/SDL2
+

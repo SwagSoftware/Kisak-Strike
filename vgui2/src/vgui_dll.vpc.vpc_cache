@@ -1,0 +1,12 @@
+"vpc_cache"
+{
+	"CacheVersion"		"1"
+	"linux64"
+	{
+		"CRCFile"		"vgui_dll_linux64.mak.vpc_crc"
+		"OutputFiles"
+		{
+			"0"		"vgui_dll_linux64.mak"
+		}
+	}
+}

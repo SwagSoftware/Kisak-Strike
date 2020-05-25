@@ -1,0 +1,12 @@
+"vpc_cache"
+{
+	"CacheVersion"		"1"
+	"linux64"
+	{
+		"CRCFile"		"soundemittersystem_linux64.mak.vpc_crc"
+		"OutputFiles"
+		{
+			"0"		"soundemittersystem_linux64.mak"
+		}
+	}
+}

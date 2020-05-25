@@ -1,0 +1,14 @@
+[vpc crc file version 3]
+_.GL.HOST_LINUX.HOST_LINUX64.HOST_LINUXALL.LINUX.LINUXALL.NO_SCALEFORM.POSIX_/vpcgame:csgo_
+PROJECT.vstdlib.GAME..PLATFORM.linux64
+a87e67e0 vstdlib.vpc
+09f159b9 ../vpc_scripts/source_dll_base.vpc
+61c7a4fb ../vpc_scripts/platform_dirs.vpc
+0769833d ../vpc_scripts/source_base.vpc
+8153c3a9 ../vpc_scripts/definitions/win32_2010.def
+07324ef9 ../vpc_scripts/source_dll_posix_base.vpc
+486b766d ../vpc_scripts/version.vpc
+fd1f551e ../vpc_scripts/source_posix_base.vpc
+12020bcc ../vpc_scripts/source_lowest_base.vpc
+75e9bed8 ../vpc_scripts/source_video_base.vpc
+9fbb2ba4 vstdlib.inc

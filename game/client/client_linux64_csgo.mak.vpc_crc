@@ -1,0 +1,25 @@
+[vpc crc file version 3]
+_.GL.HOST_LINUX.HOST_LINUX64.HOST_LINUXALL.LINUX.LINUXALL.NO_SCALEFORM.POSIX_/vpcgame:csgo_
+PROJECT.client.GAME.csgo.PLATFORM.linux64
+302adf46 client_cstrike15.vpc
+8448399c ../../game/client/client_base.vpc
+09f159b9 ../../vpc_scripts/source_dll_base.vpc
+61c7a4fb ../../vpc_scripts/platform_dirs.vpc
+0769833d ../../vpc_scripts/source_base.vpc
+8153c3a9 ../../vpc_scripts/definitions/win32_2010.def
+07324ef9 ../../vpc_scripts/source_dll_posix_base.vpc
+486b766d ../../vpc_scripts/version.vpc
+fd1f551e ../../vpc_scripts/source_posix_base.vpc
+12020bcc ../../vpc_scripts/source_lowest_base.vpc
+75e9bed8 ../../vpc_scripts/source_video_base.vpc
+3c3b6608 ../../vpc_scripts/protobuf_builder.vpc
+adcc9b09 ../../vpc_scripts/netmessages_include.vpc
+ce36120e ../../vpc_scripts/networkbasetypes_include.vpc
+17df7f3c ../../game/shared/cstrike15/cstrike15_gcmessages_include.vpc
+c0c4922b ../../game/shared/cstrike15/cstrike15_usermessages_include.vpc
+bccbc3a2 ../../game/client/client_econ_base.vpc
+9c13d35c ../../gcsdk/gcsdk_game_include.vpc
+19aa8470 ../../gcsdk/steammessages_include.vpc
+c2ed2bd8 ../../game/shared/base_gcmessages_include.vpc
+c533a4aa ../../external/external.vpc
+1404e7b6 ../../external/crypto++-5.61/external_cryptopp.vpc

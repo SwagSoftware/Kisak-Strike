@@ -1,16 +1,15 @@
 # Kisak-Strike
+Kisak-Strike: Gentoo Offensive is a CSGO port aimed towards Linux enthusiasts. 
 
-*Note: builds game in folder `../game`, make sure to clone inside another folder.*
+Our goal is to accomplish a fully open-source CSGO, something good enough to be "gentoo-approved".
 
-```
-cd cmake-build
-cmake ..
-make -j123
-```
+
+# Current Building Steps
 
 instructions not complete, https://gist.github.com/LWSS/9d2cd3205d197545d64fd27ee897fd53 for a rough draft
 
-# Current Building Steps
+*Note: builds game in folder `../game`, make sure to clone inside another folder.*
+
 ## Packages
 * google perftools (tcmalloc)
 * SDL2

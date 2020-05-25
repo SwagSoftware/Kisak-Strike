@@ -6,7 +6,7 @@
 
 #There are other projects in this folder, but this cmake is focused towards csgo a.k.a. cstrike15
 
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.16)
 project(Client_CSGO)
 set(SRCDIR "${CMAKE_SOURCE_DIR}")
 set(GAMENAME "csgo")

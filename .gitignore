@@ -30,6 +30,7 @@ bld/
 # Ignore cmake-build, but keep placeholder.
 cmake-build/*
 !cmake-build/placeholder.txt
+cmake-build-*/*
 
 #Ignore rebuilt static libs
 lib/public/linux64/*.a
@@ -38,3 +39,6 @@ lib/common/linux64/*.a
 #Ignore crypto++ built files
 external/crypto++-5.61/*.o
 external/crypto++-5.61/libcryptopp.a
+
+#VPC makefile
+csgo_partner.mak

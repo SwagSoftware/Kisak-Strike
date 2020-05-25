@@ -20,7 +20,7 @@
 #NOT DONE
 #engine_ds (seems identical to engine, missing in retail linux64)
 
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.16)
 project(KisakStrike)
 
 add_subdirectory(appframework)

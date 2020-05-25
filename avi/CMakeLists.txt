@@ -10,7 +10,7 @@
 
 #TODO: Not Done. Moving to the tier libraries first and following the build-order -lwss
 
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.16)
 project(valve_avi_client)
 set(SRCDIR "${CMAKE_SOURCE_DIR}")
 set(OUTBINNAME "valve_avi_client")

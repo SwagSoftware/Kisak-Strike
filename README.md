@@ -29,7 +29,15 @@ cd ./cmake-build
 cmake ..
 make -j<NUM_THREADS>
 ```
-## POSTBUILD
+## POSTBUILD - Acquire needed extras
+Use Depot Downloader( https://github.com/SteamRE/DepotDownloader ) with your steam account
+```
+CSGO SteamAppID: 730
+CSGO Assets: DepotID: 731 ManifestID: 7043469183016184477
+Windows Binaries: DepotID: 732 4047004309608881181
+Linux Binaries: Depot ID: 734 4197642562793798650
+```
+
 * Copy over all files from the 731 assets depot (manifest: 7043469183016184477)
 * Copy over *only needed* files from the 734 linux binary depot (manifest: 4197642562793798650)
     * ./bin/map_publish/* - (FOLDER which seems to contain some vgui assets)

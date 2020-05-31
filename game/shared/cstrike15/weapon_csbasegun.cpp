@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -7,7 +7,7 @@
 #include "cbase.h"
 #include "weapon_csbasegun.h"
 #include "fx_cs_shared.h"
-#include "in_buttons.h"	
+#include "in_buttons.h"
 
 #ifdef CLIENT_DLL
 #include "c_cs_player.h"
@@ -631,7 +631,7 @@ void CWeaponCSBaseGun::BurstFireRemaining()
 		return;
 	}
 
-	uint16 nItemDefIndex = 0;
+    uint16 nItemDefIndex = GetEconItemView()->GetItemIndex();
 
 	FX_FireBullets(
 		pPlayer->entindex(),
@@ -723,12 +723,12 @@ bool CWeaponCSBaseGun::CSBaseGunFire( float flCycleTime, CSWeaponMode weaponMode
 	else
 	{
 		SendWeaponAnim( ACT_VM_PRIMARYATTACK );
-	}		
+	}
 
 	// player "shoot" animation
 	pPlayer->SetAnimation( PLAYER_ATTACK1 );
 
-	uint16 nItemDefIndex = 0;
+	uint16 nItemDefIndex = GetEconItemView()->GetItemIndex();
 
 	FX_FireBullets(
 		pPlayer->entindex(),

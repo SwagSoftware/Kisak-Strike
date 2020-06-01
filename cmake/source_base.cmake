@@ -15,6 +15,7 @@ set(CSTRIKE_STAGING_BUILD "0")
 set(CSTRIKE_REL_BUILD "1")
 
 add_definitions(-DCSTRIKE_REL_BUILD) #without this, some weird stuff is included like fatdemos
+add_definitions(-DALLOW_DEVELOPMENT_CVARS) #let's allow development convars since this is an open source project.
 
 set(RAD_TELEMETRY_DISABLED "1")
 

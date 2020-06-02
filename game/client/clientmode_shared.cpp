@@ -27,10 +27,12 @@
 #include "hltvcamera.h"
 #include "hud.h"
 #include "hud_element_helper.h"
+#if defined( INCLUDE_SCALEFORM )
 #include "Scaleform/HUD/sfhud_chat.h"
 #include "Scaleform/HUD/sfhudfreezepanel.h"
 #include "Scaleform/HUD/sfhud_teamcounter.h"
 #include "Scaleform/mapoverview.h"
+#endif
 #include "hltvreplaysystem.h"
 #include "netmessages.h"
 #if defined( REPLAY_ENABLED )
@@ -755,12 +757,13 @@ void ClientModeShared::StartMessageMode( int iMessageModeType )
 	{
 		return;
 	}
-
+#if defined( INCLUDE_SCALEFORM )
 	SFHudChat* pChat = GET_HUDELEMENT( SFHudChat );
 	if ( pChat )
 	{
 		pChat->StartMessageMode( iMessageModeType );
 	}
+#endif
 }
 
 //-----------------------------------------------------------------------------

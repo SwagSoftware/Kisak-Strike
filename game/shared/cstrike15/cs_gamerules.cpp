@@ -88,7 +88,8 @@
 #endif
 
 #include "gametypes.h"
-
+#include "cs_workshop_manager.h"
+#include "ugc_file_info_manager.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

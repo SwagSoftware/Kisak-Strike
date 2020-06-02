@@ -415,8 +415,10 @@ void CGame::DispatchInputEvent( const InputEvent_t &event )
 
 			if ( event.m_nData >= JOYSTICK_FIRST_AXIS )
 			{
-				if ( g_pScaleformUI && g_pScaleformUI->HandleInputEvent( event ) )
+#if defined( INCLUDE_SCALEFORM )
+                if ( g_pScaleformUI && g_pScaleformUI->HandleInputEvent( event ) )
 					break;
+#endif
 
 				if ( g_pMatSystemSurface && g_pMatSystemSurface->HandleInputEvent( event ) )
 					break;

@@ -7,6 +7,7 @@
 //===========================================================================//
 #include "cbase.h"
 #include "c_baseplayer.h"
+#include "c_cs_player.h"
 #include "c_user_message_register.h"
 #include "flashlighteffect.h"
 #include "weapon_selection.h"
@@ -1146,7 +1147,7 @@ void C_BasePlayer::PostDataUpdate( DataUpdateType_t updateType )
 	}
 
 	BaseClass::PostDataUpdate( updateType );
-			 
+
 	// Only care about this for local player
 	if ( IsLocalPlayer( this ) )
 	{
@@ -1213,12 +1214,14 @@ void C_BasePlayer::PostDataUpdate( DataUpdateType_t updateType )
 		}
 		else if ( IsAlive() )
 		{
+#if defined( INCLUDE_SCALEFORM )
 			SFHudFreezePanel *pPanel = GET_HUDELEMENT( SFHudFreezePanel );
 			if ( pPanel && pPanel->IsVisible() )
 			{
 				//pPanel->ShowPanel( false );
 				bHideFreezePanel = true;
-			}	
+			}
+#endif
 		}
 		
 		if ( bHideFreezePanel && !g_HltvReplaySystem.GetHltvReplayDelay() && !g_HltvReplaySystem.IsDelayedReplayRequestPending() )

@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -7,9 +7,13 @@
 #include "cbase.h"
 #include "cs_hud_weaponselection.h"
 #include "iclientmode.h"
+#if defined( INCLUDE_SCALEFORM )
 #include "HUD/sfweaponselection.h"
+#endif
 #include "iinput.h"
 #include "cs_gamerules.h"
+#include "cs_weapon_parse.h"
+#include "c_cs_player.h"
 
 #include <keyvalues.h>
 #include <vgui/IScheme.h>
@@ -51,12 +55,14 @@ void CHudWeaponSelection::OnWeaponPickup( C_BaseCombatWeapon *pWeapon )
 	{		
 		//const CCSWeaponInfo *pCSWeaponInfo = GetWeaponInfo( pCSWeapon->GetCSWeaponID() );
 		if ( pPlayer->State_Get() == STATE_ACTIVE )
-		{			
-			SFWeaponSelection *pHudWS = GET_HUDELEMENT( SFWeaponSelection );
+		{
+#if defined( INCLUDE_SCALEFORM )
+            SFWeaponSelection *pHudWS = GET_HUDELEMENT( SFWeaponSelection );
 			if ( pHudWS )
 			{
 				pHudWS->ShowAndUpdateSelection( WEPSELECT_PICKUP, pWeapon );
 			}
+#endif
 		}
 	}
 }
@@ -73,11 +79,13 @@ void CHudWeaponSelection::OnWeaponDrop( C_BaseCombatWeapon *pWeapon )
 	{		
 		if ( pPlayer->State_Get() == STATE_ACTIVE )
 		{
-			SFWeaponSelection *pHudWS = GET_HUDELEMENT( SFWeaponSelection );
+#if defined( INCLUDE_SCALEFORM )
+            SFWeaponSelection *pHudWS = GET_HUDELEMENT( SFWeaponSelection );
 			if ( pHudWS )
 			{
 				pHudWS->ShowAndUpdateSelection( WEPSELECT_DROP, pWeapon );
-			}			
+			}
+#endif
 		}
 	}
 }
@@ -93,12 +101,14 @@ void CHudWeaponSelection::OnWeaponSwitch( C_BaseCombatWeapon *pWeapon )
 	if ( pCSWeapon && pPlayer )
 	{		
 		if ( pPlayer->State_Get() == STATE_ACTIVE )
-		{			
+		{
+#if defined( INCLUDE_SCALEFORM )
 			SFWeaponSelection *pHudWS = GET_HUDELEMENT( SFWeaponSelection );
 			if ( pHudWS )
 			{
 				pHudWS->ShowAndUpdateSelection( WEPSELECT_SWITCH, pWeapon );
 			}
+#endif
 		}
 	}
 }

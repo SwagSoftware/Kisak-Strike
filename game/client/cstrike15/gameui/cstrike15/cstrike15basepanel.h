@@ -17,7 +17,10 @@
 #endif
 
 #include "basepanel.h"
+#include "matchmaking/imatchevents.h"
+#if defined( INCLUDE_SCALEFORM )
 #include "messagebox_scaleform.h"
+#endif
 #include "GameEventListener.h"
 #include "splitscreensignon.h"
 
@@ -26,11 +29,16 @@ void MarkRegisteredKnownConsoleUserSteamIDToUnregisterLater( CSteamID steamIdCon
 void ConfigurePSNPresenceStatusBasedOnCurrentSessionState( bool bCanUseSession = true );
 #endif
 
+class SplitScreenSignonWidget;
 //-----------------------------------------------------------------------------
 // Purpose: This is the panel at the top of the panel hierarchy for GameUI
 //			It handles all the menus, background images, and loading dialogs
 //-----------------------------------------------------------------------------
+#if defined( INCLUDE_SCALEFORM )
 class CCStrike15BasePanel: public CBaseModPanel, public IMessageBoxEventCallback, public IMatchEventsSink, public CGameEventListener
+#else
+class CCStrike15BasePanel: public CBaseModPanel, public IMatchEventsSink, public CGameEventListener
+#endif
 {
 	DECLARE_CLASS_SIMPLE( CCStrike15BasePanel, CBaseModPanel );
 
@@ -143,6 +151,7 @@ protected:
 
     void CheckIntroMovieStaticDependencies( void );
 
+#endif// Scaleform
 
 protected:
 	enum CCSOnClosedCommand
@@ -184,8 +193,6 @@ private:
 	STEAM_CALLBACK_MANUAL( CCStrike15BasePanel, Steam_OnLobbyInvite, LobbyInvite_t, m_CallbackOnLobbyInvite );
 
 #endif// _PS3 && !NO_STEAM
-
-#endif// Scaleform
 
 	SplitScreenSignonWidget* m_pSplitScreenSignon;
 	bool	m_bStartLogoIsShowing;

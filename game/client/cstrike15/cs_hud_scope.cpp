@@ -21,7 +21,9 @@
 #include <keyvalues.h>
 #include <vgui_controls/AnimationController.h>
 #include "predicted_viewmodel.h"
+#if defined( INCLUDE_SCALEFORM )
 #include "HUD/sfhudreticle.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

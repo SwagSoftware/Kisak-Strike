@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -19,7 +19,9 @@
 #include "cdll_int.h"
 #include "c_cs_player.h"
 #include "menu.h" // for CHudMenu defs
+#if defined( INCLUDE_SCALEFORM )
 #include "Scaleform/HUD/sfhud_radio.h"
+#endif
 #include "cs_gamerules.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -61,6 +63,7 @@ static int g_whichMenu = 0;
 //
 void OpenRadioMenu( int index )
 {
+#if defined( INCLUDE_SCALEFORM )
 	if ( CSGameRules() && CSGameRules()->IsPlayingTraining() )
 		return;
 
@@ -74,6 +77,7 @@ void OpenRadioMenu( int index )
 		pRadio->ShowRadioGroup( index );
 		g_whichMenu = index;
 	}
+#endif
 }
 
 static void radio1_f( const CCommand &args )

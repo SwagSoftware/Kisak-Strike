@@ -2390,6 +2390,7 @@ bool CBaseClientState::InternalProcessStringCmd( const CNETMsg_StringCmd& msg )
 
 
 #ifndef DEDICATED
+#if defined( INCLUDE_SCALEFORM )
 class CScaleformAvatarImageProviderImpl : public IScaleformAvatarImageProvider
 {
 public:
@@ -2416,6 +2417,7 @@ public:
 	}
 } g_CScaleformAvatarImageProviderImpl;
 #endif
+#endif
 
 bool CBaseClientState::NETMsg_PlayerAvatarData( const CNETMsg_PlayerAvatarData& msg )
 {
@@ -2431,8 +2433,10 @@ bool CBaseClientState::NETMsg_PlayerAvatarData( const CNETMsg_PlayerAvatarData& 
 	m_mapPlayerAvatarData.Insert( pClientDataCopy->accountid(), pClientDataCopy );
 
 #ifndef DEDICATED
-	if ( g_pScaleformUI )
+#if defined( INCLUDE_SCALEFORM )
+    if ( g_pScaleformUI )
 		g_pScaleformUI->AvatarImageReload( uint64( pClientDataCopy->accountid() ), &g_CScaleformAvatarImageProviderImpl );
+#endif
 #endif
 
 	return true;

@@ -36,9 +36,10 @@ endif()
 #$Folder	"Source Files"
 target_sources(${OUTBINNAME} PRIVATE "hl2/C_Func_Monitor.cpp")
 target_sources(${OUTBINNAME} PRIVATE "geiger.cpp")
-if( NOT CSGO )
-    #$File	"history_resource.cpp"		[!$CSGO]
-endif()
+#if( NOT CSGO )
+#    #$File	"history_resource.cpp"		[!$CSGO]
+#endif()
+target_sources(${OUTBINNAME} PRIVATE "history_resource.cpp")
 target_sources(${OUTBINNAME} PRIVATE "hud_weapon.cpp")
 target_sources(${OUTBINNAME} PRIVATE "train.cpp")
 if( NOT CSGO )

@@ -18,7 +18,9 @@
 
 #if defined( CLIENT_DLL )
 	#include "c_cs_player.h"
+#if defined( INCLUDE_SCALEFORM )
 	#include "HUD/sfweaponselection.h"
+#endif
 #else
 	#include "cs_player.h"
 	#include "explode.h"
@@ -1279,7 +1281,7 @@ void CC4::WeaponReset( void )
 	void CC4::UpdateOnRemove( void )
 	{
 		BaseClass::UpdateOnRemove();
-
+#if defined( INCLUDE_SCALEFORM )
 		// when a c4 is removed, force the local player to update thier inventory screen
 		if ( !C_BasePlayer::GetLocalPlayer() || !engine->IsLocalPlayerResolvable() )
 			return; // early out if local player does not exsist
@@ -1293,6 +1295,7 @@ void CC4::WeaponReset( void )
 				pHudWS->ShowAndUpdateSelection( WEPSELECT_SWITCH, NULL );
 			}
 		}
+#endif
 	}
 
 	void CC4::ClientThink( void )

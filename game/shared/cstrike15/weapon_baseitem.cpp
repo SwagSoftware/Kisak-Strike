@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2009, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2009, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: base class for belt items, eg pills and adrenaline
 //
@@ -11,7 +11,9 @@
 
 #if defined( CLIENT_DLL )
 #include "c_cs_player.h"
+#if defined( INCLUDE_SCALEFORM )
 #include "HUD/sfweaponselection.h"
+#endif
 #else
 #include "cs_player.h"
 #endif // CLIENT_DLL
@@ -223,6 +225,7 @@ void CWeaponBaseItem::ItemPostFrame( void )
 		}
 
 #if defined (CLIENT_DLL)
+#if defined( INCLUDE_SCALEFORM )
 		// when an item is removed, force the local player to update their inventory screen
 		C_CSPlayer *pLocalPlayer = C_CSPlayer::GetLocalCSPlayer();
 		if ( pLocalPlayer && pLocalPlayer == pPlayer )
@@ -242,6 +245,7 @@ void CWeaponBaseItem::ItemPostFrame( void )
 				}
 			}
 		}
+#endif
 #endif
 	}
 

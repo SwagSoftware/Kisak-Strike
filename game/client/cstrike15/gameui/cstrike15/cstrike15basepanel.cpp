@@ -305,7 +305,9 @@ void CCStrike15BasePanel::OnEvent( KeyValues *pEvent )
 				pParameters->m_uiLockFirstPersonAccountID &&
 				pParameters->m_uiCaseID )
 			{
+#if defined( INCLUDE_SCALEFORM )
 				SFHudOverwatchResolutionPanel::LoadDialog();
+#endif
 			}
 		}
 		engine->ClientCmd_Unrestricted( "disconnect" );
@@ -338,7 +340,9 @@ void CCStrike15BasePanel::FireGameEvent( IGameEvent *event )
 			// Ensure we remove any pending dialogs as soon as we receive notification that the client is disconnecting
 			//	(fixes issue with the quit dialog staying up when you "disconnect" via console window)
 			//  Passing in false to indicate we do not wish to dismiss CCommandMsgBoxes, which indicate error codes/kick reasons/etc
+#if defined( INCLUDE_SCALEFORM )
 			CMessageBoxScaleform::UnloadAllDialogs( false );
+#endif
 		}
 	}
 }
@@ -1120,27 +1124,37 @@ bool CCStrike15BasePanel::OnMessageBoxEvent( MessageBoxFlags_t buttonPressed )
 
 void CCStrike15BasePanel::OnOpenMedalsDialog( )
 {
+#if defined( INCLUDE_SCALEFORM )
 	CCreateMedalStatsDialogScaleform::LoadDialog( CCreateMedalStatsDialogScaleform::eDialogType_Medals );
+#endif
 }
 
 void CCStrike15BasePanel::OnOpenStatsDialog( )
 {
+#if defined( INCLUDE_SCALEFORM )
 	CCreateMedalStatsDialogScaleform::LoadDialog( CCreateMedalStatsDialogScaleform::eDialogType_Stats_Last_Match );
+#endif
 }
 
 void CCStrike15BasePanel::CloseMedalsStatsDialog( )
 {
+#if defined( INCLUDE_SCALEFORM )
 	CCreateMedalStatsDialogScaleform::UnloadDialog( );
+#endif
 }
 
 void CCStrike15BasePanel::OnOpenLeaderboardsDialog( )
 {
+#if defined( INCLUDE_SCALEFORM )
 	CCreateLeaderboardsDialogScaleform::LoadDialog( );
+#endif
 }
 
 void CCStrike15BasePanel::OnOpenCallVoteDialog( )
 {
+#if defined( INCLUDE_SCALEFORM )
 	SFHudCallVotePanel::LoadDialog();
+#endif
 }
 
 void CCStrike15BasePanel::OnOpenMarketplace( )
@@ -1154,17 +1168,23 @@ void CCStrike15BasePanel::OnOpenMarketplace( )
 
 void CCStrike15BasePanel::UpdateLeaderboardsDialog( )
 {
+#if defined( INCLUDE_SCALEFORM )
 	CCreateLeaderboardsDialogScaleform::UpdateDialog( );
+#endif
 }
 
 void CCStrike15BasePanel::CloseLeaderboardsDialog( )
 {
+#if defined( INCLUDE_SCALEFORM )
 	CCreateLeaderboardsDialogScaleform::UnloadDialog( );
+#endif
 }
 
 void CCStrike15BasePanel::OnOpenUpsellDialog( void )
 {
+#if defined( INCLUDE_SCALEFORM )
 	CUpsellScaleform::ShowMenu( true );
+#endif
 }
 
 void CCStrike15BasePanel::StartExitingProcess( void )
@@ -1240,7 +1260,9 @@ void CCStrike15BasePanel::RunFrame( void )
 	{
 		// If on PS3, we now show the start menu option.  This is only hidden on PS3 in the scaleform so we can
 		// delay showing it until stats are loaded.
+#if defined( INCLUDE_SCALEFORM )
 		m_bStartLogoIsShowing = CCreateStartScreenScaleform::ShowStartLogo();
+#endif
 	}
 
 #ifndef NO_STEAM
@@ -1392,6 +1414,7 @@ void CCStrike15BasePanel::CheckIntroMovieStaticDependencies( void )
 
 bool CCStrike15BasePanel::IsScaleformIntroMovieEnabled( void )
 {
+#if defined( INCLUDE_SCALEFORM )
     if ( !m_bNeedToStartIntroMovie && !CCreateLegalAnimScaleform::IsActive() )
         return false;
 
@@ -1405,10 +1428,14 @@ bool CCStrike15BasePanel::IsScaleformIntroMovieEnabled( void )
     }
 
     return true;
+#else
+    return false;
+#endif
 }
 
 void CCStrike15BasePanel::CreateScaleformIntroMovie( void )
 {
+#if defined( INCLUDE_SCALEFORM )
     if ( IsScaleformIntroMovieEnabled() )
     {
         if ( !CCreateLegalAnimScaleform::IsActive() )
@@ -1423,18 +1450,22 @@ void CCStrike15BasePanel::CreateScaleformIntroMovie( void )
                 m_bIntroMovieWaitForButtonToClear = false;
         }
     }
+#endif
 }
 
 void CCStrike15BasePanel::DismissScaleformIntroMovie( void )
 {
+#if defined( INCLUDE_SCALEFORM )
     if ( IsScaleformIntroMovieEnabled() )
     {
         CCreateLegalAnimScaleform::DismissAnimation();
     }
+#endif
 }
 
 void CCStrike15BasePanel::OnPlayCreditsVideo( void )
 {
+#if defined( INCLUDE_SCALEFORM )
     if ( !CCreateLegalAnimScaleform::IsActive() )
     {
         GameUI().SetBackgroundMusicDesired( false );
@@ -1445,6 +1476,7 @@ void CCStrike15BasePanel::OnPlayCreditsVideo( void )
         else
             m_bIntroMovieWaitForButtonToClear = false;
     }
+#endif
 }
 
 

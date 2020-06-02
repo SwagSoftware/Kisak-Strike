@@ -156,10 +156,12 @@ void V_RenderVGuiOnly( void )
 {
 	materials->BeginFrame( host_frametime );
 
-	CMatRenderContextPtr pRenderContext;
+#if defined( INCLUDE_SCALEFORM )
+    CMatRenderContextPtr pRenderContext;
 	pRenderContext.GetFrom( materials );
-	pRenderContext->RenderScaleformSlot(SF_RESERVED_BEGINFRAME_SLOT);
+    pRenderContext->RenderScaleformSlot(SF_RESERVED_BEGINFRAME_SLOT);
 	pRenderContext.SafeRelease();
+#endif
 
 	EngineVGui()->Simulate();
 
@@ -173,10 +175,11 @@ void V_RenderVGuiOnly( void )
 
 	g_EngineRenderer->FrameEnd( );
 
-	pRenderContext.GetFrom( materials );
-	pRenderContext->RenderScaleformSlot(SF_RESERVED_ENDFRAME_SLOT);
+#if defined( INCLUDE_SCALEFORM )
+    pRenderContext.GetFrom( materials );
+    pRenderContext->RenderScaleformSlot(SF_RESERVED_ENDFRAME_SLOT);
 	pRenderContext.SafeRelease();
-
+#endif
 	materials->EndFrame();
 
 	Shader_SwapBuffers();

@@ -72,7 +72,10 @@ using namespace vgui;
 #endif
 #include "iachievementmgr.h"
 #include "customtabexplanationdialog.h"
+#if defined( INCLUDE_SCALEFORM )
 #include "loadingscreen_scaleform.h"
+#include "itempickup_scaleform.h"
+#endif
 // dgoodenough - limit this to X360 only
 // PS3_BUILDFIX
 #if defined( _X360 )
@@ -100,8 +103,6 @@ using namespace vgui;
 
 #include "cbase.h"
 #include "cs_shareddefs.h"
-
-#include "itempickup_scaleform.h"
 
 #include "checksum_sha1.h"
 
@@ -912,7 +913,11 @@ void CBaseModPanel::UpdateBackgroundState()
 	{
 		// 360 guarantees a progress bar
 		// level loading is truly completed when the progress bar is gone, then transition to main menu
-		if ( IsPC() || ( IsGameConsole() && !CLoadingScreenScaleform::IsOpen() ) )
+		if ( IsPC() || ( IsGameConsole()
+		#if defined( INCLUDE_SCALEFORM )
+		 && !CLoadingScreenScaleform::IsOpen()
+        #endif
+		) )
 		{
 			SetBackgroundRenderState( BACKGROUND_MAINMENU );
 		}
@@ -926,6 +931,7 @@ void CBaseModPanel::UpdateBackgroundState()
 		SetBackgroundRenderState( BACKGROUND_DISCONNECTED );
 	}
 
+    #if defined( INCLUDE_SCALEFORM )
 	if ( GameUI().IsConsoleUI() )
 	{
 		if ( !m_ExitingFrameCount && !m_bLevelLoading && !CLoadingScreenScaleform::IsOpen() && GameUI().IsInLevel() )
@@ -942,6 +948,7 @@ void CBaseModPanel::UpdateBackgroundState()
 		// console ui has completely different menu/dialog/fill/fading behavior
 		return;
 	}
+    #endif
 
 	// don't evaluate the rest until we've initialized the menus
 	if ( !m_bPlatformMenuInitialized )
@@ -1161,7 +1168,7 @@ void CBaseModPanel::OnLevelLoadingStarted( const char *levelName, bool bShowProg
 		// frame buffer is about to be cleared, copy it off for ui backing purposes
 		m_bCopyFrameBuffer = true;
 	}
-	
+#if defined( INCLUDE_SCALEFORM )
 	// kick off the scaleform screen load if it hasn't been opened yet
 	if ( !CLoadingScreenScaleform::IsOpen() )
 	{
@@ -1198,6 +1205,7 @@ void CBaseModPanel::OnLevelLoadingStarted( const char *levelName, bool bShowProg
 			CLoadingScreenScaleform::LoadDialog( );
 		}
 	}
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1577,6 +1585,18 @@ CEG_NOINLINE DWORD InitUiAllowProperTintFlag( void )
 
 	return CEG_ALLOW_PROPER_TINT;
 }
+#if !defined( INCLUDE_SCALEFORM )
+static DWORD CEG_ALLOW_TEXTCHAT = 0x01B3; // will override
+
+CEG_NOINLINE DWORD InitHudAllowTextChatFlag( void )
+{
+	CEG_GCV_PRE();
+	CEG_ALLOW_TEXTCHAT = CEG_GET_CONSTANT_VALUE( HudAllowTextChatFlag );
+	CEG_GCV_POST();
+
+	return CEG_ALLOW_TEXTCHAT;
+}
+#endif
 
 
 int CBaseModPanel::CheckForAnyKeyPressed( bool bCheckKeyboard )
@@ -5849,6 +5869,9 @@ void CBaseModPanel::ShowMainMenu( bool bShow )
 
 bool CBaseModPanel::LoadingProgressWantsIsolatedRender( bool bContextValid )
 {
+    #if defined( INCLUDE_SCALEFORM )
 	return CLoadingScreenScaleform::LoadingProgressWantsIsolatedRender( bContextValid );
+    #endif
+	return false;
 }
 

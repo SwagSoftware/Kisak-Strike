@@ -77,3 +77,5 @@ add_subdirectory(matchmaking) #Does all 4 matchmaking projects
 
 add_subdirectory(launcher_main) #The actual executable that just dlopen's launcher
 add_subdirectory(launcher)
+
+add_subdirectory(scaleformui) #DUMMY cmake project so CLion can do analysis

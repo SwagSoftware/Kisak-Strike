@@ -287,6 +287,9 @@ public:
 	void			EnableScaleformMainMenu( bool bEnable ) { m_bScaleformMainMenuEnabled = bEnable; }
 	bool			IsScaleformMainMenuEnabled( void ) { return m_bScaleformMainMenuEnabled; }
 
+	void            EnableRocketMainMenu( bool bEnable ) { m_bRocketMainMenuEnabled = bEnable; }
+	bool            IsRocketMainMenuEnabled( void ) { return m_bRocketMainMenuEnabled; }
+
 	// [jason] Notification that a vgui dialog has completed, in case we need to restore Scaleform menu
 	void			NotifyVguiDialogClosed( void );
 
@@ -301,8 +304,12 @@ public:
 	virtual void	ShowScaleformPauseMenu( bool bShow );
 	virtual bool	IsScaleformPauseMenuActive( void );
 	virtual bool	IsScaleformPauseMenuVisible( void );
-
 	bool			IsScaleformPauseMenuEnabled( void ) { return m_bScaleformPauseMenuEnabled; }
+
+    virtual void    ShowRocketPauseMenu( bool bShow );
+    virtual bool    IsRocketPauseMenuActive( void );
+    virtual bool    IsRocketPauseMenuVisible( void );
+	bool            IsRocketPauseMenuEnabled( void ) { return m_bRocketPauseMenuEnabled; }
 
 	KeyValues *GetConsoleControlSettings( void );
 
@@ -341,8 +348,10 @@ protected:
 
 	// [jason] Allow toggle of the new scaleform version of the main menu
 	virtual void	ShowScaleformMainMenu( bool bShow );
-
 	virtual bool	IsScaleformMainMenuActive( void );
+
+	virtual void ShowRocketMainMenu( bool bShow );
+	virtual bool IsRocketMainMenuActive( void );
 
     virtual bool    IsScaleformIntroMovieEnabled( void ) { return false; }
     virtual void    CreateScaleformIntroMovie( void ) {}
@@ -531,6 +540,10 @@ private:
 	// [jason] Should we use the Scaleform main menu, or the old vgui one?
 	bool m_bScaleformMainMenuEnabled;
 	bool m_bScaleformPauseMenuEnabled;
+    // lwss- like the above bools but for rocketui
+	bool m_bRocketMainMenuEnabled;
+	bool m_bRocketPauseMenuEnabled;
+	// lwss end
 
 	// [jason] Last value that ShowMainMenu was called with: is the old vgui active or not?
 	bool m_bMainMenuShown;

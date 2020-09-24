@@ -35,6 +35,7 @@
 #include "materialsystem/imaterialsystem.h"
 
 #include "mathlib/expressioncalculator.h"
+#include "ai_activity.h"
 
 #if defined(CLIENT_DLL) || defined(GAME_DLL)
 #include "weapon_parse.h"

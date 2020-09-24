@@ -32,6 +32,8 @@
 #include "Scaleform/HUD/sfhudfreezepanel.h"
 #include "Scaleform/HUD/sfhud_teamcounter.h"
 #include "Scaleform/mapoverview.h"
+#elif defined( INCLUDE_ROCKETUI )
+#include "RocketUI/rkhud_chat.h"
 #endif
 #include "hltvreplaysystem.h"
 #include "netmessages.h"
@@ -763,6 +765,10 @@ void ClientModeShared::StartMessageMode( int iMessageModeType )
 	{
 		pChat->StartMessageMode( iMessageModeType );
 	}
+#elif defined( INCLUDE_ROCKETUI )
+	RkHudChat* pChat = GET_HUDELEMENT( RkHudChat );
+	if( pChat )
+	    pChat->StartMessageMode( iMessageModeType );
 #endif
 }
 

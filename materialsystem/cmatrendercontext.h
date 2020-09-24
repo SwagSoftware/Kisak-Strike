@@ -678,6 +678,15 @@ public:
 	void									AdvanceAndRenderScaleformSlot( int slot ) { ScaleformUI()->AdvanceSlot( slot ); ScaleformUI()->RenderSlot( slot ); }
 	void									AdvanceAndRenderScaleformCursor() { ScaleformUI()->AdvanceCursor(); ScaleformUI()->RenderCursor(); }
 
+#elif defined( INCLUDE_ROCKETUI )
+    virtual void RenderRocketHUD()
+    {
+        RocketUI()->RenderHUDFrame();
+    }
+	virtual void RenderRocketMenu()
+	{
+        RocketUI()->RenderMenuFrame();
+	}
 #endif // INCLUDE_SCALEFORM
 
 	DELEGATE_TO_OBJECT_1( ColorCorrectionHandle_t, FindLookup, const char *, g_pColorCorrectionSystem );

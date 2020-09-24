@@ -29,6 +29,8 @@
 
 #if defined( INCLUDE_SCALEFORM )
 #include "scaleformui/scaleformui.h"
+#elif defined( INCLUDE_ROCKETUI )
+#include "rocketui/rocketui.h"
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -46,6 +48,7 @@ enum KeyUpTarget_t
 	KEY_UP_GAMEUI,
 	KEY_UP_SCALEFORM,
 	KEY_UP_OVERLAY,
+	KEY_UP_ROCKETUI,
 
 	KEY_UP_TARGET_COUNT
 };
@@ -1060,6 +1063,12 @@ static bool HandleScaleformKey( const InputEvent_t &event )
 
 	return g_pScaleformUI->HandleInputEvent( event );
 }
+#elif defined( INCLUDE_ROCKETUI )
+// lets RocketUI get key events
+static bool HandleRocketKey( const InputEvent_t &event )
+{
+    return g_pRocketUI->HandleInputEvent( event );
+}
 #endif
 
 //-----------------------------------------------------------------------------
@@ -1317,6 +1326,10 @@ void Key_Event( const InputEvent_t &event )
 		// scaleform goes first
 		if ( FilterKey( event, KEY_UP_SCALEFORM, HandleScaleformKey ) )
 			return;
+#elif defined( INCLUDE_ROCKETUI )
+		// rocketui goes first
+		if ( FilterKey( event, KEY_UP_ROCKETUI, HandleRocketKey ) )
+		    return;
 #endif
 	}
 #if defined ( CSTRIKE15 )
@@ -1326,6 +1339,12 @@ void Key_Event( const InputEvent_t &event )
 		if ( FilterKey( event, KEY_UP_SCALEFORM, HandleScaleformKey ) )
 			return;
 	}
+#elif defined( INCLUDE_ROCKETUI )
+    else if ( g_ClientDLL->IsChatRaised() || g_ClientDLL->IsBindMenuRaised() )
+    {
+        if ( FilterKey( event, KEY_UP_ROCKETUI, HandleRocketKey ) )
+            return;
+    }
 #endif
 #endif
 
@@ -1355,7 +1374,9 @@ void Key_Event( const InputEvent_t &event )
 
 		if ( bAllowScaleformFilter && FilterKey( event, KEY_UP_SCALEFORM, HandleScaleformKey ) )
 			return;
-
+#elif defined( INCLUDE_ROCKETUI )
+		if( FilterKey( event, KEY_UP_ROCKETUI, HandleRocketKey ) )
+		    return;
 #endif // INCLUDE_SCALEFORM
 
 		// Let vgui have a whack at keys

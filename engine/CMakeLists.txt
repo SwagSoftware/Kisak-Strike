@@ -44,6 +44,8 @@ if( DEDICATED )
 else()
     if( USE_SCALEFORM )
         add_definitions(-DINCLUDE_SCALEFORM)
+    elseif( USE_ROCKETUI )
+        add_definitions(-DINCLUDE_ROCKETUI)
     endif()
 endif()
 remove_definitions(-DBASE) #used by cryptopp REEE

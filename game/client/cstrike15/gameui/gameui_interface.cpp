@@ -181,6 +181,11 @@ IScaleformUI* ScaleformUI()
 {
 	return g_pScaleformUI;
 }
+#elif defined( INCLUDE_ROCKETUI )
+//IRocketUI* RocketUI()
+//{
+//    return g_pRocketUI;
+//}
 #endif
 
 
@@ -1112,6 +1117,7 @@ bool CGameUI::SetShowProgressText( bool show )
 #if defined( INCLUDE_SCALEFORM )
     return CLoadingScreenScaleform::SetShowProgressText( show );
 #endif
+    return false;
 }
 
 

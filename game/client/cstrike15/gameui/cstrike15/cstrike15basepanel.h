@@ -150,8 +150,79 @@ protected:
    	virtual void OnPlayCreditsVideo( void );
 
     void CheckIntroMovieStaticDependencies( void );
+#elif defined(INCLUDE_ROCKETUI)
+    virtual void OnOpenCreateStartScreen( void ); // [jason] provides the "Press Start" screen interface
+	virtual void DismissStartScreen( void );
+	virtual bool IsStartScreenActive( void );
 
-#endif// Scaleform
+	virtual void OnOpenCreateMainMenuScreen( void );
+	virtual void DismissMainMenuScreen( void );
+	virtual void RestoreMainMenuScreen( void );
+	virtual void DismissAllMainMenuScreens( bool bHideMainMenuOnly = false );
+
+	void RestoreMPGameMenu( void );
+
+    virtual void ShowRocketMainMenu( bool bShow );
+	virtual bool IsRocketMainMenuActive( void );
+
+    virtual void ShowRocketPauseMenu( bool bShow );
+    virtual bool IsRocketPauseMenuActive( void );
+    virtual bool IsRocketPauseMenuVisible( void );
+
+	virtual void OnOpenCreateSingleplayerGameDialog( bool bMatchmakingFilter );
+	virtual void OnOpenCreateMultiplayerGameDialog( void );
+	virtual void OnOpenCreateMultiplayerGameCommunity( void );
+	virtual void OnOpenDisconnectConfirmationDialog( void );
+	virtual void OnOpenQuitConfirmationDialog( bool bForceToDesktop = false );
+
+	virtual	void OnOpenServerBrowser();
+	virtual void OnOpenCreateLobbyScreen( bool bIsHost = false );
+	virtual void OnOpenLobbyBrowserScreen( bool bIsHost = false );
+	virtual void UpdateLobbyScreen( void );
+	virtual void UpdateMainMenuScreen();
+	virtual void UpdateLobbyBrowser( void );
+
+	virtual void ShowMatchmakingStatus( void );
+
+	virtual void OnOpenPauseMenu( void );
+	virtual void DismissPauseMenu( void );
+	virtual void RestorePauseMenu( void );
+	virtual void OnOpenControllerDialog( void );
+	virtual void OnOpenSettingsDialog( void );
+	virtual void OnOpenMouseDialog();
+	virtual void OnOpenKeyboardDialog();
+	virtual void OnOpenMotionControllerMoveDialog();
+	virtual void OnOpenMotionControllerSharpshooterDialog();
+	virtual void OnOpenMotionControllerDialog();
+	virtual void OnOpenMotionCalibrationDialog();
+	virtual void OnOpenVideoSettingsDialog();
+	virtual void OnOpenOptionsQueued();
+	virtual void OnOpenAudioSettingsDialog();
+
+	virtual void OnOpenUpsellDialog( void );
+
+	virtual void OnOpenHowToPlayDialog( void );
+
+	virtual void OnOpenMedalsDialog();
+	virtual void OnOpenStatsDialog();
+	virtual void CloseMedalsStatsDialog();
+
+
+	virtual void OnOpenLeaderboardsDialog();
+	virtual void OnOpenCallVoteDialog();
+	virtual void OnOpenMarketplace();
+	virtual void UpdateLeaderboardsDialog();
+	virtual void CloseLeaderboardsDialog();
+	virtual void StartExitingProcess( void );
+
+	virtual void RunFrame( void );
+
+	void DoCommunityQuickPlay( void );
+
+protected:
+	virtual void LockInput( void );
+	virtual void UnlockInput( void );
+#endif// Scaleform/RocketUI
 
 protected:
 	enum CCSOnClosedCommand

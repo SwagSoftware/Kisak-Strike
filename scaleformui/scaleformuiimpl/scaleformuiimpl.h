@@ -17,6 +17,7 @@
 #include "tier1/utlmap.h"
 #include "igameevents.h"
 #include "cdll_int.h"
+#include "shaderapi/IShaderDevice.h"
 
 #if defined( USE_SDL ) || defined( OSX )
 #include "appframework/ilaunchermgr.h"

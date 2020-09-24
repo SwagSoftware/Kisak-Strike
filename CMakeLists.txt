@@ -79,3 +79,4 @@ add_subdirectory(launcher_main) #The actual executable that just dlopen's launch
 add_subdirectory(launcher)
 
 add_subdirectory(scaleformui) #DUMMY cmake project so CLion can do analysis
+add_subdirectory(rocketui) #DUMMY cmake project so CLion can do analysis

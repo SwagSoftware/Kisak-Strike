@@ -31,6 +31,8 @@ bld/
 cmake-build/*
 !cmake-build/placeholder.txt
 cmake-build-*/*
+rocketui/cmake-build-*/*
+scaleformui/cmake-build-*/*
 
 #Ignore rebuilt static libs
 lib/public/linux64/*.a
@@ -42,3 +44,7 @@ external/crypto++-5.61/libcryptopp.a
 
 #VPC makefile
 csgo_partner.mak
+
+#Thirdparty
+/thirdparty/RmlUi/build/
+/thirdparty/RmlUi/Samples/

@@ -1210,6 +1210,16 @@ void CViewRender::Render( vrect_t *rect )
 			pRenderContext->Flush();
 			pRenderContext.SafeRelease();
 		}
+#elif defined( INCLUDE_ROCKETUI )
+// Don't think we need this right now, needs the opengl state to be set up differently.
+//      {
+//          CMatRenderContextPtr pRenderContext( materials );
+//
+//          pRenderContext->DoRocketRender();
+//
+//          pRenderContext->Flush();
+//			pRenderContext.SafeRelease();
+//		}
 #endif
 
 		{

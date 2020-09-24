@@ -28,6 +28,8 @@
 
 #if defined( INCLUDE_SCALEFORM )
 #include "scaleformui/scaleformui.h"
+#elif defined( INCLUDE_ROCKETUI )
+#include "rocketui/rocketui.h"
 #endif
 
 //-----------------------------------------------------------------------------
@@ -105,6 +107,12 @@ inline IScaleformUI* ScaleformUI()
 	extern IScaleformUI* g_pScaleformUI;
 	return g_pScaleformUI;
 }
+#elif defined( INCLUDE_ROCKETUI )
+//inline IRocketUI* RocketUI()
+//{
+//    extern IRocketUI* g_pRocketUI;
+//    return g_pRocketUI;
+//}
 #endif
 
 //-----------------------------------------------------------------------------

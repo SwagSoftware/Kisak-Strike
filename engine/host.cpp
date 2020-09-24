@@ -160,6 +160,8 @@
 #include "ixboxsystem.h"
 #if defined( INCLUDE_SCALEFORM )
 #include "scaleformui/scaleformui.h"
+#elif defined( INCLUDE_ROCKETUI )
+#include "rocketui/rocketui.h"
 #endif
 
 extern IXboxSystem *g_pXboxSystem;
@@ -4521,6 +4523,11 @@ void _Host_RunFrame (float time)
 			g_pScaleformUI->RunFrame( ( g_ClientGlobalVariables.realtime - flLastScaleformRunFrame ) / timeScale );
 			flLastScaleformRunFrame = g_ClientGlobalVariables.realtime;
 		}
+#elif defined( INCLUDE_ROCKETUI )
+        if ( g_pRocketUI && shouldrender )
+        {
+			g_pRocketUI->RunFrame( g_ClientGlobalVariables.realtime );
+        }
 #endif
 
 		g_Log.RunFrame();

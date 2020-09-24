@@ -80,8 +80,10 @@
 #include "hltvcamera.h"
 #include "basecsgrenade_projectile.h"
 #include "hud_chat.h"
+#if defined( INCLUDE_SCALEFORM )
 #include "Scaleform/HUD/sfhud_uniquealerts.h"
 #include "Scaleform/HUD/sfhud_rosettaselector.h"
+#endif
 #include "hltvreplaysystem.h"
 #include "netmessages.h"
 #include "playerdecals_signature.h"
@@ -1208,7 +1210,8 @@ void ClientModeCSNormal::Update()
 					}
 				}
 
-				// Quest notification alert
+#if defined( INCLUDE_SCALEFORM )
+                // Quest notification alert
 				if (SFUniqueAlerts* pAlerts = (SFUniqueAlerts*)(GetHud(0).FindElement("SFUniqueAlerts")))
 				{
 					// REI: Not sure this is correct.  Need to understand why this is a vector, and which "points" from the
@@ -1220,6 +1223,7 @@ void ClientModeCSNormal::Update()
 
 					pAlerts->ShowQuestProgress(numPointsEarned, questProgress.m_numNormalPoints, questPoints, "weapon_knife", "do the thing"); // TODO: Correctly extract the weapon icon to use
 				}
+#endif
 			}
 		}
 		questProgress.m_numNormalPointsProgressBaseline = questProgress.m_numNormalPoints;
@@ -1290,11 +1294,12 @@ CON_COMMAND_F(quest_ui_test, "Test quest ui", FCVAR_CLIENTCMD_CAN_EXECUTE)
 	{
 		maxPoints = Q_atoi(args.ArgV()[3]);
 	}
-
+#if defined( INCLUDE_SCALEFORM )
 	if (SFUniqueAlerts* pAlerts = (SFUniqueAlerts*)(GetHud(0).FindElement("SFUniqueAlerts")))
 	{
 		pAlerts->ShowQuestProgress(newPoints, totalPoints, maxPoints, "weapon_knife", "quest desc");
 	}
+#endif
 }
 #endif
 
@@ -3889,21 +3894,25 @@ CEG_NOINLINE void ClientModeCSFullscreen::OnEvent( KeyValues *pEvent )
 			okCommand = "error_message_explain_vac";
 		else if ( !V_strcmp( szReason, "#GameUI_Disconnect_PureServer_Mismatch" ) )
 			okCommand = "error_message_explain_pure";
-
+#if defined( INCLUDE_SCALEFORM )
 		CCommandMsgBox::CreateAndShow("#SFUI_Disconnect_Title", szReason, true, false, okCommand );
+#endif
 	}
 	else if ( !Q_stricmp( pEventName, "OnClientInsecureBlocked" ) )
 	{
 		STEAMWORKS_SELFCHECK();
 		g_bClientIsAllowedToPlayOnSecureServers = false;
-		
-		CMessageBoxScaleform::UnloadAllDialogs();
+#if defined( INCLUDE_SCALEFORM )
+        CMessageBoxScaleform::UnloadAllDialogs();
+#endif
 		BasePanel()->RestoreMainMenuScreen();
 		char const *szSuffix = "";
 		if ( ( CommandLine()->FindParm( "-insecure" ) && !CommandLine()->FindParm( "-insecure_forced_by_launcher" ) ) || CommandLine()->FindParm( "-tools" ) )
 			szSuffix = "_cmd";
-		CCommandMsgBox::CreateAndShow( CFmtStr( "#SFUI_DisconnectReason_OnClientInsecureTitle_%s", pEvent->GetString( "reason" ) ),
+#if defined( INCLUDE_SCALEFORM )
+        CCommandMsgBox::CreateAndShow( CFmtStr( "#SFUI_DisconnectReason_OnClientInsecureTitle_%s", pEvent->GetString( "reason" ) ),
 			CFmtStr( "#SFUI_DisconnectReason_OnClientInsecureBlocked_%s%s", pEvent->GetString( "reason" ), szSuffix ), true);
+#endif
 	}
 }
 

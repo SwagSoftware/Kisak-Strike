@@ -85,10 +85,12 @@ static const char *gBugTokenTable[] = {
 inline void CS15ForwardStatusMsg( const char* text, int clientid )
 {
 	/* Removed for partner depot */
+	ConMsg("[forwardstatusmsg]%s", text);
 }
 inline void CS15ForwardStatusMsg( const wchar_t* text, int clientid )
 {
 	/* Removed for partner depot */
+	ConMsg("[forwardstatusmsg]%ls", text);
 }
 #endif // CSTRIKE15
 

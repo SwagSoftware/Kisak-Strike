@@ -21,6 +21,10 @@ using namespace vgui;
 #if defined( CSTRIKE15 )
 
 extern bool IsTakingAFreezecamScreenshot( void );
+bool IsTakingAFreezecamScreenshot( void )
+{
+    return false;
+}
 
 extern ConVar cl_drawhud;
 //extern ConVar sfcrosshair;

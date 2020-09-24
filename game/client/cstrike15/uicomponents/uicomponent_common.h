@@ -12,7 +12,9 @@
 #pragma once
 #endif
 
+#if defined( INCLUDE_SCALEFORM )
 #define USE_SCALEFORM_BINDINGS
+#endif
 
 #if defined ( PANORAMA_ENABLE )
 #define USE_PANORAMA_BINDINGS
@@ -715,6 +717,7 @@ GC_REG_CLIENT_JOB( cjobclass, gcmsgid );
 
 
 // Function decl/impl helpers for ui component code that will be called by scaleform and/or javascript
+#if defined( INCLUDE_SCALEFORM )
 #define UI_COMPONENT_FUNCTION_NAME( fnname ) UiComponentFunction_##fnname
 #define UI_DEFAULT_PARAMS_DECL IUIMarshalHelper* pui, SFPARAMS obj
 #define UI_DEFAULT_PARAMS_PASS pui, obj
@@ -734,6 +737,7 @@ inline char const * HelperUiGetStringParamSafe( UI_DEFAULT_PARAMS_DECL, int iPar
 	else
 		return szDefault;
 }
+#endif
 
 // Convert keyvalues to a json formatted string
 bool Helper_RecursiveKeyValuesToJSONString( const KeyValues* pKV, CUtlBuffer &outBuffer );

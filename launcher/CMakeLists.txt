@@ -24,7 +24,12 @@ if( LINUXALL )
 endif()
 include(${CMAKE_MODULE_PATH}/source_dll_base.cmake)
 
-add_definitions(-DLAUNCHERONLY -DINCLUDE_SCALEFORM -DALLOW_TEXT_MODE=1)
+add_definitions(-DLAUNCHERONLY -DALLOW_TEXT_MODE=1)
+if( USE_SCALEFORM )
+    add_definitions(-DINCLUDE_SCALEFORM)
+elseif( USE_ROCKETUI )
+    add_definitions(-DINCLUDE_ROCKETUI)
+endif()
 
 if( LINUXALL )
     target_link_libraries(${OUTBINNAME} SDL2)

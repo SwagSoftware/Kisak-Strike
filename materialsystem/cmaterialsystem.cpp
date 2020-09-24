@@ -104,6 +104,8 @@ IMaterialInternal *g_pErrorMaterial = NULL;
 
 #if defined( INCLUDE_SCALEFORM )
 extern IScaleformUI* g_pScaleformUI;
+#elif defined( INCLUDE_ROCKETUI )
+extern IRocketUI* g_pRocketUI;
 #endif
 
 CreateInterfaceFn g_fnMatSystemConnectCreateInterface = NULL;  
@@ -858,6 +860,8 @@ bool CMaterialSystem::Connect( CreateInterfaceFn factory )
 
 #if defined( INCLUDE_SCALEFORM )
 	g_pScaleformUI = ( IScaleformUI* ) factory( SCALEFORMUI_INTERFACE_VERSION, 0 );
+#elif defined( INCLUDE_ROCKETUI )
+	g_pRocketUI = ( IRocketUI* ) factory( ROCKETUI_INTERFACE_VERSION, 0 );
 #endif
 
 	return g_pShaderDeviceMgr->Connect( ShaderFactory );	
@@ -885,6 +889,8 @@ void CMaterialSystem::Disconnect()
 
 #if defined( INCLUDE_SCALEFORM )
 	g_pScaleformUI = NULL;
+#elif defined( INCLUDE_ROCKETUI )
+	g_pRocketUI = NULL;
 #endif
 
 	BaseClass::Disconnect();
@@ -4406,7 +4412,9 @@ void CMaterialSystem::EndFrame( void )
 				Assert( m_QueuedRenderContexts[i].IsInitialized() );
 				m_QueuedRenderContexts[i].Shutdown();
 			}
+#if defined( INCLUDE_SCALEFORM )
 			g_pScaleformUI->SetSingleThreadedMode(true);
+#endif
 			break;
 
 		case MATERIAL_QUEUED_SINGLE_THREADED:
@@ -4424,7 +4432,9 @@ void CMaterialSystem::EndFrame( void )
 			if ( m_ThreadMode == MATERIAL_QUEUED_SINGLE_THREADED )
 			{
 				g_pShaderAPI->SetDisallowAccess( true );
-				g_pScaleformUI->SetSingleThreadedMode(true);
+#if defined( INCLUDE_SCALEFORM )
+                g_pScaleformUI->SetSingleThreadedMode(true);
+#endif
 			}
 			else
 			{
@@ -4434,7 +4444,9 @@ void CMaterialSystem::EndFrame( void )
 				g_pShaderAPI->ReleaseThreadOwnership();
 				m_QueuedRenderContexts[m_iCurQueuedContext].GetCallQueueInternal()->QueueCall( g_pShaderAPI, &IShaderAPI::AcquireThreadOwnership );
 #endif
-				g_pScaleformUI->SetSingleThreadedMode(false);
+#if defined( INCLUDE_SCALEFORM )
+                g_pScaleformUI->SetSingleThreadedMode(false);
+#endif
 			}
 			break;
 		}

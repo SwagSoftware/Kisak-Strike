@@ -24,7 +24,15 @@ ConVar spec_replay_autostart_delay( "spec_replay_autostart_delay", "1.5", FCVAR_
 ConVar spec_replay_victim_pov( "spec_replay_victim_pov", "0", FCVAR_CLIENTDLL, "Killer Replay - replay from victim's point of view (1); the default is killer's (0). Experimental." );
 CHltvReplaySystem g_HltvReplaySystem;
 extern void CS_FreezePanel_OnHltvReplayButtonStateChanged();
-
+void CS_FreezePanel_OnHltvReplayButtonStateChanged()
+{
+    /*
+    SFHudFreezePanel *pPanel = GET_HUDELEMENT( SFHudFreezePanel );
+    if ( pPanel )
+    {
+        pPanel->OnHltvReplayButtonStateChanged();
+    }*/
+}
 CHltvReplaySystem::CHltvReplaySystem()
 {
 	m_nHltvReplayDelay = 0;
@@ -783,8 +791,8 @@ void CHltvReplaySystem::OnPlayerDeath( IGameEvent *event )
 					{
 						// we're dead anyway... request a replay, it may be interesting
 						m_DelayedReplay.nRequest = REPLAY_EVENT_GENERIC;
-						extern void CS_FreezePanel_ResetDamageText( int iPlayerIndexKiller, int iPlayerIndexVictim );
-						CS_FreezePanel_ResetDamageText( iPlayerIndexKiller, iPlayerIndexVictim );
+						//extern void CS_FreezePanel_ResetDamageText( int iPlayerIndexKiller, int iPlayerIndexVictim );
+						//CS_FreezePanel_ResetDamageText( iPlayerIndexKiller, iPlayerIndexVictim );
 					}
 				}
 			}

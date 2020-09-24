@@ -34,6 +34,9 @@
 #include "splitscreensignon.h"
 #include "messagebox_scaleform.h"
 #include "itempickup_scaleform.h"
+#elif defined(INCLUDE_ROCKETUI)
+#include "../RocketUI/rkmenu_main.h"
+#include "../RocketUI/rkhud_pausemenu.h"
 #endif
 
 #if defined ( _PS3 )
@@ -153,6 +156,8 @@ CCStrike15BasePanel::~CCStrike15BasePanel()
 
 	// [jason] Release any screens that may still be active on shutdown so we don't leak memory
 #if defined(INCLUDE_SCALEFORM)
+	DismissAllMainMenuScreens();
+#elif defined(INCLUDE_ROCKETUI)
 	DismissAllMainMenuScreens();
 #endif
 }
@@ -305,7 +310,9 @@ void CCStrike15BasePanel::OnEvent( KeyValues *pEvent )
 				pParameters->m_uiLockFirstPersonAccountID &&
 				pParameters->m_uiCaseID )
 			{
+#if defined( INCLUDE_SCALEFORM )
 				SFHudOverwatchResolutionPanel::LoadDialog();
+#endif
 			}
 		}
 		engine->ClientCmd_Unrestricted( "disconnect" );
@@ -338,7 +345,9 @@ void CCStrike15BasePanel::FireGameEvent( IGameEvent *event )
 			// Ensure we remove any pending dialogs as soon as we receive notification that the client is disconnecting
 			//	(fixes issue with the quit dialog staying up when you "disconnect" via console window)
 			//  Passing in false to indicate we do not wish to dismiss CCommandMsgBoxes, which indicate error codes/kick reasons/etc
+#if defined( INCLUDE_SCALEFORM )
 			CMessageBoxScaleform::UnloadAllDialogs( false );
+#endif
 		}
 	}
 }
@@ -394,7 +403,7 @@ CON_COMMAND_F( cl_avatar_convert_rgb, "Converts all png avatars in the avatars d
 	g_pFullFileSystem->FindClose( hFind );
 }
 
-
+// lwss- Overrides for the basepanel if either of these systems are enabled.
 #if defined(INCLUDE_SCALEFORM)
 
 void CCStrike15BasePanel::OnOpenCreateStartScreen( void )
@@ -550,7 +559,7 @@ void CCStrike15BasePanel::OnOpenCreateMultiplayerGameCommunity( void )
 	m_bCommunityQuickPlayWarningRaised = true;
 	if ( !m_bCommunityServerWarningIssued && player_nevershow_communityservermessage.GetBool() == 0 )
 	{
-		OnOpenMessageBoxThreeway( "#SFUI_MainMenu_ServerBrowserWarning_Title", "#SFUI_MainMenu_ServerBrowserWarning_Text2", "#SFUI_MainMenu_ServerBrowserWarning_Legend", "#SFUI_MainMenu_ServerBrowserWarning_NeverShow", ( MESSAGEBOX_FLAG_OK  |  MESSAGEBOX_FLAG_CANCEL | MESSAGEBOX_FLAG_TERTIARY ), this );	
+		OnOpenMessageBoxThreeway( "#SFUI_MainMenu_ServerBrowserWarning_Title", "#SFUI_MainMenu_ServerBrowserWarning_Text2", "#SFUI_MainMenu_ServerBrowserWarning_Legend", "#SFUI_MainMenu_ServerBrowserWarning_NeverShow", ( MESSAGEBOX_FLAG_OK  |  MESSAGEBOX_FLAG_CANCEL | MESSAGEBOX_FLAG_TERTIARY ), this );
 		m_bCommunityQuickPlayWarningRaised = true;
 	}
 	else
@@ -571,7 +580,7 @@ void CCStrike15BasePanel::OnOpenServerBrowser()
 #if !defined(_GAMECONSOLE)
 	if ( !m_bCommunityServerWarningIssued && player_nevershow_communityservermessage.GetBool() == 0 )
 	{
-		OnOpenMessageBoxThreeway( "#SFUI_MainMenu_ServerBrowserWarning_Title", "#SFUI_MainMenu_ServerBrowserWarning_Text2", "#SFUI_MainMenu_ServerBrowserWarning_Legend", "#SFUI_MainMenu_ServerBrowserWarning_NeverShow", ( MESSAGEBOX_FLAG_OK  |  MESSAGEBOX_FLAG_CANCEL | MESSAGEBOX_FLAG_TERTIARY ), this );	
+		OnOpenMessageBoxThreeway( "#SFUI_MainMenu_ServerBrowserWarning_Title", "#SFUI_MainMenu_ServerBrowserWarning_Text2", "#SFUI_MainMenu_ServerBrowserWarning_Legend", "#SFUI_MainMenu_ServerBrowserWarning_NeverShow", ( MESSAGEBOX_FLAG_OK  |  MESSAGEBOX_FLAG_CANCEL | MESSAGEBOX_FLAG_TERTIARY ), this );
 		m_bServerBrowserWarningRaised = true;
 	}
 	else
@@ -648,7 +657,7 @@ bool CCStrike15BasePanel::ShowLockInput( void )
 	if ( devCheatSkipInputLocking.GetBool() )
 		return false;
 
-#if defined( WIN32 ) 
+#if defined( WIN32 )
 	if ( g_pScaleformUI )
 	{
 		g_pScaleformUI->LockMostRecentInputDevice( SF_FULL_SCREEN_SLOT );
@@ -693,13 +702,13 @@ bool CCStrike15BasePanel::ShowLockInput( void )
 				if( var.IsValid( ) )
 					var.SetValue( 0 );
 			}
-#endif  
+#endif
 
-			
+
 
 			InputDevice_t currentInputDevice = g_pInputSystem->GetCurrentInputDevice();
 
-			bool hasLockedIntoMotionController = currentInputDevice == INPUT_DEVICE_PLAYSTATION_MOVE || 
+			bool hasLockedIntoMotionController = currentInputDevice == INPUT_DEVICE_PLAYSTATION_MOVE ||
 												 currentInputDevice == INPUT_DEVICE_SHARPSHOOTER;
 
 			if ( hasLockedIntoMotionController )
@@ -719,139 +728,139 @@ bool CCStrike15BasePanel::ShowLockInput( void )
 
 		return true;
 	}
-	
-	return false;	
+
+	return false;
 }
 
 void CCStrike15BasePanel::OnOpenPauseMenu( void )
 {
-	CBaseModPanel::OnOpenPauseMenu();
+    CBaseModPanel::OnOpenPauseMenu();
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: 
+// Purpose:
 //-----------------------------------------------------------------------------
 void CCStrike15BasePanel::OnOpenMouseDialog()
 {
-	COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_MOUSE );
+    COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_MOUSE );
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: 
+// Purpose:
 //-----------------------------------------------------------------------------
 void CCStrike15BasePanel::OnOpenKeyboardDialog()
 {
-	COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_KEYBOARD );
+    COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_KEYBOARD );
 }
 
 
 //-----------------------------------------------------------------------------
-// Purpose: 
+// Purpose:
 //-----------------------------------------------------------------------------
 void CCStrike15BasePanel::OnOpenControllerDialog( void )
 {
-	COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_CONTROLLER );
+    COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_CONTROLLER );
 }
 
 
 //-----------------------------------------------------------------------------
-// Purpose: 
+// Purpose:
 //-----------------------------------------------------------------------------
 void CCStrike15BasePanel::OnOpenMotionControllerMoveDialog()
 {
-	COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_MOTION_CONTROLLER_MOVE );
+    COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_MOTION_CONTROLLER_MOVE );
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: 
+// Purpose:
 //-----------------------------------------------------------------------------
 void CCStrike15BasePanel::OnOpenMotionControllerSharpshooterDialog()
 {
-	COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_MOTION_CONTROLLER_SHARPSHOOTER );
+    COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_MOTION_CONTROLLER_SHARPSHOOTER );
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: 
+// Purpose:
 //-----------------------------------------------------------------------------
 void CCStrike15BasePanel::OnOpenMotionControllerDialog()
 {
-	COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_MOTION_CONTROLLER );
+    COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_MOTION_CONTROLLER );
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: 
+// Purpose:
 //-----------------------------------------------------------------------------
 void CCStrike15BasePanel::OnOpenMotionCalibrationDialog()
 {
-	CMotionCalibrationScaleform::LoadDialog();
+    CMotionCalibrationScaleform::LoadDialog();
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: 
+// Purpose:
 //-----------------------------------------------------------------------------
 void CCStrike15BasePanel::OnOpenVideoSettingsDialog()
 {
-	COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_VIDEO );
+    COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_VIDEO );
 }
 
 
 //-----------------------------------------------------------------------------
-// Purpose: 
+// Purpose:
 //-----------------------------------------------------------------------------
 void CCStrike15BasePanel::OnOpenOptionsQueued()
 {
-	COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_NONE );
+    COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_NONE );
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: 
+// Purpose:
 //-----------------------------------------------------------------------------
 void CCStrike15BasePanel::OnOpenAudioSettingsDialog()
 {
-	COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_AUDIO );
+    COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_AUDIO );
 }
 
 void CCStrike15BasePanel::OnOpenSettingsDialog( void )
 {
-	COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_SETTINGS );
+    COptionsScaleform::ShowMenu( true, COptionsScaleform::DIALOG_TYPE_SETTINGS );
 }
 
 void CCStrike15BasePanel::OnOpenHowToPlayDialog( void )
 {
-	CHowToPlayDialogScaleform::LoadDialog();
+    CHowToPlayDialogScaleform::LoadDialog();
 }
 
 void CCStrike15BasePanel::DismissPauseMenu( void )
 {
-	/* Removed for partner depot */
+    /* Removed for partner depot */
 }
 
 void CCStrike15BasePanel::RestorePauseMenu( void )
 {
-	/* Removed for partner depot */
+    /* Removed for partner depot */
 }
 
 void CCStrike15BasePanel::ShowScaleformPauseMenu( bool bShow )
 {
-	/* Removed for partner depot */
+    /* Removed for partner depot */
 }
 
 bool CCStrike15BasePanel::IsScaleformPauseMenuActive( void )
 {
-	/* Removed for partner depot */
-	return false;
+    /* Removed for partner depot */
+    return false;
 }
 
 bool CCStrike15BasePanel::IsScaleformPauseMenuVisible( void )
 {
-	/* Removed for partner depot */
-	return false;
+    /* Removed for partner depot */
+    return false;
 }
 
 void CCStrike15BasePanel::OnOpenDisconnectConfirmationDialog( void )
-{	
+{
 #if defined( INCLUDE_SCALEFORM )
-	char const *szTitle = "#SFUI_PauseMenu_ExitGameConfirmation_Title";
+    char const *szTitle = "#SFUI_PauseMenu_ExitGameConfirmation_Title";
 	char const *szMessageDefault = "#SFUI_PauseMenu_ExitGameConfirmation_Message";
 	char const *szMessage = szMessageDefault;
 	if ( engine->IsHLTV() || engine->IsPlayingDemo() )
@@ -869,7 +878,7 @@ void CCStrike15BasePanel::OnOpenDisconnectConfirmationDialog( void )
 	{
 		szTitle = "#SFUI_PauseMenu_ExitGameConfirmation_TitleQueuedMatchmaking";
 		szMessage = "#SFUI_PauseMenu_ExitGameConfirmation_MessageQueuedMatchmaking";
-		
+
 		if ( CSGameRules()->IsPlayingCooperativeGametype() )
 		{
 			szTitle = "#SFUI_PauseMenu_ExitGameConfirmation_TitleQueuedGuardian";
@@ -916,237 +925,247 @@ void CCStrike15BasePanel::OnOpenDisconnectConfirmationDialog( void )
 	OnOpenMessageBox( szTitle, szMessage,
 		"#SFUI_PauseMenu_ExitGameConfirmation_Navigation", ( MESSAGEBOX_FLAG_OK  |  MESSAGEBOX_FLAG_CANCEL | MESSAGEBOX_FLAG_BOX_CLOSED | MESSAGEBOX_FLAG_AUTO_CLOSE_ON_DISCONNECT ), this );
 #else
-	BaseClass::OnOpenDisconnectConfirmationDialog();
+    BaseClass::OnOpenDisconnectConfirmationDialog();
 #endif
 }
 
 void CCStrike15BasePanel::OnOpenQuitConfirmationDialog( bool bForceToDesktop )
-{	
+{
 #if defined( INCLUDE_SCALEFORM )
-	m_bForceQuitToDesktopOnDisconnect = bForceToDesktop;
+    m_bForceQuitToDesktopOnDisconnect = bForceToDesktop;
 	OnOpenMessageBox( "#SFUI_MainMenu_ExitGameConfirmation_Title", "#SFUI_MainMenu_ExitGameConfirmation_Message", "#SFUI_MainMenu_ExitGameConfirmation_Navigation", ( MESSAGEBOX_FLAG_OK  |  MESSAGEBOX_FLAG_CANCEL | MESSAGEBOX_FLAG_BOX_CLOSED ), this );
 #else
-	BaseClass::OnOpenDisconnectConfirmationDialog();
+    BaseClass::OnOpenDisconnectConfirmationDialog();
 #endif
 }
 
 
 bool CCStrike15BasePanel::OnMessageBoxEvent( MessageBoxFlags_t buttonPressed )
 {
-	//Special handling for the Server Browser prompt. if we go through here, we return early and never hit the rest of the code
-	if ( m_bServerBrowserWarningRaised )
-	{
-		if ( (buttonPressed & MESSAGEBOX_FLAG_OK) || (buttonPressed & MESSAGEBOX_FLAG_TERTIARY) )
-		{
-			if (buttonPressed & MESSAGEBOX_FLAG_TERTIARY)
-			{
-				player_nevershow_communityservermessage.SetValue( true );
-			}
+    //Special handling for the Server Browser prompt. if we go through here, we return early and never hit the rest of the code
+    if ( m_bServerBrowserWarningRaised )
+    {
+        if ( (buttonPressed & MESSAGEBOX_FLAG_OK) || (buttonPressed & MESSAGEBOX_FLAG_TERTIARY) )
+        {
+            if (buttonPressed & MESSAGEBOX_FLAG_TERTIARY)
+            {
+                player_nevershow_communityservermessage.SetValue( true );
+            }
 
-			m_bCommunityServerWarningIssued = true;
-			g_VModuleLoader.ActivateModule("Servers");
-		}
+            m_bCommunityServerWarningIssued = true;
+            g_VModuleLoader.ActivateModule("Servers");
+        }
 
-		if ( buttonPressed & MESSAGEBOX_FLAG_CANCEL )
-		{
-			if ( GameUI().IsInLevel() )
-			{
-				RestorePauseMenu();
-			}
-			else
-			{
-				RestoreMainMenuScreen();
-			}
-		}
-		
-		m_bServerBrowserWarningRaised = false;
-		return true;
-	}
+        if ( buttonPressed & MESSAGEBOX_FLAG_CANCEL )
+        {
+            if ( GameUI().IsInLevel() )
+            {
+                RestorePauseMenu();
+            }
+            else
+            {
+                RestoreMainMenuScreen();
+            }
+        }
 
-	/*
-	( ( CCStrike15BasePanel* )BasePanel() )->OnOpenMessageBoxThreeway( "#SFUI_LobbyGameSettings_Title", 
-	"#SFUI_LobbyGameSettings_Text", 
-	"#SFUI_LobbyGameSettings_Help", 
-	"#SFUI_LobbyGameSettings_QMButton",
-	( MESSAGEBOX_FLAG_OK  |  MESSAGEBOX_FLAG_CANCEL | MESSAGEBOX_FLAG_TERTIARY ), 
-	this, &m_pConfirmDialog );
-	*/
+        m_bServerBrowserWarningRaised = false;
+        return true;
+    }
 
-	if ( m_bCommunityQuickPlayWarningRaised )
-	{
-		if ( (buttonPressed & MESSAGEBOX_FLAG_OK) || (buttonPressed & MESSAGEBOX_FLAG_TERTIARY) )
-		{
-			if (buttonPressed & MESSAGEBOX_FLAG_TERTIARY)
-			{
-				player_nevershow_communityservermessage.SetValue( true );
-			}
+    /*
+    ( ( CCStrike15BasePanel* )BasePanel() )->OnOpenMessageBoxThreeway( "#SFUI_LobbyGameSettings_Title",
+    "#SFUI_LobbyGameSettings_Text",
+    "#SFUI_LobbyGameSettings_Help",
+    "#SFUI_LobbyGameSettings_QMButton",
+    ( MESSAGEBOX_FLAG_OK  |  MESSAGEBOX_FLAG_CANCEL | MESSAGEBOX_FLAG_TERTIARY ),
+    this, &m_pConfirmDialog );
+    */
 
-			m_bCommunityServerWarningIssued = true;
-			DoCommunityQuickPlay();
-		}
+    if ( m_bCommunityQuickPlayWarningRaised )
+    {
+        if ( (buttonPressed & MESSAGEBOX_FLAG_OK) || (buttonPressed & MESSAGEBOX_FLAG_TERTIARY) )
+        {
+            if (buttonPressed & MESSAGEBOX_FLAG_TERTIARY)
+            {
+                player_nevershow_communityservermessage.SetValue( true );
+            }
 
-		if ( buttonPressed & MESSAGEBOX_FLAG_CANCEL )
-		{
-			if ( GameUI().IsInLevel() )
-			{
-				RestorePauseMenu();
-			}
-			else
-			{
-				RestoreMainMenuScreen();
-			}
-		}
+            m_bCommunityServerWarningIssued = true;
+            DoCommunityQuickPlay();
+        }
 
-		m_bCommunityQuickPlayWarningRaised = false;
-		return true;
-	}
+        if ( buttonPressed & MESSAGEBOX_FLAG_CANCEL )
+        {
+            if ( GameUI().IsInLevel() )
+            {
+                RestorePauseMenu();
+            }
+            else
+            {
+                RestoreMainMenuScreen();
+            }
+        }
+
+        m_bCommunityQuickPlayWarningRaised = false;
+        return true;
+    }
 
 
-	if ( buttonPressed & MESSAGEBOX_FLAG_OK )
-	{
-		if ( GameUI().IsInLevel() && !m_bForceQuitToDesktopOnDisconnect )
-		{
-			// "Exit Game" prompt (disconnect) from within the level
-			if ( m_bReturnToMPGameMenuOnDisconnect )
-				m_OnClosedCommand = ON_CLOSED_DISCONNECT_TO_MP_GAME_MENU;
-			else
-				m_OnClosedCommand = ON_CLOSED_DISCONNECT;
-		}
-		else
-		{
-			// "Quit game" prompt from main menu
-			m_OnClosedCommand = ON_CLOSED_QUIT;
-		}
-	}
+    if ( buttonPressed & MESSAGEBOX_FLAG_OK )
+    {
+        if ( GameUI().IsInLevel() && !m_bForceQuitToDesktopOnDisconnect )
+        {
+            // "Exit Game" prompt (disconnect) from within the level
+            if ( m_bReturnToMPGameMenuOnDisconnect )
+                m_OnClosedCommand = ON_CLOSED_DISCONNECT_TO_MP_GAME_MENU;
+            else
+                m_OnClosedCommand = ON_CLOSED_DISCONNECT;
+        }
+        else
+        {
+            // "Quit game" prompt from main menu
+            m_OnClosedCommand = ON_CLOSED_QUIT;
+        }
+    }
 
-	else if ( buttonPressed & MESSAGEBOX_FLAG_CANCEL )
-	{
-		// Clear the migrating status, so we can open main menu
-		if ( IsX360() && m_bMigratingActive )
-		{
-			// Close the multiplayer session to abort the server starting
-			g_pMatchFramework->CloseSession();
+    else if ( buttonPressed & MESSAGEBOX_FLAG_CANCEL )
+    {
+        // Clear the migrating status, so we can open main menu
+        if ( IsX360() && m_bMigratingActive )
+        {
+            // Close the multiplayer session to abort the server starting
+            g_pMatchFramework->CloseSession();
 
-			m_bMigratingActive = false;
+            m_bMigratingActive = false;
 
-			m_OnClosedCommand = ON_CLOSED_RESTORE_MAIN_MENU;
-		}
-		else if ( GameUI().IsInLevel() )
-		{
-			m_OnClosedCommand = ON_CLOSED_RESTORE_PAUSE_MENU;
-		}
-		else
-		{
-			m_OnClosedCommand = ON_CLOSED_RESTORE_MAIN_MENU;
-		}
+            m_OnClosedCommand = ON_CLOSED_RESTORE_MAIN_MENU;
+        }
+        else if ( GameUI().IsInLevel() )
+        {
+            m_OnClosedCommand = ON_CLOSED_RESTORE_PAUSE_MENU;
+        }
+        else
+        {
+            m_OnClosedCommand = ON_CLOSED_RESTORE_MAIN_MENU;
+        }
 
-		m_bReturnToMPGameMenuOnDisconnect = false;
-		m_bForceQuitToDesktopOnDisconnect = false;
-	}
+        m_bReturnToMPGameMenuOnDisconnect = false;
+        m_bForceQuitToDesktopOnDisconnect = false;
+    }
 
-	else if ( buttonPressed & MESSAGEBOX_FLAG_BOX_CLOSED )
-	{
-		switch ( m_OnClosedCommand )
-		{
-			case ON_CLOSED_DISCONNECT:
-				{
+    else if ( buttonPressed & MESSAGEBOX_FLAG_BOX_CLOSED )
+    {
+        switch ( m_OnClosedCommand )
+        {
+            case ON_CLOSED_DISCONNECT:
+            {
 #if defined( _X360 )
-					for ( int i=0; i<XUSER_MAX_COUNT; ++i )
+                for ( int i=0; i<XUSER_MAX_COUNT; ++i )
 					{
 						char cmdLine[80];
 						Q_snprintf( cmdLine, 80, "host_writeconfig_ss %d", i );
 						engine->ClientCmd_Unrestricted( cmdLine );
 					}
 #endif
-					// Dismiss the pause menu first, so it doesn't restore itself when this dialog goes away
-					DismissPauseMenu();
-					engine->ClientCmd_Unrestricted( "disconnect" );
-					break;
-				}
-			case ON_CLOSED_QUIT:
-				{
-					ConVarRef xbox_arcade_title_unlocked( "xbox_arcade_title_unlocked" );
-					bool bResult = xbox_arcade_title_unlocked.GetBool();
+                // Dismiss the pause menu first, so it doesn't restore itself when this dialog goes away
+                DismissPauseMenu();
+                engine->ClientCmd_Unrestricted( "disconnect" );
+                break;
+            }
+            case ON_CLOSED_QUIT:
+            {
+                ConVarRef xbox_arcade_title_unlocked( "xbox_arcade_title_unlocked" );
+                bool bResult = xbox_arcade_title_unlocked.GetBool();
 
 #if defined( _X360 )
-					bResult = xboxsystem && xboxsystem->IsArcadeTitleUnlocked();
+                bResult = xboxsystem && xboxsystem->IsArcadeTitleUnlocked();
 #elif defined ( _PS3 )
-					//$TODO: Hook up PS3 trial mode check
+                //$TODO: Hook up PS3 trial mode check
 #endif
 
-					if ( bResult )
-					{
-						RunMenuCommand( "QuitNoConfirm" );
-					}
-					else
-					{
-						// In trial mode. Show UpSell
-						RunMenuCommand( "OpenUpsellDialog" );
-					}
-				}
+                if ( bResult )
+                {
+                    RunMenuCommand( "QuitNoConfirm" );
+                }
+                else
+                {
+                    // In trial mode. Show UpSell
+                    RunMenuCommand( "OpenUpsellDialog" );
+                }
+            }
 
-				break;
+                break;
 
-			case ON_CLOSED_RESTORE_PAUSE_MENU:
-				RestorePauseMenu();
-				break;
+            case ON_CLOSED_RESTORE_PAUSE_MENU:
+                RestorePauseMenu();
+                break;
 
-			case ON_CLOSED_RESTORE_MAIN_MENU:
-				RestoreMainMenuScreen();
-				break;
+            case ON_CLOSED_RESTORE_MAIN_MENU:
+                RestoreMainMenuScreen();
+                break;
 
-			case ON_CLOSED_DISCONNECT_TO_MP_GAME_MENU:
-				RestoreMPGameMenu();
-				break;
+            case ON_CLOSED_DISCONNECT_TO_MP_GAME_MENU:
+                RestoreMPGameMenu();
+                break;
 
-			default:
-				if ( GameUI().IsInLevel() )
-				{
-					RestorePauseMenu();
-				}
-				else
-				{
-					RestoreMainMenuScreen();
-				}
-				break;
-		}
+            default:
+                if ( GameUI().IsInLevel() )
+                {
+                    RestorePauseMenu();
+                }
+                else
+                {
+                    RestoreMainMenuScreen();
+                }
+                break;
+        }
 
-		m_OnClosedCommand = ON_CLOSED_NULL;
-	}
+        m_OnClosedCommand = ON_CLOSED_NULL;
+    }
 
-	return true;
+    return true;
 }
 
 
 void CCStrike15BasePanel::OnOpenMedalsDialog( )
 {
-	CCreateMedalStatsDialogScaleform::LoadDialog( CCreateMedalStatsDialogScaleform::eDialogType_Medals );
+#if defined( INCLUDE_SCALEFORM )
+    CCreateMedalStatsDialogScaleform::LoadDialog( CCreateMedalStatsDialogScaleform::eDialogType_Medals );
+#endif
 }
 
 void CCStrike15BasePanel::OnOpenStatsDialog( )
 {
-	CCreateMedalStatsDialogScaleform::LoadDialog( CCreateMedalStatsDialogScaleform::eDialogType_Stats_Last_Match );
+#if defined( INCLUDE_SCALEFORM )
+    CCreateMedalStatsDialogScaleform::LoadDialog( CCreateMedalStatsDialogScaleform::eDialogType_Stats_Last_Match );
+#endif
 }
 
 void CCStrike15BasePanel::CloseMedalsStatsDialog( )
 {
-	CCreateMedalStatsDialogScaleform::UnloadDialog( );
+#if defined( INCLUDE_SCALEFORM )
+    CCreateMedalStatsDialogScaleform::UnloadDialog( );
+#endif
 }
 
 void CCStrike15BasePanel::OnOpenLeaderboardsDialog( )
 {
-	CCreateLeaderboardsDialogScaleform::LoadDialog( );
+#if defined( INCLUDE_SCALEFORM )
+    CCreateLeaderboardsDialogScaleform::LoadDialog( );
+#endif
 }
 
 void CCStrike15BasePanel::OnOpenCallVoteDialog( )
 {
-	SFHudCallVotePanel::LoadDialog();
+#if defined( INCLUDE_SCALEFORM )
+    SFHudCallVotePanel::LoadDialog();
+#endif
 }
 
 void CCStrike15BasePanel::OnOpenMarketplace( )
 {
 #ifdef _X360
-	// $TODO Replace placeholder offer ID with real one
+    // $TODO Replace placeholder offer ID with real one
 	engine->ClientCmd( VarArgs("x360_marketplace_offer %d 0x1111111 dl", XSHOWMARKETPLACEDOWNLOADITEMS_ENTRYPOINT_PAIDITEMS ) );
 #endif  // _X360
 
@@ -1154,35 +1173,41 @@ void CCStrike15BasePanel::OnOpenMarketplace( )
 
 void CCStrike15BasePanel::UpdateLeaderboardsDialog( )
 {
-	CCreateLeaderboardsDialogScaleform::UpdateDialog( );
+#if defined( INCLUDE_SCALEFORM )
+    CCreateLeaderboardsDialogScaleform::UpdateDialog( );
+#endif
 }
 
 void CCStrike15BasePanel::CloseLeaderboardsDialog( )
 {
-	CCreateLeaderboardsDialogScaleform::UnloadDialog( );
+#if defined( INCLUDE_SCALEFORM )
+    CCreateLeaderboardsDialogScaleform::UnloadDialog( );
+#endif
 }
 
 void CCStrike15BasePanel::OnOpenUpsellDialog( void )
 {
-	CUpsellScaleform::ShowMenu( true );
+#if defined( INCLUDE_SCALEFORM )
+    CUpsellScaleform::ShowMenu( true );
+#endif
 }
 
 void CCStrike15BasePanel::StartExitingProcess( void )
 {
-	if (m_pSplitScreenSignon)
-	{
-		m_pSplitScreenSignon->RemoveFlashElement();
-		m_pSplitScreenSignon = NULL;
-	}
+    if (m_pSplitScreenSignon)
+    {
+        m_pSplitScreenSignon->RemoveFlashElement();
+        m_pSplitScreenSignon = NULL;
+    }
 
-	CBaseModPanel::StartExitingProcess();
+    CBaseModPanel::StartExitingProcess();
 }
 
 void CCStrike15BasePanel::RunFrame( void )
 {
 #if defined( _X360 )
-	
-	// We have a pending game voice channel check to perform - either prompt user to switch back, or if they failed to 
+
+    // We have a pending game voice channel check to perform - either prompt user to switch back, or if they failed to
 	//	OK switching back to game voice then quit the game - so run that here:
 	if ( !IsLevelLoading() && m_GameVoiceChannelRecheckTimer.HasStarted() && m_GameVoiceChannelRecheckTimer.IsElapsed() )
 	{
@@ -1202,7 +1227,7 @@ void CCStrike15BasePanel::RunFrame( void )
 			}
 			else
 			{
-				// Most likely, we tried to prompt to switch to Game Chat while the guide was open 
+				// Most likely, we tried to prompt to switch to Game Chat while the guide was open
 				// It's closed now, so prompt the user to switch again
 				Xbox_PromptSwitchToGameVoiceChannel();
 			}
@@ -1213,7 +1238,7 @@ void CCStrike15BasePanel::RunFrame( void )
 
 #ifdef _PS3
 
-#ifndef NO_STEAM
+    #ifndef NO_STEAM
 
 	if ( ( s_ePS3SaveInitState == SIS_INIT_REQUESTED ) && s_PS3SaveAsyncStatus.JobDone() )
 	{
@@ -1225,89 +1250,91 @@ void CCStrike15BasePanel::RunFrame( void )
 
 #endif
 
-	if ( m_pSplitScreenSignon )
-	{
-		m_pSplitScreenSignon->Update();
-	}
+    if ( m_pSplitScreenSignon )
+    {
+        m_pSplitScreenSignon->Update();
+    }
 
-	// Handles making sure pupups get the proper updates.  Usually just dealing with showing and hiding.
-	PopupManager::Update();
+    // Handles making sure pupups get the proper updates.  Usually just dealing with showing and hiding.
+    PopupManager::Update();
 
-	CBaseModPanel::RunFrame();
+    CBaseModPanel::RunFrame();
 
-	// Make sure stats are loaded before showing the start logo.
-	if ( IsStartScreenEnabled() && GetStatsLoaded() && !m_bStartLogoIsShowing )
-	{
-		// If on PS3, we now show the start menu option.  This is only hidden on PS3 in the scaleform so we can
-		// delay showing it until stats are loaded.
-		m_bStartLogoIsShowing = CCreateStartScreenScaleform::ShowStartLogo();
-	}
+    // Make sure stats are loaded before showing the start logo.
+    if ( IsStartScreenEnabled() && GetStatsLoaded() && !m_bStartLogoIsShowing )
+    {
+        // If on PS3, we now show the start menu option.  This is only hidden on PS3 in the scaleform so we can
+        // delay showing it until stats are loaded.
+#if defined( INCLUDE_SCALEFORM )
+        m_bStartLogoIsShowing = CCreateStartScreenScaleform::ShowStartLogo();
+#endif
+    }
 
 #ifndef NO_STEAM
-	if ( s_bSteamOverlayPositionNeedsToBeSet )
-	{
-		s_bSteamOverlayPositionNeedsToBeSet = false;
+    if ( s_bSteamOverlayPositionNeedsToBeSet )
+    {
+        s_bSteamOverlayPositionNeedsToBeSet = false;
 
-		ENotificationPosition ePos = k_EPositionTopLeft;
-		if ( !V_stricmp( ui_steam_overlay_notification_position.GetString(), "topright" ) )
-			ePos = k_EPositionTopRight;
-		else if ( !V_stricmp( ui_steam_overlay_notification_position.GetString(), "bottomright" ) )
-			ePos = k_EPositionBottomRight;
-		else if ( !V_stricmp( ui_steam_overlay_notification_position.GetString(), "bottomleft" ) )
-			ePos = k_EPositionBottomLeft;
-		else if ( !V_stricmp( ui_steam_overlay_notification_position.GetString(), "topleft" ) )
-			ePos = k_EPositionTopLeft;
-		steamapicontext->SteamUtils()->SetOverlayNotificationPosition( ePos );
-	}
+        ENotificationPosition ePos = k_EPositionTopLeft;
+        if ( !V_stricmp( ui_steam_overlay_notification_position.GetString(), "topright" ) )
+            ePos = k_EPositionTopRight;
+        else if ( !V_stricmp( ui_steam_overlay_notification_position.GetString(), "bottomright" ) )
+            ePos = k_EPositionBottomRight;
+        else if ( !V_stricmp( ui_steam_overlay_notification_position.GetString(), "bottomleft" ) )
+            ePos = k_EPositionBottomLeft;
+        else if ( !V_stricmp( ui_steam_overlay_notification_position.GetString(), "topleft" ) )
+            ePos = k_EPositionTopLeft;
+        steamapicontext->SteamUtils()->SetOverlayNotificationPosition( ePos );
+    }
 #endif
 
-	static bool s_bConnectLobbyChecked = false;
-	if ( IsPC() && !s_bConnectLobbyChecked && g_flReadyToCheckForPCBootInvite && ( ( Plat_FloatTime() - g_flReadyToCheckForPCBootInvite ) > 2.5f ) )
-	{
-		s_bConnectLobbyChecked = true;
+    static bool s_bConnectLobbyChecked = false;
+    if ( IsPC() && !s_bConnectLobbyChecked && g_flReadyToCheckForPCBootInvite && ( ( Plat_FloatTime() - g_flReadyToCheckForPCBootInvite ) > 2.5f ) )
+    {
+        s_bConnectLobbyChecked = true;
 
-		// push initial rich presence string
-		( void ) clientdll->GetRichPresenceStatusString();
+        // push initial rich presence string
+        ( void ) clientdll->GetRichPresenceStatusString();
 
-		// if we were launched with "+connect_lobby <lobbyid>" on the command line, join that lobby immediately
-		uint64 nLobbyID = 0ull;
-		sscanf( CommandLine()->ParmValue( "+connect_lobby", "" ), "%llu", &nLobbyID );
-		if ( nLobbyID != 0 )
-		{
-			Msg( "Connecting to lobby: 0x%llX\n", nLobbyID );
-			KeyValues *kvEvent = new KeyValues( "OnSteamOverlayCall::LobbyJoin" );
-			kvEvent->SetUint64( "sessionid", nLobbyID );
-			g_pMatchFramework->GetEventsSubscription()->BroadcastEvent( kvEvent );
-		}
-		// Check if we were launched with +connect command and connect to that server
-		else if ( char const *szConnectAdr = CommandLine()->ParmValue( "+connect" ) )
-		{
-			Msg( "Executing deferred connect command: %s\n", szConnectAdr );
-			engine->ExecuteClientCmd( CFmtStr( "connect %s -%s\n", szConnectAdr, "ConnectStringOnCommandline" ) );
-		}
-		// Check if we were launched with +playcast command and connect to that server
-		else if ( char const *szPlaycastUrl = CommandLine()->ParmValue( "+playcast" ) )
-		{
-			Msg( "Executing deferred playcast command: %s\n", szPlaycastUrl );
-			engine->ExecuteClientCmd( CFmtStr( "playcast %s%s%s\n", ((szPlaycastUrl[0]=='"') ? "" : "\""), szPlaycastUrl, ((szPlaycastUrl[0]=='"') ? "" : "\"" )) );
-		}
-		else if ( char const *szEconActionPreview = CommandLine()->ParmValue( "+csgo_econ_action_preview" ) )
-		{
-			Msg( "Executing deferred econ action preview: %s\n", szEconActionPreview );
-			engine->ExecuteClientCmd( CFmtStr( "csgo_econ_action_preview %s\n", szEconActionPreview ) );
-		}
-		else if ( char const *szDownloadMatch = CommandLine()->ParmValue( "+csgo_download_match" ) )
-		{
-			Msg( "Executing deferred download match: %s\n", szDownloadMatch );
-			engine->ExecuteClientCmd( CFmtStr( "csgo_download_match %s\n", szDownloadMatch ) );
-		}
-		else if ( char const *szPlayDemoFirstArgumentParm = CommandLine()->ParmValue( "+playdemo" ) )
-		{
-			// need to handle more than one parameter on +playdemo commands
-			if ( int nPlayDemoParm = CommandLine()->FindParm( "+playdemo" ) )
-			{
-				CUtlBuffer build( 0, 0, CUtlBuffer::TEXT_BUFFER );
-				build.PutString( szPlayDemoFirstArgumentParm );
+        // if we were launched with "+connect_lobby <lobbyid>" on the command line, join that lobby immediately
+        uint64 nLobbyID = 0ull;
+        sscanf( CommandLine()->ParmValue( "+connect_lobby", "" ), "%llu", &nLobbyID );
+        if ( nLobbyID != 0 )
+        {
+            Msg( "Connecting to lobby: 0x%llX\n", nLobbyID );
+            KeyValues *kvEvent = new KeyValues( "OnSteamOverlayCall::LobbyJoin" );
+            kvEvent->SetUint64( "sessionid", nLobbyID );
+            g_pMatchFramework->GetEventsSubscription()->BroadcastEvent( kvEvent );
+        }
+            // Check if we were launched with +connect command and connect to that server
+        else if ( char const *szConnectAdr = CommandLine()->ParmValue( "+connect" ) )
+        {
+            Msg( "Executing deferred connect command: %s\n", szConnectAdr );
+            engine->ExecuteClientCmd( CFmtStr( "connect %s -%s\n", szConnectAdr, "ConnectStringOnCommandline" ) );
+        }
+            // Check if we were launched with +playcast command and connect to that server
+        else if ( char const *szPlaycastUrl = CommandLine()->ParmValue( "+playcast" ) )
+        {
+            Msg( "Executing deferred playcast command: %s\n", szPlaycastUrl );
+            engine->ExecuteClientCmd( CFmtStr( "playcast %s%s%s\n", ((szPlaycastUrl[0]=='"') ? "" : "\""), szPlaycastUrl, ((szPlaycastUrl[0]=='"') ? "" : "\"" )) );
+        }
+        else if ( char const *szEconActionPreview = CommandLine()->ParmValue( "+csgo_econ_action_preview" ) )
+        {
+            Msg( "Executing deferred econ action preview: %s\n", szEconActionPreview );
+            engine->ExecuteClientCmd( CFmtStr( "csgo_econ_action_preview %s\n", szEconActionPreview ) );
+        }
+        else if ( char const *szDownloadMatch = CommandLine()->ParmValue( "+csgo_download_match" ) )
+        {
+            Msg( "Executing deferred download match: %s\n", szDownloadMatch );
+            engine->ExecuteClientCmd( CFmtStr( "csgo_download_match %s\n", szDownloadMatch ) );
+        }
+        else if ( char const *szPlayDemoFirstArgumentParm = CommandLine()->ParmValue( "+playdemo" ) )
+        {
+            // need to handle more than one parameter on +playdemo commands
+            if ( int nPlayDemoParm = CommandLine()->FindParm( "+playdemo" ) )
+            {
+                CUtlBuffer build( 0, 0, CUtlBuffer::TEXT_BUFFER );
+                build.PutString( szPlayDemoFirstArgumentParm );
 
 				// append all the stuff upafter the first argument (which is handled above) until the next command line argument (starting with a + or -)
 				// this handles paths with spaces as well as the optional 2 extra parameters for playdemo
@@ -1325,16 +1352,16 @@ void CCStrike15BasePanel::RunFrame( void )
 				}
 				build.PutChar( '\0' );
 
-				Msg( "Executing deferred playdemo: %s\n", (char *)build.Base() );
-				engine->ExecuteClientCmd( CFmtStr( "playdemo %s\n", (char *)build.Base() ) );
-			}
-		}
-		else if ( char const *gcconnect = strstr( CommandLine()->GetCmdLine(), "+gcconnect" ) )
-		{
-			Msg( "Executing deferred gcconnect: %s\n", gcconnect );
-			/* Removed for partner depot */
-		}
-	}
+                Msg( "Executing deferred playdemo: %s\n", (char *)build.Base() );
+                engine->ExecuteClientCmd( CFmtStr( "playdemo %s\n", (char *)build.Base() ) );
+            }
+        }
+        else if ( char const *gcconnect = strstr( CommandLine()->GetCmdLine(), "+gcconnect" ) )
+        {
+            Msg( "Executing deferred gcconnect: %s\n", gcconnect );
+            /* Removed for partner depot */
+        }
+    }
 }
 
 void CCStrike15BasePanel::LockInput( void )
@@ -1344,17 +1371,17 @@ void CCStrike15BasePanel::LockInput( void )
 		m_pSplitScreenSignon->RevertUIToOnePlayerMode();
 	}
 
-	CBaseModPanel::LockInput();
+    CBaseModPanel::LockInput();
 }
 
 void CCStrike15BasePanel::UnlockInput( void )
 {
-	if ( m_pSplitScreenSignon )
-	{
-		m_pSplitScreenSignon->RevertUIToOnePlayerMode();
-	}
+    if ( m_pSplitScreenSignon )
+    {
+        m_pSplitScreenSignon->RevertUIToOnePlayerMode();
+    }
 
-	CBaseModPanel::UnlockInput();
+    CBaseModPanel::UnlockInput();
 }
 
 void CCStrike15BasePanel::CheckIntroMovieStaticDependencies( void )
@@ -1362,7 +1389,7 @@ void CCStrike15BasePanel::CheckIntroMovieStaticDependencies( void )
     m_bTestedStaticIntroMovieDependencies = true;
 
 #if defined( _X360 )
-	if ( ( XboxLaunch()->GetLaunchFlags() & LF_WARMRESTART ) )
+    if ( ( XboxLaunch()->GetLaunchFlags() & LF_WARMRESTART ) )
 	{
 		// xbox does not play intro startup videos if it restarted itself
         m_bNeedToStartIntroMovie = false;
@@ -1370,18 +1397,18 @@ void CCStrike15BasePanel::CheckIntroMovieStaticDependencies( void )
 	}
 #endif
 
-  	if ( Plat_IsInBenchmarkMode() )
+    if ( Plat_IsInBenchmarkMode() )
     {
         m_bNeedToStartIntroMovie = false;
-		return;
+        return;
     }
 
     if ( engine->IsInEditMode() ||
-        CommandLine()->CheckParm( "-dev" ) || 
-        CommandLine()->CheckParm( "-novid" ) || 
-        CommandLine()->CheckParm( "-allowdebug" ) ||
-        CommandLine()->CheckParm( "-console" ) ||
-        CommandLine()->CheckParm( "-toconsole" ) )
+         CommandLine()->CheckParm( "-dev" ) ||
+         CommandLine()->CheckParm( "-novid" ) ||
+         CommandLine()->CheckParm( "-allowdebug" ) ||
+         CommandLine()->CheckParm( "-console" ) ||
+         CommandLine()->CheckParm( "-toconsole" ) )
     {
         m_bNeedToStartIntroMovie = false;
         return;
@@ -1392,6 +1419,7 @@ void CCStrike15BasePanel::CheckIntroMovieStaticDependencies( void )
 
 bool CCStrike15BasePanel::IsScaleformIntroMovieEnabled( void )
 {
+#if defined( INCLUDE_SCALEFORM )
     if ( !m_bNeedToStartIntroMovie && !CCreateLegalAnimScaleform::IsActive() )
         return false;
 
@@ -1405,10 +1433,14 @@ bool CCStrike15BasePanel::IsScaleformIntroMovieEnabled( void )
     }
 
     return true;
+#else
+    return false;
+#endif
 }
 
 void CCStrike15BasePanel::CreateScaleformIntroMovie( void )
 {
+#if defined( INCLUDE_SCALEFORM )
     if ( IsScaleformIntroMovieEnabled() )
     {
         if ( !CCreateLegalAnimScaleform::IsActive() )
@@ -1423,18 +1455,22 @@ void CCStrike15BasePanel::CreateScaleformIntroMovie( void )
                 m_bIntroMovieWaitForButtonToClear = false;
         }
     }
+#endif
 }
 
 void CCStrike15BasePanel::DismissScaleformIntroMovie( void )
 {
+#if defined( INCLUDE_SCALEFORM )
     if ( IsScaleformIntroMovieEnabled() )
     {
         CCreateLegalAnimScaleform::DismissAnimation();
     }
+#endif
 }
 
 void CCStrike15BasePanel::OnPlayCreditsVideo( void )
 {
+#if defined( INCLUDE_SCALEFORM )
     if ( !CCreateLegalAnimScaleform::IsActive() )
     {
         GameUI().SetBackgroundMusicDesired( false );
@@ -1445,6 +1481,7 @@ void CCStrike15BasePanel::OnPlayCreditsVideo( void )
         else
             m_bIntroMovieWaitForButtonToClear = false;
     }
+#endif
 }
 
 
@@ -1469,7 +1506,7 @@ void CCStrike15BasePanel::ShowFatalError( uint32 unSize )
 			Q_wcsncpy( wszBuffer, szNoSpacePart1, 2 * ( nLen1 + nLen2 + 100 ) );
 			Q_snwprintf( wszBuffer + Q_wcslen( wszBuffer ), 2*100, L"%u", nMbRequired );
 			Q_wcsncpy( wszBuffer + Q_wcslen( wszBuffer ), szNoSpacePart2, 2*( nLen2 + 1 ) );
-			
+
 			// Set the body of the message to be the same as the title until we actually set the message.
 			OnOpenMessageBox( "#SFUI_MsgBx_AttractDeviceFullC", "#SFUI_Boot_ErrorFatal", " ", MESSAGEBOX_FLAG_INVALID, this, NULL, wszBuffer );
 
@@ -1546,7 +1583,7 @@ void CCStrike15BasePanel::PerformPS3GameBootWork()
 
 	// Install PS3 trophies
 	m_CallbackOnPS3TrophiesInstalled.Register( this, &CCStrike15BasePanel::Steam_OnPS3TrophiesInstalled );
-	steamapicontext->SteamUserStats()->InstallPS3Trophies();	
+	steamapicontext->SteamUserStats()->InstallPS3Trophies();
 }
 
 void CCStrike15BasePanel::Steam_OnPS3TrophiesInstalled( PS3TrophiesInstalled_t *pParam )
@@ -1565,7 +1602,7 @@ void CCStrike15BasePanel::Steam_OnPS3TrophiesInstalled( PS3TrophiesInstalled_t *
 
 	if ( eResult == k_EResultOK )
 	{
-		
+
 		CMessageBoxScaleform::UnloadAllDialogs( true );
 		OnOpenMessageBox("#SFUI_PS3_LOADING_TITLE", "#SFUI_PS3_LOADING_INIT_SAVE_UTILITY", "", MESSAGEBOX_FLAG_INVALID, this );
 
@@ -1596,5 +1633,269 @@ void CCStrike15BasePanel::Steam_OnUserStatsReceived( UserStatsReceived_t *pParam
 
 
 #endif	// !NO_STEAM && _PS3
+#elif defined(INCLUDE_ROCKETUI)
+void CCStrike15BasePanel::OnOpenCreateStartScreen( void )
+{
+}
 
-#endif	// INCLUDE_SCALEFORM
+void CCStrike15BasePanel::DismissStartScreen()
+{
+}
+
+bool CCStrike15BasePanel::IsStartScreenActive()
+{
+    return false;
+}
+
+void CCStrike15BasePanel::OnOpenCreateMainMenuScreen( void )
+{
+    ListenForGameEvent( "player_team" );
+    ListenForGameEvent( "cs_game_disconnected" );
+
+    RocketMainMenuDocument::LoadDialog( );
+}
+
+void CCStrike15BasePanel::DismissMainMenuScreen( void )
+{
+    RocketMainMenuDocument::UnloadDialog( );
+}
+
+void CCStrike15BasePanel::DismissAllMainMenuScreens( bool bHideMainMenuOnly )
+{
+    // Either hide the menus, or tear them down.
+    if( bHideMainMenuOnly )
+    {
+        if( CCStrike15BasePanel::IsRocketMainMenuEnabled() )
+            RocketMainMenuDocument::ShowPanel( false );
+    }
+    else
+    {
+        CCStrike15BasePanel::DismissMainMenuScreen();
+        CCStrike15BasePanel::DismissPauseMenu();
+    }
+
+    // Close all menu screens that may have been opened from main or pause menu
+}
+
+void CCStrike15BasePanel::RestoreMainMenuScreen( void )
+{
+
+}
+
+void CCStrike15BasePanel::RestoreMPGameMenu( void )
+{
+
+}
+
+void CCStrike15BasePanel::ShowRocketMainMenu( bool bShow )
+{
+    if( bShow && !IsRocketMainMenuEnabled() )
+        return;
+
+    RocketMainMenuDocument::ShowPanel( bShow );
+}
+
+bool CCStrike15BasePanel::IsRocketMainMenuActive( void )
+{
+    return RocketMainMenuDocument::IsActive();
+}
+
+void CCStrike15BasePanel::OnOpenCreateSingleplayerGameDialog( bool bMatchmakingFilter )
+{
+    /* Removed for partner depot */
+}
+
+void CCStrike15BasePanel::OnOpenCreateMultiplayerGameDialog( void )
+{
+    // Continue to support the vgui create server dialog
+    CBaseModPanel::OnOpenCreateMultiplayerGameDialog();
+}
+
+void CCStrike15BasePanel::OnOpenCreateMultiplayerGameCommunity( void )
+{
+
+}
+
+
+void CCStrike15BasePanel::DoCommunityQuickPlay( void )
+{
+}
+
+void CCStrike15BasePanel::OnOpenServerBrowser()
+{
+#if !defined(_GAMECONSOLE)
+    g_VModuleLoader.ActivateModule("Servers");
+#endif
+}
+
+void CCStrike15BasePanel::OnOpenCreateLobbyScreen( bool bIsHost )
+{
+}
+
+void CCStrike15BasePanel::OnOpenLobbyBrowserScreen( bool bIsHost )
+{
+}
+
+void CCStrike15BasePanel::UpdateLobbyScreen( )
+{
+}
+
+void CCStrike15BasePanel::UpdateMainMenuScreen()
+{
+}
+
+void CCStrike15BasePanel::UpdateLobbyBrowser( )
+{
+}
+
+void CCStrike15BasePanel::ShowMatchmakingStatus( void )
+{
+}
+
+void CCStrike15BasePanel::OnOpenPauseMenu( void )
+{
+    ConMsg("OnOpenPauseMenu\n");
+    ShowRocketPauseMenu( true );
+    //CBaseModPanel::OnOpenPauseMenu();
+}
+
+void CCStrike15BasePanel::OnOpenMouseDialog()
+{
+}
+
+void CCStrike15BasePanel::OnOpenKeyboardDialog()
+{
+}
+
+void CCStrike15BasePanel::OnOpenControllerDialog( void )
+{
+}
+
+void CCStrike15BasePanel::OnOpenMotionControllerMoveDialog()
+{
+}
+
+void CCStrike15BasePanel::OnOpenMotionControllerSharpshooterDialog()
+{
+}
+
+void CCStrike15BasePanel::OnOpenMotionControllerDialog()
+{
+}
+
+void CCStrike15BasePanel::OnOpenMotionCalibrationDialog()
+{
+}
+
+void CCStrike15BasePanel::OnOpenVideoSettingsDialog()
+{
+}
+
+
+void CCStrike15BasePanel::OnOpenOptionsQueued()
+{
+}
+
+void CCStrike15BasePanel::OnOpenAudioSettingsDialog()
+{
+}
+
+void CCStrike15BasePanel::OnOpenSettingsDialog( void )
+{
+}
+
+void CCStrike15BasePanel::OnOpenHowToPlayDialog( void )
+{
+}
+
+void CCStrike15BasePanel::DismissPauseMenu( void )
+{
+    ShowRocketPauseMenu( false );
+}
+
+void CCStrike15BasePanel::RestorePauseMenu( void )
+{
+    ShowRocketPauseMenu( true );
+}
+
+void CCStrike15BasePanel::ShowRocketPauseMenu( bool bShow )
+{
+    RocketPauseMenuDocument::ShowPanel( bShow, true );
+}
+
+bool CCStrike15BasePanel::IsRocketPauseMenuActive( void )
+{
+    return RocketPauseMenuDocument::IsActive();
+}
+
+bool CCStrike15BasePanel::IsRocketPauseMenuVisible( void )
+{
+    return RocketPauseMenuDocument::IsVisible();
+}
+
+void CCStrike15BasePanel::OnOpenDisconnectConfirmationDialog( void )
+{
+}
+
+void CCStrike15BasePanel::OnOpenQuitConfirmationDialog( bool bForceToDesktop )
+{
+}
+
+
+void CCStrike15BasePanel::OnOpenMedalsDialog( )
+{
+}
+
+void CCStrike15BasePanel::OnOpenStatsDialog( )
+{
+}
+
+void CCStrike15BasePanel::CloseMedalsStatsDialog( )
+{
+}
+
+void CCStrike15BasePanel::OnOpenLeaderboardsDialog( )
+{
+}
+
+void CCStrike15BasePanel::OnOpenCallVoteDialog( )
+{
+}
+
+void CCStrike15BasePanel::OnOpenMarketplace( )
+{
+}
+
+void CCStrike15BasePanel::UpdateLeaderboardsDialog( )
+{
+}
+
+void CCStrike15BasePanel::CloseLeaderboardsDialog( )
+{
+}
+
+void CCStrike15BasePanel::OnOpenUpsellDialog( void )
+{
+}
+
+void CCStrike15BasePanel::StartExitingProcess( void )
+{
+    //TODO: rocketui shutdown here.
+    CBaseModPanel::StartExitingProcess();
+}
+
+void CCStrike15BasePanel::RunFrame( void )
+{
+    CBaseModPanel::RunFrame();
+}
+
+void CCStrike15BasePanel::LockInput( void )
+{
+    CBaseModPanel::LockInput();
+}
+
+void CCStrike15BasePanel::UnlockInput( void )
+{
+    CBaseModPanel::UnlockInput();
+}
+#endif	// INCLUDE_SCALEFORM/ROCKETUI

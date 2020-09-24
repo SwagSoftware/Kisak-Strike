@@ -41,14 +41,23 @@
 
 #include "teammenu_scaleform.h"
 #include "chooseclass_scaleform.h"
+#if defined( INCLUDE_SCALEFORM )
 #include "Scaleform/HUD/sfhudinfopanel.h"
 #include "Scaleform/HUD/sfhudwinpanel.h"
 #include "Scaleform/loadingscreen_scaleform.h"
+#endif
 
 #if defined( CSTRIKE15 )
 #include "basepanel.h"
 #endif
 
+ConVar crosshair( "crosshair", "1", FCVAR_ARCHIVE  | FCVAR_SS );
+ConVar cl_disablefreezecam(
+        "cl_disablefreezecam",
+        "0",
+        FCVAR_ARCHIVE,
+        "Turn on/off freezecam on client"
+);
 static void OpenPanelWithCheck( const char *panelToOpen, const char *panelToCheck )
 {
 	IViewPortPanel *checkPanel = GetViewPortInterface()->FindPanelByName( panelToCheck );
@@ -60,6 +69,7 @@ static void OpenPanelWithCheck( const char *panelToOpen, const char *panelToChec
 
 void PrintBuyTimeOverMessage( void )
 {
+#if defined( INCLUDE_SCALEFORM )
 	CHudElement *pElement = GetHud().FindElement( "SFHudInfoPanel" );
 	if ( pElement )														
 	{																	
@@ -79,6 +89,7 @@ void PrintBuyTimeOverMessage( void )
 
 		((SFHudInfoPanel *)pElement)->SetPriorityText( buffer );				
 	}
+#endif
 }
 
 
@@ -276,13 +287,15 @@ IViewPortPanel* CounterStrikeViewport::CreatePanelByName( const char *szPanelNam
 
 	// overwrite MOD specific panel creation
 
- 	if ( Q_strcmp( PANEL_TEAM, szPanelName ) == 0 )
+#if defined( INCLUDE_SCALEFORM )
+    if ( Q_strcmp( PANEL_TEAM, szPanelName ) == 0 )
  	{
  		newpanel = new CCSTeamMenuScaleform( this );
  	}
 
 	else
-	{
+#endif
+    {
 		// create a generic base panel, don't add twice
 		newpanel = BaseClass::CreatePanelByName( szPanelName );
 	}
@@ -357,7 +370,10 @@ void CounterStrikeViewport::UpdateAllPanels( void )
 			if ( pCSPlayer->State_Get() != STATE_PICKINGTEAM && ( pCSPlayer->GetTeamNumber() == TEAM_UNASSIGNED ) && !pCSPlayer->IsHLTV() )
 			{
 				// not a member of a team and not a spectator. show the team select screen.
-				if ( !CLoadingScreenScaleform::IsOpen() && 
+				if (
+#if defined( INCLUDE_SCALEFORM )
+				        !CLoadingScreenScaleform::IsOpen() &&
+#endif
 					 ( (GetActivePanel() && !V_strcmp( GetActivePanel()->GetName(), PANEL_TEAM )) || !GetActivePanel() ) )
 				{
 					// don't show the team panel if the team panel is already up
@@ -366,8 +382,10 @@ void CounterStrikeViewport::UpdateAllPanels( void )
 			}
 			else
 			{
+#if defined( INCLUDE_SCALEFORM )
 				SFHudWinPanel * pWinPanel = GET_HUDELEMENT( SFHudWinPanel );
 				if ( pWinPanel && !pWinPanel->IsVisible() )
+#endif
 				{
 					UIToShow = PANEL_SPECGUI;
 				}

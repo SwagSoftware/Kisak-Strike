@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -10,11 +10,13 @@
 #define ICLIENTMODE_H
 
 #include <vgui/vgui.h>
+#include <inputsystem/ButtonCode.h>
 
 class CViewSetup;
 class C_BaseEntity;
 class C_BasePlayer;
 class CUserCmd;
+class AudioState_t;
 
 namespace vgui
 {

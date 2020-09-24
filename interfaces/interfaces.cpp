@@ -1,4 +1,4 @@
-//===== Copyright © 2005-2005, Valve Corporation, All rights reserved. ======//
+//===== Copyright ï¿½ 2005-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: A higher level link library for general use in the game and tools.
 //
@@ -63,6 +63,8 @@ IGameUISystemMgr *g_pGameUISystemMgr = 0;
 
 #if defined( INCLUDE_SCALEFORM )
 IScaleformUI *g_pScaleformUI = 0;
+#elif defined( INCLUDE_ROCKETUI )
+IRocketUI *g_pRocketUI = 0;
 #endif
 
 //-----------------------------------------------------------------------------
@@ -171,6 +173,8 @@ static InterfaceGlobals_t g_pInterfaceGlobals[] =
 
 #if defined( INCLUDE_SCALEFORM )
 	{ SCALEFORMUI_INTERFACE_VERSION, &g_pScaleformUI },
+#elif defined( INCLUDE_ROCKETUI )
+    { ROCKETUI_INTERFACE_VERSION, &g_pRocketUI },
 #endif
 
 };

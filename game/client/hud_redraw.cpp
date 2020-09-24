@@ -14,7 +14,9 @@
 #include "itextmessage.h"
 #include "vgui_basepanel.h"
 #include "hud_crosshair.h"
+#if defined( INCLUDE_SCALEFORM )
 #include "HUD/sfhudflashinterface.h"
+#endif
 #include <vgui/ISurface.h>
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -62,7 +64,8 @@ void CHud::DoElementThink( CHudElement* pElement, vgui::Panel* pPanel )
     }
 	
 	bool bProcessInput = visible;
-	if ( bProcessInput )
+#if defined( INCLUDE_SCALEFORM )
+    if ( bProcessInput )
 	{
 		if ( SFHudFlashInterface *pHudFlashInterface = dynamic_cast< SFHudFlashInterface * >( pElement ) )
 		{
@@ -70,6 +73,7 @@ void CHud::DoElementThink( CHudElement* pElement, vgui::Panel* pPanel )
 				bProcessInput = false;
 		}
 	}
+#endif
     if ( bProcessInput )
     {
 	    pElement->ProcessInput();

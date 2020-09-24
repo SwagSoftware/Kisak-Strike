@@ -31,7 +31,10 @@
 
 #ifdef DX_TO_GL_ABSTRACTION
 	#ifndef WIN32
-	#define Debugger DebuggerBreak
+	//lwss - REEEE this was invading other code.
+	//TODO: go replace where this is used. It's mainly just for graphics debugging
+	//#define Debugger DebuggerBreak
+	//lwss end
 	#endif
 	#undef CurrentTime
 

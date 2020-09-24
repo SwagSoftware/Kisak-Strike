@@ -328,8 +328,8 @@ private:
 	int m_MouseButtonDownY;
 			
 #if WITH_OVERLAY_CURSOR_VISIBILITY_WORKAROUND
-	int m_nForceCursorVisible;
-	int m_nForceCursorVisiblePrev;
+	bool m_nForceCursorVisible;
+	bool m_nForceCursorVisiblePrev;
 	SDL_Cursor* m_hSystemArrowCursor;
 #endif
 
@@ -530,8 +530,8 @@ InitReturnVal_t CSDLMgr::Init()
 	m_bRawInput = false;
 
 #if WITH_OVERLAY_CURSOR_VISIBILITY_WORKAROUND
-	m_nForceCursorVisible = 0;
-	m_nForceCursorVisiblePrev = 0;
+	m_nForceCursorVisible = false;
+	m_nForceCursorVisiblePrev = false;
 	m_hSystemArrowCursor = SDL_CreateSystemCursor( SDL_SYSTEM_CURSOR_ARROW );
 #endif
 			
@@ -1013,10 +1013,10 @@ void CSDLMgr::OnFrameRendered()
 	}
 
 #if WITH_OVERLAY_CURSOR_VISIBILITY_WORKAROUND
-	if ( m_nForceCursorVisible > 0 )
+	if ( m_nForceCursorVisible )
 	{
 		// Edge case: We were just asked to force the cursor visible, so do it now.
-		if ( m_nForceCursorVisiblePrev == 0 ) 
+		if ( !m_nForceCursorVisiblePrev )
 		{
 			SDL_SetCursor( m_hSystemArrowCursor );
 			SDL_SetWindowGrab( m_Window, SDL_FALSE );
@@ -1028,10 +1028,8 @@ void CSDLMgr::OnFrameRendered()
 		m_nForceCursorVisiblePrev = m_nForceCursorVisible;
 		return;
 	} 
-	else if ( m_nForceCursorVisiblePrev > 0 )
+	else if ( m_nForceCursorVisiblePrev )
 	{
-		Assert( m_nForceCursorVisible == 0 );
-
 		// Make sure to give the normal processing a shot at putting things
 		// back correctly.
 		m_bSetMouseCursorCalled = true;
@@ -2034,15 +2032,13 @@ void CSDLMgr::SetGammaRamp( const uint16 *pRed, const uint16 *pGreen, const uint
 //===============================================================================
 void CSDLMgr::ForceSystemCursorVisible()
 {
-	Assert( m_nForceCursorVisible >= 0 );
-	m_nForceCursorVisible += 1;
+	m_nForceCursorVisible = true;
 }
 
 //===============================================================================
 void CSDLMgr::UnforceSystemCursorVisible()
 {
-	Assert( m_nForceCursorVisible >= 1 );
-	m_nForceCursorVisible -= 1;
+	m_nForceCursorVisible = false;
 }
 
 #endif

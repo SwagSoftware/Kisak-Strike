@@ -69,6 +69,8 @@
 
 #if defined( INCLUDE_SCALEFORM )
 #include "scaleformui/scaleformui.h"
+#elif defined( INCLUDE_ROCKETUI )
+#include "rocketui/rocketui.h"
 #endif
 
 #include <vgui/ILocalize.h>
@@ -415,8 +417,10 @@ void CGame::DispatchInputEvent( const InputEvent_t &event )
 
 			if ( event.m_nData >= JOYSTICK_FIRST_AXIS )
 			{
-				if ( g_pScaleformUI && g_pScaleformUI->HandleInputEvent( event ) )
+#if defined( INCLUDE_SCALEFORM )
+                if ( g_pScaleformUI && g_pScaleformUI->HandleInputEvent( event ) )
 					break;
+#endif
 
 				if ( g_pMatSystemSurface && g_pMatSystemSurface->HandleInputEvent( event ) )
 					break;
@@ -433,6 +437,11 @@ void CGame::DispatchInputEvent( const InputEvent_t &event )
 				//		handling anything underneath the console
 				if ( !vguiActive && g_pScaleformUI && g_pScaleformUI->HandleInputEvent( event ) )
 					break;
+#elif defined( INCLUDE_ROCKETUI )
+                bool vguiActive = IsPC() && cv_vguipanel_active.GetBool();
+
+                if ( !vguiActive && g_pRocketUI && g_pRocketUI->HandleInputEvent( event ) )
+                    break;
 #endif // INCLUDE_SCALEFORM
 			}
 
@@ -477,6 +486,11 @@ void CGame::DispatchInputEvent( const InputEvent_t &event )
 		//		handling anything underneath the console
 		if ( !vguiActive && g_pScaleformUI && g_pScaleformUI->HandleInputEvent( event ) )
 			break;
+#elif defined( INCLUDE_ROCKETUI )
+        bool vguiActive = IsPC() && cv_vguipanel_active.GetBool();
+
+        if ( !vguiActive && g_pRocketUI && g_pRocketUI->HandleInputEvent( event ) )
+            break;
 #endif // INCLUDE_SCALEFORM
 
 		for ( int i=0; i < ARRAYSIZE( g_GameMessageHandlers ); i++ )

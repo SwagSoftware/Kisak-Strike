@@ -462,11 +462,11 @@ void CBaseViewport::ShowPanel( IViewPortPanel* pPanel, bool state )
 					IViewPortPanel* pSpecGuiPanel = FindPanelByName(PANEL_SPECGUI);
 					if ( pSpecGuiPanel != m_pActivePanel )
 					{
-						SFDevMsg("CBaseViewport::ShowPanel(0) %s\n", m_pActivePanel->GetName());
+						Msg("CBaseViewport::ShowPanel(0) %s\n", m_pActivePanel->GetName());
 						m_pActivePanel->ShowPanel( false );
 					}
 #else
-					SFDevMsg("CBaseViewport::ShowPanel(0) %s\n", m_pActivePanel->GetName());
+					Msg("CBaseViewport::ShowPanel(0) %s\n", m_pActivePanel->GetName());
 					m_pActivePanel->ShowPanel( false );
 #endif
 				}
@@ -498,14 +498,14 @@ void CBaseViewport::ShowPanel( IViewPortPanel* pPanel, bool state )
 			m_pActivePanel = m_pLastActivePanel;
 			m_pLastActivePanel = NULL;
 
-			SFDevMsg("CBaseViewport::ShowPanel(1) %s\n", m_pActivePanel->GetName());
+			Msg("CBaseViewport::ShowPanel(1) %s\n", m_pActivePanel->GetName());
 			m_pActivePanel->ShowPanel( true );
 		}
 #endif
 	}
 
 	// just show/hide panel
-	SFDevMsg("CBaseViewport::ShowPanel(%d) %s\n", (int)state, pPanel->GetName());
+	Msg("CBaseViewport::ShowPanel(%d) %s\n", (int)state, pPanel->GetName());
 	pPanel->ShowPanel( state );
 
 	UpdateAllPanels(); // let other panels rearrange

@@ -15,8 +15,10 @@
 // Purpose: The overlay doesn't properly work on OS X 64-bit because a bunch of 
 // Cocoa functions that we hook were never ported to 64-bit. Until that is fixed,
 // we basically have to work around this by making sure the cursor is visible 
-// and set to something that is reasonable for usage in the overlay. 
-#if ( defined( OSX ) && defined( PLATFORM_64BITS ) && !defined( NO_STEAM ) )
+// and set to something that is reasonable for usage in the overlay.
+// lwss - add || defined( LINUX ). because I want to use this for rocketui
+#if ( defined( OSX ) && defined( PLATFORM_64BITS ) && !defined( NO_STEAM ) ) || defined( LINUX )
+// lwss end
 #define WITH_OVERLAY_CURSOR_VISIBILITY_WORKAROUND 1 
 #endif
 

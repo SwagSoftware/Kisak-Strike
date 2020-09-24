@@ -181,6 +181,11 @@ IScaleformUI* ScaleformUI()
 {
 	return g_pScaleformUI;
 }
+#elif defined( INCLUDE_ROCKETUI )
+//IRocketUI* RocketUI()
+//{
+//    return g_pRocketUI;
+//}
 #endif
 
 
@@ -878,15 +883,21 @@ void CGameUI::OnDisconnectFromServer( uint8 eSteamLoginFailure )
 
 	if ( eSteamLoginFailure == STEAMLOGINFAILURE_NOSTEAMLOGIN )
 	{
-		CLoadingScreenScaleform::DisplayNoSteamConnectionError();
+#if defined( INCLUDE_SCALEFORM )
+        CLoadingScreenScaleform::DisplayNoSteamConnectionError();
+#endif
 	}
 	else if ( eSteamLoginFailure == STEAMLOGINFAILURE_VACBANNED )
 	{
-		CLoadingScreenScaleform::DisplayVACBannedError();
+#if defined( INCLUDE_SCALEFORM )
+        CLoadingScreenScaleform::DisplayVACBannedError();
+#endif
 	}
 	else if ( eSteamLoginFailure == STEAMLOGINFAILURE_LOGGED_IN_ELSEWHERE )
 	{
-		CLoadingScreenScaleform::DisplayLoggedInElsewhereError();
+#if defined( INCLUDE_SCALEFORM )
+        CLoadingScreenScaleform::DisplayLoggedInElsewhereError();
+#endif
 	}
 }
 
@@ -1015,9 +1026,10 @@ void CGameUI::StartProgressBar()
 {
 	// open a loading dialog
 	m_szPreviousStatusText[0] = 0;
-	CLoadingScreenScaleform::SetProgressPoint( 0.0f );
+#if defined( INCLUDE_SCALEFORM )
+    CLoadingScreenScaleform::SetProgressPoint( 0.0f );
 	CLoadingScreenScaleform::Open();
-
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1025,8 +1037,12 @@ void CGameUI::StartProgressBar()
 //-----------------------------------------------------------------------------
 bool CGameUI::ContinueProgressBar( float progressFraction, bool showDialog )
 {
-	CLoadingScreenScaleform::Activate();
+#if defined( INCLUDE_SCALEFORM )
+    CLoadingScreenScaleform::Activate();
 	return CLoadingScreenScaleform::SetProgressPoint( progressFraction, showDialog );
+#else
+	return false;
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1034,7 +1050,8 @@ bool CGameUI::ContinueProgressBar( float progressFraction, bool showDialog )
 //-----------------------------------------------------------------------------
 void CGameUI::StopProgressBar(bool bError, const char *failureReason, const char *extendedReason)
 {
-	if ( IsInLevel() )
+#if defined( INCLUDE_SCALEFORM )
+    if ( IsInLevel() )
 	{
 		CLoadingScreenScaleform::FinishLoading();			
 	}
@@ -1042,7 +1059,7 @@ void CGameUI::StopProgressBar(bool bError, const char *failureReason, const char
 	{
 		CLoadingScreenScaleform::CloseLoadingScreen();
 	}
-
+#endif
 // CStrike15 handles error messages elsewhere. (ClientModeCSFullscreen::OnEvent)
 #if !defined( CSTRIKE15 )
 	if ( !IsGameConsole() && bError )
@@ -1063,7 +1080,9 @@ bool CGameUI::SetProgressBarStatusText(const char *statusText, bool showDialog )
 	if (!stricmp(statusText, m_szPreviousStatusText))
 		return false;
 
-	CLoadingScreenScaleform::SetStatusText( statusText, showDialog );
+#if defined( INCLUDE_SCALEFORM )
+    CLoadingScreenScaleform::SetStatusText( statusText, showDialog );
+#endif
 	Q_strncpy(m_szPreviousStatusText, statusText, sizeof(m_szPreviousStatusText));
 	return true;
 }
@@ -1073,7 +1092,9 @@ bool CGameUI::SetProgressBarStatusText(const char *statusText, bool showDialog )
 //-----------------------------------------------------------------------------
 void CGameUI::SetSecondaryProgressBar(float progress /* range [0..1] */)
 {
-	CLoadingScreenScaleform::SetSecondaryProgress( progress );
+#if defined( INCLUDE_SCALEFORM )
+    CLoadingScreenScaleform::SetSecondaryProgress( progress );
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1083,8 +1104,9 @@ void CGameUI::SetSecondaryProgressBarText( const wchar_t *desc )
 {
 	if (!desc)
 		return;
-
+#if defined( INCLUDE_SCALEFORM )
 	CLoadingScreenScaleform::SetSecondaryProgressText( desc );
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1092,7 +1114,10 @@ void CGameUI::SetSecondaryProgressBarText( const wchar_t *desc )
 //-----------------------------------------------------------------------------
 bool CGameUI::SetShowProgressText( bool show )
 {
-	return CLoadingScreenScaleform::SetShowProgressText( show );
+#if defined( INCLUDE_SCALEFORM )
+    return CLoadingScreenScaleform::SetShowProgressText( show );
+#endif
+    return false;
 }
 
 
@@ -1206,14 +1231,18 @@ void CGameUI::ShowMessageDialog( const uint nType, vgui::Panel *pOwner )
 void CGameUI::ShowMessageDialog( const char* messageID, const char* titleID )
 {
 #if defined( CSTRIKE15 )
+#if defined( INCLUDE_SCALEFORM )
 	( ( CCStrike15BasePanel* )BasePanel() )->OnOpenMessageBox( titleID, messageID, "#SFUI_Legend_Ok", MESSAGEBOX_FLAG_OK, NULL, NULL );
+#endif
 #endif
 }
 
 void CGameUI::CreateCommandMsgBox( const char* pszTitle, const char* pszMessage, bool showOk, bool showCancel, const char* okCommand, const char* cancelCommand, const char* closedCommand, const char* pszLegend )
 {
 #if defined( CSTRIKE15 )
+#if defined( INCLUDE_SCALEFORM )
 	( ( CCStrike15BasePanel* )BasePanel() )->CreateCommandMsgBox( pszTitle, pszMessage, showOk, showCancel, okCommand, cancelCommand, closedCommand, pszLegend );
+#endif
 #endif
 
 }
@@ -1221,7 +1250,9 @@ void CGameUI::CreateCommandMsgBox( const char* pszTitle, const char* pszMessage,
 void CGameUI::CreateCommandMsgBoxInSlot( ECommandMsgBoxSlot slot, const char* pszTitle, const char* pszMessage, bool showOk, bool showCancel, const char* okCommand, const char* cancelCommand, const char* closedCommand, const char* pszLegend )
 {
 #if defined( CSTRIKE15 )
+#if defined( INCLUDE_SCALEFORM )
 	( ( CCStrike15BasePanel* )BasePanel() )->CreateCommandMsgBoxInSlot( slot, pszTitle, pszMessage, showOk, showCancel, okCommand, cancelCommand, closedCommand, pszLegend );
+#endif
 #endif
 }
 
@@ -1267,12 +1298,16 @@ bool CGameUI::IsTransitionEffectEnabled()
 
 void CGameUI::StartLoadingScreenForCommand( const char* command )
 {
-	CLoadingScreenScaleform::LoadDialogForCommand( command );
+#if defined( INCLUDE_SCALEFORM )
+    CLoadingScreenScaleform::LoadDialogForCommand( command );
+#endif
 }
 
 void CGameUI::StartLoadingScreenForKeyValues( KeyValues* keyValues )
 {
-	CLoadingScreenScaleform::LoadDialogForKeyValues( keyValues );
+#if defined( INCLUDE_SCALEFORM )
+    CLoadingScreenScaleform::LoadDialogForKeyValues( keyValues );
+#endif
 }
 
 

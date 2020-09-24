@@ -1,4 +1,4 @@
-//===== Copyright © 2005-2005, Valve Corporation, All rights reserved. ======//
+//===== Copyright ï¿½ 2005-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: A higher level link library for general use in the game and tools.
 //
@@ -92,6 +92,7 @@ class IVGuiRenderSurface;
 
 class IScaleformUISystemMgr;
 class IScaleformUI;
+class IRocketUI;
 
 namespace vgui
 {
@@ -199,6 +200,9 @@ DECLARE_TIER3_INTERFACE( IGameUISystemMgr, g_pGameUISystemMgr );
 #if defined( INCLUDE_SCALEFORM )
 #define SCALEFORMUI_INTERFACE_VERSION "ScaleformUI002"
 DECLARE_TIER3_INTERFACE( IScaleformUI, g_pScaleformUI );
+#elif defined( INCLUDE_ROCKETUI )
+#define ROCKETUI_INTERFACE_VERSION "RocketUI001"
+DECLARE_TIER3_INTERFACE( IRocketUI, g_pRocketUI );
 #endif
 
 

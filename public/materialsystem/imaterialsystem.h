@@ -1827,6 +1827,9 @@ public:
 
 	virtual void AdvanceAndRenderScaleformSlot( int slot ) = 0;
 	virtual void AdvanceAndRenderScaleformCursor() = 0;
+#elif defined( INCLUDE_ROCKETUI )
+	virtual void RenderRocketHUD() = 0;
+	virtual void RenderRocketMenu() = 0;
 #endif
 
 	virtual void SetRenderingPaint( bool bEnable ) = 0;

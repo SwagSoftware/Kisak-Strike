@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Entity that propagates general data needed by clients for every player.
 //
@@ -95,8 +95,11 @@ C_PlayerResource::C_PlayerResource()
 	}
 
 	g_PR = this;
-
+#if defined ( INCLUDE_SCALEFORM )
 	g_pScaleformUI->AddDeviceDependentObject( this );
+#elif defined ( INCLUDE_ROCKETUI )
+    g_pRocketUI->AddDeviceDependentObject( this );
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -104,6 +107,7 @@ C_PlayerResource::C_PlayerResource()
 //-----------------------------------------------------------------------------
 C_PlayerResource::~C_PlayerResource()
 {
+#if defined( INCLUDE_SCALEFORM )
 	for ( int i = 1; i <= MAX_PLAYERS; i++ )
 	{
 		if ( m_Xuids[i] != INVALID_XUID )
@@ -112,9 +116,11 @@ C_PlayerResource::~C_PlayerResource()
 		}
 	}
 
-	g_PR = NULL;
-
 	g_pScaleformUI->RemoveDeviceDependentObject( this );
+#elif defined( INCLUDE_ROCKETUI )
+    g_pRocketUI->RemoveDeviceDependentObject( this );
+#endif
+    g_PR = NULL;
 }
 
 void C_PlayerResource::OnDataChanged(DataUpdateType_t updateType)
@@ -156,8 +162,8 @@ void C_PlayerResource::UpdateXuids( void )
 
 		if ( newXuid != m_Xuids[i] )
 		{
-			bool bAddRefSuccess = false;
-
+#if defined ( INCLUDE_SCALEFORM )
+            bool bAddRefSuccess = false;
 			if ( m_Xuids[i] != INVALID_XUID )
 			{
 				g_pScaleformUI->AvatarImageRelease( m_Xuids[i] );
@@ -167,8 +173,10 @@ void C_PlayerResource::UpdateXuids( void )
 			{
 				bAddRefSuccess = g_pScaleformUI->AvatarImageAddRef( newXuid );
 			}
-
-			if ( bAddRefSuccess || ( newXuid == INVALID_XUID ) )
+#else
+            bool bAddRefSuccess = true;
+#endif
+            if ( bAddRefSuccess || ( newXuid == INVALID_XUID ) )
 			{
 				m_Xuids[i] = newXuid;
 			}
@@ -689,7 +697,8 @@ void C_PlayerResource::FillXuidText( int iIndex, char *buf, int bufSize )
 
 void C_PlayerResource::DeviceLost( void )
 {
-	for ( int i = 1; i <= MAX_PLAYERS; i++ )
+#if defined ( INCLUDE_SCALEFORM )
+    for ( int i = 1; i <= MAX_PLAYERS; i++ )
 	{
 		if ( m_Xuids[i] != INVALID_XUID )
 		{
@@ -697,6 +706,7 @@ void C_PlayerResource::DeviceLost( void )
 			m_Xuids[i] = INVALID_XUID;
 		}
 	}
+#endif
 }
 
 void C_PlayerResource::DeviceReset( void *pDevice, void *pPresentParameters, void *pHWnd )

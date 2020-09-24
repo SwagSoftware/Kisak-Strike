@@ -3575,6 +3575,9 @@ void CViewRender::RenderView( const CViewSetup &view, const CViewSetup &hudViewS
 #if defined( INCLUDE_SCALEFORM )
 			pRenderContext->SetScaleformSlotViewport( SF_SS_SLOT( slot ), hudViewSetup.x, hudViewSetup.y, hudViewSetup.width, hudViewSetup.height );
 			pRenderContext->AdvanceAndRenderScaleformSlot( SF_SS_SLOT( slot ) );
+#elif defined( INCLUDE_ROCKETUI )
+            //TODO: splitscreen slot rocket ui
+            pRenderContext->RenderRocketHUD();
 #endif
 			pRenderContext->Flush();
 		}

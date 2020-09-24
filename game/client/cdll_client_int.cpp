@@ -4,6 +4,7 @@
 //===============================================================================
 
 #include "cbase.h"
+#include "cdll_int.h"
 #include <crtmemdebug.h>
 #include <econ/econ_item_system.h>
 #include "vgui_int.h"
@@ -112,6 +113,8 @@
 #include "c_keyvalue_saver.h"
 #include "cs_workshop_manager.h"
 #include "c_team.h"
+#include "cs_gamerules.h"
+#include "c_cs_player.h"
 #include "cstrike15/fatdemo.h"
 #endif
 
@@ -156,14 +159,19 @@
 #include "achievements_and_stats_interface.h"
 
 #if defined ( CSTRIKE15 )
-#include "iachievementmgr.h"
-#include "hud.h"
-#include "hud_element_helper.h"
-#include "Scaleform/HUD/sfhud_chat.h"
-#include "Scaleform/HUD/sfhud_radio.h"
-#include "Scaleform/options_scaleform.h"
-#include "Scaleform/loadingscreen_scaleform.h"
-#include "Scaleform/HUD/sfhud_deathnotice.h"
+    #include "iachievementmgr.h"
+    #include "hud.h"
+    #include "hud_element_helper.h"
+    #if defined( INCLUDE_SCALEFORM )
+        #include "Scaleform/HUD/sfhud_chat.h"
+        #include "Scaleform/HUD/sfhud_radio.h"
+        #include "Scaleform/options_scaleform.h"
+        #include "Scaleform/loadingscreen_scaleform.h"
+        #include "Scaleform/HUD/sfhud_deathnotice.h"
+    #elif defined( INCLUDE_ROCKETUI )
+        #include "RocketUI/rkhud_chat.h"
+        #include "RocketUI/rkhud_loadingscreen.h"
+    #endif
 #endif
 
 #ifdef PORTAL
@@ -255,6 +263,8 @@ IRenderToRTHelper *g_pRenderToRTHelper = NULL;
 
 #if defined( INCLUDE_SCALEFORM )
 IScaleformUI* g_pScaleformUI = NULL;
+#elif defined( INCLUDE_ROCKETUI )
+IRocketUI* g_pRocketUI = NULL;
 #endif
 
 IUploadGameStats *gamestatsuploader = NULL;
@@ -1025,8 +1035,10 @@ public:
 	virtual void PrepareSignedEvidenceData( void *pvData, int numBytes, CDemoPlaybackParameters_t const *pPlaybackParameters );
 	virtual bool ShouldSkipEvidencePlayback( CDemoPlaybackParameters_t const *pPlaybackParameters );
 
-	// Scaleform slot controller
+#if defined( INCLUDE_SCALEFORM )
+    // Scaleform slot controller
 	virtual IScaleformSlotInitController * GetScaleformSlotInitController();
+#endif
 
 	virtual bool IsConnectedUserInfoChangeAllowed( IConVar *pCvar );
 	virtual void OnCommandDuringPlayback( char const *cmd );
@@ -1409,6 +1421,8 @@ int CHLClient::Connect( CreateInterfaceFn appSystemFactory, CGlobalVarsBase *pGl
 
 #if defined( INCLUDE_SCALEFORM )
 	g_pScaleformUI = ( IScaleformUI* ) appSystemFactory( SCALEFORMUI_INTERFACE_VERSION, NULL );
+#elif defined( INCLUDE_ROCKETUI )
+    g_pRocketUI = ( IRocketUI* ) appSystemFactory( ROCKETUI_INTERFACE_VERSION, NULL );
 #endif
 
 #ifndef NO_STEAM
@@ -4196,7 +4210,8 @@ void CHLClient::GetStatus( char *buffer, int bufsize )
 #if defined ( CSTRIKE15 )
 bool CHLClient::IsChatRaised( void )
 {
-	SFHudChat* pChat = GET_HUDELEMENT( SFHudChat );
+#if defined( INCLUDE_SCALEFORM )
+    SFHudChat* pChat = GET_HUDELEMENT( SFHudChat );
 
 	if ( pChat == NULL )
 	{
@@ -4206,11 +4221,21 @@ bool CHLClient::IsChatRaised( void )
 	{
 		return pChat->ChatRaised();
 	}
+#elif defined( INCLUDE_ROCKETUI )
+	RkHudChat* pChat = GET_HUDELEMENT( RkHudChat );
+	if( !pChat )
+	    return false;
+
+	return pChat->ChatRaised();
+#else
+	return false;
+#endif
 }
 
 bool CHLClient::IsRadioPanelRaised( void )
 {
-	SFHudRadio* pRadio = GET_HUDELEMENT( SFHudRadio );
+#if defined( INCLUDE_SCALEFORM )
+    SFHudRadio* pRadio = GET_HUDELEMENT( SFHudRadio );
 
 	if ( pRadio == NULL )
 	{
@@ -4220,14 +4245,21 @@ bool CHLClient::IsRadioPanelRaised( void )
 	{
 		return pRadio->PanelRaised();
 	}
+#else
+	return false;
+#endif
 }
 
 
 bool CHLClient::IsBindMenuRaised( void )
 {
-	return COptionsScaleform::IsBindMenuRaised();
+#if defined( INCLUDE_SCALEFORM )
+    return COptionsScaleform::IsBindMenuRaised();
+#endif
+    return false;
 }
 
+//rocketui note: This is only used in keys.cpp for scaleform
 bool CHLClient::IsTeamMenuRaised( void )
 {
 	if ( !GetViewPortInterface() )
@@ -4244,9 +4276,13 @@ bool CHLClient::IsTeamMenuRaised( void )
 	return false;
 }
 
+//rocketui note: This is only used in keys.cpp for scaleform
 bool CHLClient::IsLoadingScreenRaised( void )
 {
+#if defined( INCLUDE_SCALEFORM )
 	return CLoadingScreenScaleform::IsOpen();
+#endif
+	return false;
 }
 
 #endif // CSTRIKE15
@@ -4803,13 +4839,14 @@ bool CHLClient::ShouldSkipEvidencePlayback( CDemoPlaybackParameters_t const *pPl
 	return true;
 }
 
+#if defined( INCLUDE_SCALEFORM )
 // Scaleform slot controller
 IScaleformSlotInitController * CHLClient::GetScaleformSlotInitController()
 {
 	/* Removed for partner depot */
 	return nullptr;
 }
-
+#endif
 bool CHLClient::IsConnectedUserInfoChangeAllowed( IConVar *pCvar )
 {
 	return CSGameRules() ? CSGameRules()->IsConnectedUserInfoChangeAllowed( NULL ) : true;

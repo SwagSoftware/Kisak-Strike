@@ -12,7 +12,9 @@
 #include "tier3/tier3.h"
 #ifdef CLIENT_DLL
 #include "c_cs_player.h"
+#if defined( INCLUDE_SCALEFORM )
 #include "itempickup_scaleform.h"
+#endif
 #include "keyvalues.h"
 #include "filesystem.h"
 #include "ienginevgui.h"
@@ -1565,6 +1567,7 @@ bool CCSPlayerInventory::ClearLoadoutSlot( int iTeam, int iSlot )
 
 
 #ifdef CLIENT_DLL
+#if defined(INCLUDE_SCALEFORM)
 //
 // Inventory image provider for Scaleform
 //
@@ -1575,7 +1578,7 @@ public:
 	CScaleformInventoryImageProviderImpl()
 	{
 		m_mapItems2Owners.SetLessFunc( DefLessFunc( itemid_t ) );
-		
+
 		Assert( !g_pIScaleformInventoryImageProvider );
 		g_pIScaleformInventoryImageProvider = this;
 	}
@@ -1654,7 +1657,7 @@ CEconItemView * CEconItemView::FindOrCreateEconItemViewForItemID( uint64 uiItemI
 {
 	return g_ScaleformInventoryImageProviderImpl.FindOrCreateEconItemViewForItemID( uiItemId );
 }
-
+#endif // #if defined(INCLUDE_SCALEFORM)
 #else
 
 CEconItemView::UtlMapLookupByID_t CEconItemView::s_mapLookupByID;
@@ -1737,7 +1740,7 @@ void CCSPlayerInventory::ItemHasBeenUpdated( CEconItemView *pItem, bool bUpdateA
 	}
 #endif
 
-#ifdef CLIENT_DLL
+#if defined(CLIENT_DLL) && defined(INCLUDE_SCALEFORM)
 	// Assert that this item belongs to this inventory and store the mapping to owner
 	CSteamID owner( this->GetOwner().ID() );
 	Assert( pItem->GetAccountID() == owner.GetAccountID() );
@@ -1745,9 +1748,6 @@ void CCSPlayerInventory::ItemHasBeenUpdated( CEconItemView *pItem, bool bUpdateA
 
 	// Make sure that the item inventory image is updated no that the item can be found in the mapping
 	g_pScaleformUI->InventoryImageUpdate( pItem->GetItemID(), g_pIScaleformInventoryImageProvider );
-
-
-
 #endif
 }
 

@@ -46,7 +46,9 @@
 	#include "cs_custom_material_swap.h"
 	#include "cs_custom_weapon_visualsdata_processor.h"
 	//#include "glow_outline_effect.h"
+#if defined( INCLUDE_SCALEFORM )
 	#include "HUD/sfhudreticle.h"
+#endif
 
 	extern IVModelInfoClient* modelinfo;
 
@@ -2094,6 +2096,7 @@ void CWeaponCSBase::DrawCrosshair()
 	float flAngleToScreenPixel = 0;
 
 #ifdef CLIENT_DLL
+#if defined( INCLUDE_SCALEFORM )
 	// subtract a ratio of cam driver motion from crosshair according to cl_cam_driver_compensation_scale
 	if ( cl_cam_driver_compensation_scale.GetFloat() != 0 )
 	{
@@ -2113,6 +2116,7 @@ void CWeaponCSBase::DrawCrosshair()
 			}
 		}
 	}
+#endif
 #endif
 
 /*

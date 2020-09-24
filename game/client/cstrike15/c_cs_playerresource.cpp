@@ -664,11 +664,13 @@ const wchar_t* C_CS_PlayerResource::GetDecoratedPlayerName( int index, wchar_t* 
 		safe_wide_name[0] = L'\0';
 		wchar_t *pSafeWideName = wide_name;
 
-		if ( bMakeStringSafe )
+#if defined( INCLUDE_SCALEFORM )
+        if ( bMakeStringSafe )
 		{
 			g_pScaleformUI->MakeStringSafe( wide_name, safe_wide_name, sizeof( safe_wide_name ) );
 			pSafeWideName = safe_wide_name;
 		}
+#endif
 
 
 		if ( !nBotControlStringType ) // normal name

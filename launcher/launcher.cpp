@@ -807,6 +807,16 @@ bool CSourceAppSystemGroup::Create()
 		if ( !AddSystems( scaleformInfo ) ) 
 			return false;	
 	}
+#elif defined( INCLUDE_ROCKETUI )
+	// This is where the rocketui dll actually gets loaded.
+    AppSystemInfo_t rocketInfo[] =
+    {
+        { LAUNCHER_APPSYSTEM( "rocketui" ),		ROCKETUI_INTERFACE_VERSION },
+        { "", "" }
+    };
+
+    if ( !AddSystems( rocketInfo ) )
+        return false;
 #endif // INCLUDE_SCALEFORM
 		
 	// Hook in datamodel and p4 control if we're running with -tools

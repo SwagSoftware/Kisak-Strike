@@ -1,4 +1,4 @@
-//========= Copyright © Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Provide interface to custom materials for entities that use them
 //
@@ -7,8 +7,7 @@
 #pragma once
 
 #include "refcount.h"
-
-class IMaterial;
+#include "imaterial.h"
 class ICompositeTexture;
 
 class ICustomMaterial : public CRefCounted<>

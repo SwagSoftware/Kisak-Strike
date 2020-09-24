@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -17,10 +17,10 @@
 #ifdef CLIENT_DLL
 	// CEG interface functions:
 	#define ALLOW_TEXTCHAT_FLAG			0xAD1A
-	DWORD InitHudAllowTextChatFlag( void );
+	extern DWORD InitHudAllowTextChatFlag( void );
 
 	#define ALLOW_PROPER_TINT_FLAG		0x8E3C
-	DWORD InitUiAllowProperTintFlag( void );
+	extern DWORD InitUiAllowProperTintFlag( void );
 
 #endif
 

@@ -5,7 +5,9 @@
 // $NoKeywords: $
 //=============================================================================//
 
+#include <IGameUIFuncs.h>
 #include "stdafx.h"
+#include "scaleformuiimpl.h"
 #include "scaleformuiintegration.h"
 #include "tier1/keyvalues.h"
 #include "vgui/ILocalize.h"

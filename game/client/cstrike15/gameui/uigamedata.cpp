@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2008, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2008, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -1481,10 +1481,14 @@ public:
 			char const *szReason = RemapText_t::RemapRawText( arrText, msg.Body().errormsg().c_str() );
 
 			g_pMatchFramework->CloseSession();
-			CMessageBoxScaleform::UnloadAllDialogs( true );
-			BasePanel()->RestoreMainMenuScreen();
-			CCommandMsgBox::CreateAndShow( "#SFUI_Disconnect_Title", szReason, true );
-			return false;
+#if defined( INCLUDE_SCALEFORM )
+            CMessageBoxScaleform::UnloadAllDialogs( true );
+#endif
+            BasePanel()->RestoreMainMenuScreen();
+#if defined( INCLUDE_SCALEFORM )
+            CCommandMsgBox::CreateAndShow( "#SFUI_Disconnect_Title", szReason, true );
+#endif
+            return false;
 		}
 
 		if ( msg.Body().res().serverid() )
@@ -1522,9 +1526,13 @@ public:
 			char const *szReason = RemapText_t::RemapRawText( arrText, msg.Body().errormsg().c_str() );
 
 			g_pMatchFramework->CloseSession();
-			CMessageBoxScaleform::UnloadAllDialogs( true );
-			BasePanel()->RestoreMainMenuScreen();
-			GameUI().CreateCommandMsgBox( "#SFUI_Disconnect_Title", szReason, true );
+#if defined( INCLUDE_SCALEFORM )
+            CMessageBoxScaleform::UnloadAllDialogs( true );
+#endif
+            BasePanel()->RestoreMainMenuScreen();
+#if defined( INCLUDE_SCALEFORM )
+            CCommandMsgBox::CreateAndShow( "#SFUI_Disconnect_Title", szReason, true );
+#endif
 			return false;
 		}
 

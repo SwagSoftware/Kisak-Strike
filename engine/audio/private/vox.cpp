@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Voice / Sentence streaming & parsing code
 //
@@ -638,7 +638,7 @@ char * VOX_LookupRndVirtual( char *pGroupName )
 
 // given groupname, get pointer to first word of n'th sentence in group
 
-char *VOX_LookupSentenceByIndex( char *pGroupname, int ipick, int *pipicknext )
+char *VOX_LookupSentenceByIndex( const char *pGroupname, int ipick, int *pipicknext )
 {
 	// get group index
 

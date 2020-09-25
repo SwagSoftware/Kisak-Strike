@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Client side CTeam class
 //
@@ -31,10 +31,10 @@ public:
 	virtual void	PreDataUpdate( DataUpdateType_t updateType );
 
 	// Data Handling
-	virtual char	*Get_Name( void );
-	virtual char	*Get_ClanName( void );
-	virtual char	*Get_FlagImageString( void );
-	virtual char	*Get_LogoImageString( void );
+	virtual const char	*Get_Name( void );
+	virtual const char	*Get_ClanName( void );
+	virtual const char	*Get_FlagImageString( void );
+	virtual const char	*Get_LogoImageString( void );
 	int				Get_Score( void )				{ return m_scoreTotal; }
 	int				Get_Score_First_Half( void )	{ return m_scoreFirstHalf; }
 	int				Get_Score_Second_Half( void )	{ return m_scoreSecondHalf; }	

@@ -7879,7 +7879,7 @@ void S_StopAllSounds( bool bClear )
 	{
 		char nameBuf[MAX_PATH];
 		channel_t *pChannel = list.GetChannel( i );
-		char *pName = nameBuf;
+		const char *pName = nameBuf;
 		if ( pChannel->sfx )
 		{
 			pChannel->sfx->getname( nameBuf, sizeof( nameBuf ) );

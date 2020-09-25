@@ -17,8 +17,8 @@
 #elif POSIX
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/tcp.h>
+//#include <netinet/in.h> // lwss: these seem unused, but cause redefinition warnings for INT_MAX and related
+//#include <netinet/tcp.h>
 #include <errno.h>
 #include <sys/ioctl.h>
 #define closesocket close

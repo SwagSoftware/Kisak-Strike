@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Parsing of entity network packets.
 //
@@ -115,7 +115,7 @@ void SpewToFile( char const* pFmt, ... )
 // Purpose: Frees the client DLL's binding to the object.
 // Input  : iEnt - 
 //-----------------------------------------------------------------------------
-void CL_DeleteDLLEntity( int iEnt, char *reason, bool bOnRecreatingAllEntities )
+void CL_DeleteDLLEntity( int iEnt, const char *reason, bool bOnRecreatingAllEntities )
 {
 	IClientNetworkable *pNet = entitylist->GetClientNetworkable( iEnt );
 

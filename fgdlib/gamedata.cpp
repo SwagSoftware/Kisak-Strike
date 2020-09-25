@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ====
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ====
 //
 //=============================================================================
 
@@ -91,7 +91,7 @@ static bool DoGetToken(TokenReader &tr, char **ppszStore, int nSize, trtoken_t t
 		// We didn't get the expected token type but no expected
 		// string was specified.
 		//
-		char *pszTokenName;
+		const char *pszTokenName;
 		switch (ttexpecting)
 		{
 			case IDENT:
@@ -143,7 +143,7 @@ static bool DoGetToken(TokenReader &tr, char **ppszStore, int nSize, trtoken_t t
 //			error - 
 // Output : 
 //-----------------------------------------------------------------------------
-bool GDError(TokenReader &tr, char *error, ...)
+bool GDError(TokenReader &tr, const char *error, ...)
 {
 	char szBuf[128];
 	va_list vl;

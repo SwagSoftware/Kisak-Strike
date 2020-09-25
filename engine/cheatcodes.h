@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//===== Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -18,7 +18,7 @@
 
 
 void	ClearCheatCommands( void );
-void	ReadCheatCommandsFromFile( char *pchFileName );
+void	ReadCheatCommandsFromFile( const char *pchFileName );
 void	LogKeyPress( ButtonCode_t code );
 void	CheckCheatCodes();
 

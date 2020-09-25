@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -28,7 +28,7 @@ struct maplist_map_t
 //	pMapFile: If you're using a maplist file, this should be the filename of it
 //	pSystemMsg: Used to preface and debug messages
 //	iCurrentMap: The map in the list to begin at. Handles the -startmap parameter for you.
-bool BuildGeneralMapList( CUtlVector<maplist_map_t> *aMaps, bool bUseMapListFile, const char *pMapFile, char *pSystemMsg, int *iCurrentMap );
+bool BuildGeneralMapList( CUtlVector<maplist_map_t> *aMaps, bool bUseMapListFile, const char *pMapFile, const char *pSystemMsg, int *iCurrentMap );
 
 // initialization
 void MapReslistGenerator_Init();

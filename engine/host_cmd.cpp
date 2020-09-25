@@ -2009,7 +2009,7 @@ CON_COMMAND( kickid, "Kick a player by userid or uniqueid, with a message." )
 void PerformKick( cmd_source_t commandSource, int iSearchIndex, char* szSearchString, bool bForceKick, const char* pszMessage )
 {
 	IClient		*client = NULL;
-	char		*who = "Console";
+	const char	*who = "Console";
 
 	// find this client
 	int i;
@@ -2095,7 +2095,7 @@ Kicks a user off of the server using their name
 */
 CON_COMMAND( kick, "Kick a player by name." )
 {
-	char		*who = "Console";
+	const char	*who = "Console";
 	char		*pszName = NULL;
 	IClient		*client = NULL;
 	int			i = 0;

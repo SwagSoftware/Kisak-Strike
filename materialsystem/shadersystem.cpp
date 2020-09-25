@@ -541,7 +541,7 @@ void CShaderSystem::UnloadShaderDLL( const char *pFullPath )
 //-----------------------------------------------------------------------------
 // Make sure these match the bits in imaterial.h
 //-----------------------------------------------------------------------------
-static char* s_pShaderStateString[] =
+static const char* s_pShaderStateString[] =
 {
 	"$debug",
 	"$no_fullbright",

@@ -186,7 +186,7 @@ void CTextureReference::InitProceduralTexture( const char *pTextureName, const c
 	*/
 }
 
-void CTextureReference::InitRenderTarget( int w, int h, RenderTargetSizeMode_t sizeMode, ImageFormat fmt, MaterialRenderTargetDepth_t depth, bool bHDR, char *pStrOptionalName /* = NULL */ )
+void CTextureReference::InitRenderTarget( int w, int h, RenderTargetSizeMode_t sizeMode, ImageFormat fmt, MaterialRenderTargetDepth_t depth, bool bHDR, const char *pStrOptionalName /* = NULL */ )
 {
 	Shutdown();
 

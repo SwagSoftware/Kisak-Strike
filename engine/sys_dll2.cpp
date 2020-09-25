@@ -208,7 +208,7 @@ void EXPORT F( IEngineAPI **api )
 
 extern bool cs_initialized;
 extern int			lowshift;
-static char	*empty_string = "";
+static const char	*empty_string = "";
 
 //-----------------------------------------------------------------------------
 // Purpose: 

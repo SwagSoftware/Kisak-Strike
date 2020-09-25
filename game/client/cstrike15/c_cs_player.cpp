@@ -4097,7 +4097,7 @@ CNewParticleEffect *C_CSPlayer::GetVOIPParticleEffect( void )
 }
 
 
-char *C_CSPlayer::GetHalloweenMaskModelAddon( C_CSPlayer *pPlayer ) 
+const char *C_CSPlayer::GetHalloweenMaskModelAddon( C_CSPlayer *pPlayer )
 { 
 	int nMaskIndex = 0;
 

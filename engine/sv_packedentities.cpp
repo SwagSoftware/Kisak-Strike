@@ -866,9 +866,9 @@ const tokenset_t< SendPropType > gSendPropTypeTokenSet[] =
 	{ "String",    DPT_String },
 	{ "Array",     DPT_Array },	// An array of the base types (can't be of datatables).
 	{ "DataTable", DPT_DataTable },
-#if 0 // We can't ship this since it changes the size of DTVariant to be 20 bytes instead of 16 and that breaks MODs!!!
-	{ "Quaternion,DPT_Quaternion },
-#endif               
+//#if 0 // We can't ship this since it changes the size of DTVariant to be 20 bytes instead of 16 and that breaks MODs!!!
+	//{ "Quaternion,DPT_Quaternion },
+//#endif
 	{ "Int64",     DPT_Int64 },
 	{ NULL, (SendPropType)0 }
 };

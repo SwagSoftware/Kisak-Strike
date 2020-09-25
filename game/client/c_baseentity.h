@@ -862,7 +862,7 @@ public:
 
 	// ID Target handling
 	virtual bool					IsValidIDTarget( void ) { return false; }
-	virtual char					*GetIDString( void ) { return ""; };
+	virtual const char      		*GetIDString( void ) { return ""; };
 
 	// See CSoundEmitterSystem
 	// Will return the sound guid. If negative, the guid is unknown (call may be successful or not). 0 if the sound was not emitted. Positive if the guid is valid.

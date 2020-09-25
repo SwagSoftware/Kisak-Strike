@@ -1132,7 +1132,7 @@ bool GrabSourceMutex()
 	 */
 
 	// Check TMPDIR environment variable for temp directory.
-	char *tmpdir = getenv( "TMPDIR" );
+	const char *tmpdir = getenv( "TMPDIR" );
 
 	// If it's NULL, or it doesn't exist, or it isn't a directory, fallback to /tmp.
 	struct stat buf;

@@ -22,7 +22,7 @@ if( LINUXALL )
     target_compile_options(${OUTLIBNAME} PRIVATE -fPIC)
 endif()
 
-target_sources(${OUTLIBNAME} PRIVATE "convert_x360.cpp")
+#target_sources(${OUTLIBNAME} PRIVATE "convert_x360.cpp")
 if( WINDOWS )
     #$File	"s3tc_decode.cpp" 	[$WINDOWS]
 endif()

@@ -211,7 +211,7 @@ int GameData::GetTraceHeight(void)
 
 
 void GDSetMessageFunc(GameDataMessageFunc_t pFunc);
-bool GDError(TokenReader &tr, char *error, ...);
+bool GDError(TokenReader &tr, const char *error, ...);
 bool GDSkipToken(TokenReader &tr, trtoken_t ttexpecting = TOKENNONE, const char *pszExpecting = NULL);
 bool GDGetToken(TokenReader &tr, char *pszStore, int nSize, trtoken_t ttexpecting = TOKENNONE, const char *pszExpecting = NULL);
 bool GDGetTokenDynamic(TokenReader &tr, char **pszStore, trtoken_t ttexpecting, const char *pszExpecting = NULL);

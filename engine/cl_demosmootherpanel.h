@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-//========= Copyright © 1996-2002, Valve LLC, All rights reserved. ============
+//========= Copyright ï¿½ 1996-2002, Valve LLC, All rights reserved. ============
 //
 // Purpose: 
 //
@@ -133,9 +133,9 @@ protected:
 	void				Redo( void );
 
 	// Do push before changes
-	void				PushUndo( char *description );
+	void				PushUndo( const char *description );
 	// Do this push after changes, must match pushundo 1for1
-	void				PushRedo( char *description );
+	void				PushRedo( const char *description );
 
 	void				WipeUndo( void );
 	void				WipeRedo( void );

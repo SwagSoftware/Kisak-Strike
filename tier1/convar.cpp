@@ -156,7 +156,7 @@ CVarDLLIdentifier_t ConCommandBase::GetDLLIdentifier() const
 //-----------------------------------------------------------------------------
 void ConCommandBase::Create( const char *pName, const char *pHelpString /*= 0*/, int flags /*= 0*/ )
 {
-	static char *empty_string = "";
+	static const char *empty_string = "";
 
 	m_bRegistered = false;
 
@@ -857,12 +857,12 @@ void ConVar::InternalSetValue( const char *value )
 	}
 
 	char  tempVal[ 32 ];
-	char  *val;
+	const char  *val;
 
 	Assert(m_pParent == this); // Only valid for root convars.
 
 	float flOldValue = ObscureConvarValue( m_Value.m_fValue, ( intp ) this );
-	val = (char *)value;
+	val = value;
 	if ( !val )
 		val = "";
 
@@ -1068,7 +1068,7 @@ void ConVar::Create( const char *pName, const char *pDefaultValue, int flags /*=
 	const char *pHelpString /*= NULL*/, bool bMin /*= false*/, float fMin /*= 0.0*/,
 	bool bMax /*= false*/, float fMax /*= false*/, FnChangeCallback_t callback /*= NULL*/ )
 {
-	static char *empty_string = "";
+	static const char *empty_string = "";
 
 	m_pParent = this;
 
@@ -1231,7 +1231,7 @@ const char *ConVar::GetDefault( void ) const
 
 void ConVar::SetDefault( const char *pszDefault ) 
 { 
-	static char *empty_string = "";
+	static const char *empty_string = "";
 	m_pszDefaultValue = pszDefault ? pszDefault : empty_string;
 	Assert( m_pszDefaultValue );
 }

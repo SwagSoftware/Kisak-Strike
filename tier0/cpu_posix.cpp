@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#include <sys/sysctl.h>
+//#include <sys/sysctl.h> // lwss: deprecated header
 #include <sys/time.h>
 #include <unistd.h>
 #include <tier0/platform.h>

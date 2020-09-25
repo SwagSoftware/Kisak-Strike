@@ -308,7 +308,7 @@ void Sys_Shutdown( void )
 //			... - 
 // Output : void Sys_Printf
 //-----------------------------------------------------------------------------
-void Sys_Printf(char *fmt, ...)
+void Sys_Printf(const char *fmt, ...)
 {
 	va_list		argptr;
 	char		text[1024];
@@ -939,7 +939,7 @@ public:
 				if ( ! IsChildProcess() )							// do NOT let subprocesses output to stdout.
 				{
 					// This is not actually a varargs-style printf function; it simply takes a char*
-					dedicated->Sys_Printf( (char *) pMessage );		// stupid header has char * instead of const char *
+					dedicated->Sys_Printf( pMessage );		// stupid header has char * instead of const char * -- lwss: not any longer
 				}
 				else
 				{
@@ -1561,7 +1561,7 @@ void Sys_SetRegKeyValueUnderRoot( HKEY rootKey, const char *pszSubKey, const cha
 }
 #endif
 
-void Sys_GetRegKeyValue( char *pszSubKey, char *pszElement,	char *pszReturnString, int nReturnLength, char *pszDefaultValue )
+void Sys_GetRegKeyValue( char *pszSubKey, const char *pszElement, char *pszReturnString, int nReturnLength, char *pszDefaultValue )
 {
 #if defined(_WIN32)
 	Sys_GetRegKeyValueUnderRoot( HKEY_CURRENT_USER, pszSubKey, pszElement, pszReturnString, nReturnLength, pszDefaultValue );
@@ -1581,7 +1581,7 @@ void Sys_GetRegKeyValueInt( char *pszSubKey, char *pszElement, long *plReturnVal
 #endif
 }
 
-void Sys_SetRegKeyValue( char *pszSubKey, char *pszElement,	const char *pszValue )
+void Sys_SetRegKeyValue( const char *pszSubKey, const char *pszElement,	const char *pszValue )
 {
 #if defined(_WIN32)
 	Sys_SetRegKeyValueUnderRoot( HKEY_CURRENT_USER, pszSubKey, pszElement, pszValue );

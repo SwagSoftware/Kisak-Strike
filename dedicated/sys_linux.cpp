@@ -70,7 +70,7 @@ public:
 	void		WriteStatusText( char *szText );
 	void		UpdateStatus( int force );
 
-	long		LoadLibrary( char *lib );
+	long		LoadLibrary( const char *lib );
 	void		FreeLibrary( long library );
 	void		*GetProcAddress( long library, const char *name );
 
@@ -118,7 +118,7 @@ void *CSys::GetProcAddress( long library, const char *name )
 // Input  : *lib -
 // Output : long
 //-----------------------------------------------------------------------------
-long CSys::LoadLibrary( char *lib )
+long CSys::LoadLibrary( const char *lib )
 {
 	void *hDll = NULL;
 

@@ -1,4 +1,4 @@
-//========= Copyright © 2008, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 2008, Valve Corporation, All rights reserved. ============//
 
 #ifndef __TOKENSET_H
 #define __TOKENSET_H
@@ -6,7 +6,7 @@
 #ifdef _WIN32
 #pragma once
 #endif
-
+#include "strtools.h" // lwss: included for Q_strcmp functions
 //-----------------------------------------------------------------------------
 // 
 // This class is a handy way to match a series of values to stings and vice

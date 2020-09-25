@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -29,7 +29,7 @@ public:
 	virtual void		WriteStatusText( char *szText ) = 0;
 	virtual void		UpdateStatus( int force ) = 0;
 
-	virtual long		LoadLibrary( char *lib ) = 0;
+	virtual long		LoadLibrary( const char *lib ) = 0;
 	virtual void		FreeLibrary( long library ) = 0;
 
 	virtual bool		CreateConsoleWindow( void ) = 0;

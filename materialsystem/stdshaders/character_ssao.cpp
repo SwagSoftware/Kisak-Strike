@@ -134,7 +134,7 @@ BEGIN_VS_SHADER( CharacterSSAO, "Help for CharacterSSAO" )
 			SetVertexShaderTextureTransform( VERTEX_SHADER_SHADER_SPECIFIC_CONST_0, BASETEXTURETRANSFORM );
 			
 			#ifdef NOISE_SAMPLE
-				float c0[4] = {	fmod( pShaderAPI->CurrentTime(), 1.0f ) * 14.54321f, fmod( pShaderAPI->CurrentTime(), 1.0f ) * 16.12345f, 0, 0 };
+				float c0[4] = {	fmodf( pShaderAPI->CurrentTime(), 1.0f ) * 14.54321f, fmodf( pShaderAPI->CurrentTime(), 1.0f ) * 16.12345f, 0, 0 };
 				pShaderAPI->SetPixelShaderConstant( 0, c0, 1 );
 			#endif
 

@@ -410,7 +410,7 @@ struct CommandDescriptor
 	char const *m_pCmdHelp;
 };
 
-static char *va( char *format, ... )
+static char *va( const char *format, ... )
 {
 	va_list		argptr;
 	static char	string[8][512];

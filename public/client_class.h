@@ -49,7 +49,7 @@ typedef IClientNetworkable*	(*CreateEventFn)();
 class ClientClass
 {
 public:
-	ClientClass( char *pNetworkName, CreateClientClassFn createFn, CreateEventFn createEventFn, RecvTable *pRecvTable )
+	ClientClass( const char *pNetworkName, CreateClientClassFn createFn, CreateEventFn createEventFn, RecvTable *pRecvTable )
 	{
 		m_pNetworkName	= pNetworkName;
 		m_pCreateFn		= createFn;
@@ -70,7 +70,7 @@ public:
 public:
 	CreateClientClassFn		m_pCreateFn;
 	CreateEventFn			m_pCreateEventFn;	// Only called for event objects.
-	char					*m_pNetworkName;
+	const char				*m_pNetworkName;
 	RecvTable				*m_pRecvTable;
 	ClientClass				*m_pNext;
 	int						m_ClassID;	// Managed by the engine.

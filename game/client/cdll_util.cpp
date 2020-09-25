@@ -682,9 +682,9 @@ CBaseEntity *CEntitySphereQuery::GetCurrentEntity()
 int UTIL_ComputeStringWidth( vgui::HFont& font, const char *str )
 {
 	float pixels = 0;
-	char *p = (char *)str;
-	char *pAfter = p + 1;
-	char *pBefore = "\0";
+	const char *p = (char *)str;
+	const char *pAfter = p + 1;
+	const char *pBefore = "\0";
 	while ( *p )
 	{
 #ifdef OSX
@@ -714,9 +714,9 @@ int UTIL_ComputeStringWidth( vgui::HFont& font, const char *str )
 int UTIL_ComputeStringWidth( vgui::HFont& font, const wchar_t *str )
 {
 	float pixels = 0;
-	wchar_t *p = (wchar_t *)str;
-	wchar_t *pAfter = p + 1;
-	wchar_t *pBefore = L"\0";
+	const wchar_t *p = (wchar_t *)str;
+	const wchar_t *pAfter = p + 1;
+	const wchar_t *pBefore = L"\0";
 	while ( *p )
 	{
 #ifdef OSX

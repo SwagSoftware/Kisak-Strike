@@ -408,25 +408,25 @@ inline void CAI_Agent::ResetScheduleCurTaskIndex()
 
 //-----------------
 
-#define DEFINE_SCHEDULE( id, text ) \
-	scheduleIds.PushBack( #id, id ); \
-	char * g_psz##id = \
-		"\n	Schedule" \
-		"\n		" #id \
-		text \
-		"\n"; \
-	schedulesToLoad.AddToTail( (char *)g_psz##id );
-	
-//-----------------
-
-#define DECLARE_CONDITION( id ) \
-	conditionIds.PushBack( #id, id );
-
-//-----------------
-
-#define DECLARE_TASK( id ) \
-	taskIds.PushBack( #id, id );
-
+//#define DEFINE_SCHEDULE( id, text ) \
+//	scheduleIds.PushBack( #id, id ); \
+//	char * g_psz##id = \
+//		"\n	Schedule" \
+//		"\n		" #id \
+//		text \
+//		"\n"; \
+//	schedulesToLoad.AddToTail( (char *)g_psz##id );
+//
+////-----------------
+//
+//#define DECLARE_CONDITION( id ) \
+//	conditionIds.PushBack( #id, id );
+//
+////-----------------
+//
+//#define DECLARE_TASK( id ) \
+//	taskIds.PushBack( #id, id );
+//
 //-----------------
 
 // IDs are stored and then added in order due to constraints in the namespace implementation

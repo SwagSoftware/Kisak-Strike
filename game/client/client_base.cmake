@@ -27,9 +27,7 @@ TargetBuildAndAddProto( ${OUTBINNAME} ${SRCDIR}/game/shared/base_gcmessages.prot
 #NUT stuff would go here..
 
 if( LINUXALL )
-    #lwss- add Wno-narrowing to fix compilation
-    target_compile_options(${OUTBINNAME} PRIVATE "-Wno-narrowing")
-    #lwss end
+    target_compile_options(${OUTBINNAME} PRIVATE -Wno-narrowing -Wno-ignored-attributes)
     target_link_libraries(${OUTBINNAME} rt)
 endif()
 

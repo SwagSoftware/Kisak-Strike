@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//===== Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -166,7 +166,7 @@ void CMapReslistGenerator::BuildMapList()
 	}
 }
 
-bool BuildGeneralMapList( CUtlVector<maplist_map_t> *aMaps, bool bUseMapListFile, const char *pMapFile, char *pSystemMsg, int *iCurrentMap )
+bool BuildGeneralMapList( CUtlVector<maplist_map_t> *aMaps, bool bUseMapListFile, const char *pMapFile, const char *pSystemMsg, int *iCurrentMap )
 {
 	if ( !bUseMapListFile )
 	{

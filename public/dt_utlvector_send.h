@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:		Player for HL1.
 //
@@ -43,7 +43,7 @@
 //		)
 //
 SendProp SendPropUtlVector(
-	char *pVarName,		// Use SENDINFO_UTLVECTOR to generate these first 4 parameters.
+	const char *pVarName,		// Use SENDINFO_UTLVECTOR to generate these first 4 parameters.
 	int offset,
 	int sizeofVar,
 	EnsureCapacityFn ensureFn,

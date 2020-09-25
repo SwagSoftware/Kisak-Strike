@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -800,7 +800,7 @@ public:
 
 	float GetLastSmokeOverlayAlpha( void ) const { return m_flLastSmokeOverlayAlpha; }
 
-	char *GetHalloweenMaskModelAddon( C_CSPlayer *pPlayer );
+	const char *GetHalloweenMaskModelAddon( C_CSPlayer *pPlayer );
 
 	uint32 GetActiveQuestID( void ) const;
 	QuestProgress::Reason GetQuestProgressReason( void ) const;

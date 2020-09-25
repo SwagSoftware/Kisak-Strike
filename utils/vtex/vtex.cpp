@@ -3696,7 +3696,7 @@ public:
 		return iResult;
 	}
 
-	virtual int VTex( CreateInterfaceFn fsFactory, const char *pGameDir, int argc, char **argv )
+	virtual int VTex( CreateInterfaceFn fsFactory, const char *pGameDir, int argc, const char **argv )
 	{
 		g_pFileSystem = g_pFullFileSystem = (IFileSystem*)fsFactory( FILESYSTEM_INTERFACE_VERSION, NULL );
 		if ( !g_pFileSystem )

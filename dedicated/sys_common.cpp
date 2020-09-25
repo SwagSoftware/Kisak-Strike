@@ -127,7 +127,7 @@ extern bool g_bVGui;
 class CDedicatedExports : public CBaseAppSystem<IDedicatedExports>
 {
 public:
-	virtual void Sys_Printf( char *text )
+	virtual void Sys_Printf( const char *text )
 	{
 		if ( sys )
 		{

@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -29,8 +29,8 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-#include <netinet/in.h>
-#include <netinet/tcp.h>
+//#include <netinet/in.h> // lwss: these seem unused but cause type redefinition warnings
+//#include <netinet/tcp.h>
 #include <errno.h>
 #include <sys/ioctl.h>
 #define closesocket close

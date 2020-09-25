@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Client side CTeam class
 //
@@ -150,7 +150,7 @@ int C_Team::GetTeamNumber() const
 //=================================================================================================
 // Purpose: 
 //-----------------------------------------------------------------------------
-char *C_Team::Get_Name( void )
+const char *C_Team::Get_Name( void )
 {
 	return m_szTeamname;
 }
@@ -158,7 +158,7 @@ char *C_Team::Get_Name( void )
 //=================================================================================================
 // Purpose: 
 //-----------------------------------------------------------------------------
-char *C_Team::Get_ClanName( void )
+const char *C_Team::Get_ClanName( void )
 {
 	if ( CDemoPlaybackParameters_t const *pParameters = engine->GetDemoPlaybackParameters() )
 	{
@@ -174,7 +174,7 @@ char *C_Team::Get_ClanName( void )
 //=================================================================================================
 // Purpose: 
 //-----------------------------------------------------------------------------
-char *C_Team::Get_FlagImageString( void )
+const char *C_Team::Get_FlagImageString( void )
 {
 	if ( CDemoPlaybackParameters_t const *pParameters = engine->GetDemoPlaybackParameters() )
 	{
@@ -188,7 +188,7 @@ char *C_Team::Get_FlagImageString( void )
 //=================================================================================================
 // Purpose: 
 //-----------------------------------------------------------------------------
-char *C_Team::Get_LogoImageString( void )
+const char *C_Team::Get_LogoImageString( void )
 {
 	if ( CDemoPlaybackParameters_t const *pParameters = engine->GetDemoPlaybackParameters() )
 	{

@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//===== Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -43,7 +43,7 @@ void ClearCheatCommands( void )
 	s_CheatCodeCommands.RemoveAll();
 }
 
-void ReadCheatCommandsFromFile( char *pchFileName )
+void ReadCheatCommandsFromFile( const char *pchFileName )
 {
 #if defined( _CERT )
 	return;

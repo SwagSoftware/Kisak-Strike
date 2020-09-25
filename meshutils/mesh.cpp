@@ -1,4 +1,4 @@
-//=========== Copyright © Valve Corporation, All rights reserved. ============//
+//=========== Copyright ï¿½ Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Mesh class operations.
 //
@@ -291,7 +291,7 @@ bool CMesh::CalculateIndicentFacesForVertices( CUtlLinkedList<int> *pFacesPerVer
 
 struct InputDataForVertexElement_t
 {
-	char *m_pSemanticName;
+	const char *m_pSemanticName;
 	int m_nSemanticIndex;
 };
 

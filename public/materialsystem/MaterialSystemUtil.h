@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//===== Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -75,7 +75,7 @@ public:
 	// Attach to a texture
 	void Init( char const* pTexture, const char *pTextureGroupName, bool bComplain = true, int nAdditionalCreationFlags = 0 );
 	void InitProceduralTexture( const char *pTextureName, const char *pTextureGroupName, int w, int h, ImageFormat fmt, int nFlags );
-	void InitRenderTarget( int w, int h, RenderTargetSizeMode_t sizeMode, ImageFormat fmt, MaterialRenderTargetDepth_t depth, bool bHDR, char *pStrOptionalName = NULL );
+	void InitRenderTarget( int w, int h, RenderTargetSizeMode_t sizeMode, ImageFormat fmt, MaterialRenderTargetDepth_t depth, bool bHDR, const char *pStrOptionalName = NULL );
 #if defined( _X360 )
 	// used when RT coupling is disparate (texture is DDR based, surface is EDRAM based)
 	void InitRenderTargetTexture( int width, int height, RenderTargetSizeMode_t sizeMode, ImageFormat fmt, MaterialRenderTargetDepth_t depth, bool bHDR, char *pStrOptionalName = NULL, int nRenderTargetFlags = 0 );

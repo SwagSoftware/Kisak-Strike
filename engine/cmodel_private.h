@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -38,7 +38,7 @@ struct TraceInfo_t
 {
 	TraceInfo_t()
 	{
-		memset( this, 0, offsetof( TraceInfo_t, m_BrushCounters ) );
+		memset( this, 0, sizeof( TraceInfo_t ) );
 		m_nCheckDepth = -1;
 	}
 
@@ -412,9 +412,9 @@ public:
 	int									numareaportals;
 	CRangeValidatedArray<dareaportal_t>	map_areaportals;
 	int									numclusters;
-	char								*map_nullname;
+	const char							*map_nullname;
 	int									numtextures;
-	char								*map_texturenames;
+	char    							*map_texturenames;
 	CRangeValidatedArray<csurface_t>	map_surfaces;
 	int									floodvalid;
 	int									numportalopen;

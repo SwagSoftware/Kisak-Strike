@@ -362,7 +362,7 @@ static void BuildSingleCubemap( const char *pVTFName, const Vector &vecOrigin,
 
 	if ( ivt )
 	{
-		char *argv[64];
+		const char *argv[64];
 		int iArg = 0;
 		argv[iArg++] = "";
 		argv[iArg++] = "-oldcubepath";		// Process one file per face (new authoring path uses one file per cubemap)

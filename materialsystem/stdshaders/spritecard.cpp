@@ -546,18 +546,18 @@ BEGIN_VS_SHADER_FLAGS( Spritecard, "Help for Spritecard", SHADER_NOT_EDITABLE )
 
 			if ( bZoomSeq2 || bFog )
 			{
-				float flZScale=1.0/(params[ZOOMANIMATESEQ2]->GetFloatValue());
-				float C0[4]={ 0.5*(1.0+flZScale), flZScale, params[VERTEXFOGAMOUNT]->GetFloatValue(), 0 };
+				float flZScale=1.0f/(params[ZOOMANIMATESEQ2]->GetFloatValue());
+				float C0[4]={ 0.5f*(1.0f+flZScale), flZScale, params[VERTEXFOGAMOUNT]->GetFloatValue(), 0 };
 				pShaderAPI->SetVertexShaderConstant( VERTEX_SHADER_SHADER_SPECIFIC_CONST_7, C0, ARRAYSIZE(C0)/4 );
 			}
 
 			// set fade constants in vsconsts 8 and 9
 			float flMaxDistance = params[MAXDISTANCE]->GetFloatValue();
-			float flStartFade = MAX( 1.0, flMaxDistance - params[FARFADEINTERVAL]->GetFloatValue() );
+			float flStartFade = MAX( 1.0f, flMaxDistance - params[FARFADEINTERVAL]->GetFloatValue() );
 
 			float VC0[8]={ params[MINSIZE]->GetFloatValue(), params[MAXSIZE]->GetFloatValue(),
 						   params[STARTFADESIZE]->GetFloatValue(), params[ENDFADESIZE]->GetFloatValue(),
-						   flStartFade, 1.0/(flMaxDistance-flStartFade),
+						   flStartFade, 1.0f/(flMaxDistance-flStartFade),
 						   params[ALPHATRAILFADE]->GetFloatValue(),
 						   params[RADIUSTRAILFADE]->GetFloatValue() };
 

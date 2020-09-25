@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//===== Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -1949,7 +1949,7 @@ void CDemoSmootherPanel::Redo( void )
 	InvalidateLayout();
 }
 
-void CDemoSmootherPanel::PushUndo( char *description )
+void CDemoSmootherPanel::PushUndo( const char *description )
 {
 	Assert( !m_bRedoPending );
 	m_bRedoPending = true;
@@ -1967,7 +1967,7 @@ void CDemoSmootherPanel::PushUndo( char *description )
 	m_nUndoLevel++;
 }
 
-void CDemoSmootherPanel::PushRedo( char *description )
+void CDemoSmootherPanel::PushRedo( const char *description )
 {
 	Assert( m_bRedoPending );
 	m_bRedoPending = false;

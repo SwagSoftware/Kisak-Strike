@@ -4261,7 +4261,7 @@ void CBaseServer::AddTagString( CUtlString &dest, char const *pchString )
 	if ( !pchString || !*pchString )
 		return;
 
-	char *chDelim = ",";
+	const char *chDelim = ",";
 
 	if ( Q_strstr( pchString, chDelim ) )
 	{
@@ -4371,7 +4371,7 @@ void CBaseServer::UpdateGameData()
 	const char *pszGroupName = sv_steamgroup.GetString();
 	{
 		CUtlVector< CUtlString > list;
-		char *chDelim = ",";
+		const char *chDelim = ",";
 		BuildTokenList( pszGroupName, *chDelim, list );
 
 		for ( int i = 0; i < list.Count(); ++i )

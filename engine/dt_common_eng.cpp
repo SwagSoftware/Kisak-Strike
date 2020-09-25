@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -82,7 +82,7 @@ bool DataTable_SetupReceiveTableFromSendTable( SendTable *sendTable, bool bNeeds
 
 		if ( pProp->m_Type == DPT_DataTable )
 		{
-			char *pDTName = pSendTableProp->m_pExcludeDTName; // HACK
+			const char *pDTName = pSendTableProp->m_pExcludeDTName; // HACK
 
 			if ( pSendTableProp->GetDataTable() )
 				pDTName = pSendTableProp->GetDataTable()->m_pNetTableName;

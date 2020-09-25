@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//===== Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -160,7 +160,7 @@ void CDemoFile::WriteCmdHeader( unsigned char cmd, int tick, int nPlayerSlot )
 			nPlayerSlot < MAX_SPLITSCREEN_CLIENTS );
 	m_pBuffer->PutChar( nPlayerSlot );
 
-	char *cmdname[] = 
+	const char *cmdname[] =
 	{
 		"dem_unknown",
 		"dem_signon",

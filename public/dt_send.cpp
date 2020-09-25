@@ -28,7 +28,7 @@ void SendProxy_UInt16ToInt32( const SendProp *pProp, const void *pStruct, const 
 void SendProxy_UInt32ToInt32( const SendProp *pProp, const void *pStruct, const void *pData, DVariant *pOut, int iElement, int objectID);
 void SendProxy_UInt64ToInt64( const SendProp *pProp, const void *pStruct, const void *pData, DVariant *pOut, int iElement, int objectID);
 
-char *s_ElementNames[MAX_ARRAY_ELEMENTS] =
+const char *s_ElementNames[MAX_ARRAY_ELEMENTS] =
 {
 	"000", "001", "002", "003", "004", "005", "006", "007", "008", "009", 
 	"010", "011", "012", "013", "014", "015", "016", "017", "018", "019",
@@ -341,7 +341,7 @@ float AssignRangeMultiplier( int nBits, double range )
 
 
 SendProp SendPropFloat(
-	char *pVarName,		
+	const char *pVarName,
 	// Variable name.
 	int offset,			// Offset into container structure.
 	int sizeofVar,
@@ -405,7 +405,7 @@ SendProp SendPropFloat(
 }
 
 SendProp SendPropVector(
-	char *pVarName,
+	const char *pVarName,
 	int offset,
 	int sizeofVar,
 	int nBits,					// Number of bits to use when encoding.
@@ -443,7 +443,7 @@ SendProp SendPropVector(
 }
 
 SendProp SendPropVectorXY(
-	char *pVarName,
+	const char *pVarName,
 	int offset,
 	int sizeofVar,
 	int nBits,					// Number of bits to use when encoding.
@@ -480,48 +480,48 @@ SendProp SendPropVectorXY(
 	return ret;
 }
 
-#if 0 // We can't ship this since it changes the size of DTVariant to be 20 bytes instead of 16 and that breaks MODs!!!
-SendProp SendPropQuaternion(
-	char *pVarName,
-	int offset,
-	int sizeofVar,
-	int nBits,					// Number of bits to use when encoding.
-	int flags,
-	float fLowValue,			// For floating point, low and high values.
-	float fHighValue,			// High value. If HIGH_DEFAULT, it's (1<<nBits).
-	SendVarProxyFn varProxy,
-	byte priority
-	)
-{
-	SendProp ret;
-
-	if(varProxy == SendProxy_QuaternionToQuaternion)
-	{
-		Assert(sizeofVar == sizeof(Quaternion));
-	}
-
-	if ( nBits == 32 )
-		flags |= SPROP_NOSCALE;
-
-	ret.m_Type = DPT_Quaternion;
-	ret.m_pVarName = pVarName;
-	ret.SetOffset( offset );
-	ret.m_nBits = nBits;
-	ret.SetFlags( flags );
-	ret.m_fLowValue = fLowValue;
-	ret.m_fHighValue = fHighValue;
-	ret.m_fHighLowMul = AssignRangeMultiplier( ret.m_nBits, ret.m_fHighValue - ret.m_fLowValue );
-	ret.SetProxyFn( varProxy );
-	ret.SetPriority( priority );
-	if( ret.GetFlags() & (SPROP_COORD | SPROP_NOSCALE | SPROP_NORMAL | SPROP_COORD_MP | SPROP_COORD_MP_LOWPRECISION | SPROP_COORD_MP_INTEGRAL) )
-		ret.m_nBits = 0;
-
-	return ret;
-}
-#endif
+//#if 0 // We can't ship this since it changes the size of DTVariant to be 20 bytes instead of 16 and that breaks MODs!!!
+//SendProp SendPropQuaternion(
+//	const char *pVarName,
+//	int offset,
+//	int sizeofVar,
+//	int nBits,					// Number of bits to use when encoding.
+//	int flags,
+//	float fLowValue,			// For floating point, low and high values.
+//	float fHighValue,			// High value. If HIGH_DEFAULT, it's (1<<nBits).
+//	SendVarProxyFn varProxy,
+//	byte priority
+//	)
+//{
+//	SendProp ret;
+//
+//	if(varProxy == SendProxy_QuaternionToQuaternion)
+//	{
+//		Assert(sizeofVar == sizeof(Quaternion));
+//	}
+//
+//	if ( nBits == 32 )
+//		flags |= SPROP_NOSCALE;
+//
+//	ret.m_Type = DPT_Quaternion;
+//	ret.m_pVarName = pVarName;
+//	ret.SetOffset( offset );
+//	ret.m_nBits = nBits;
+//	ret.SetFlags( flags );
+//	ret.m_fLowValue = fLowValue;
+//	ret.m_fHighValue = fHighValue;
+//	ret.m_fHighLowMul = AssignRangeMultiplier( ret.m_nBits, ret.m_fHighValue - ret.m_fLowValue );
+//	ret.SetProxyFn( varProxy );
+//	ret.SetPriority( priority );
+//	if( ret.GetFlags() & (SPROP_COORD | SPROP_NOSCALE | SPROP_NORMAL | SPROP_COORD_MP | SPROP_COORD_MP_LOWPRECISION | SPROP_COORD_MP_INTEGRAL) )
+//		ret.m_nBits = 0;
+//
+//	return ret;
+//}
+//#endif
 
 SendProp SendPropAngle(
-	char *pVarName,
+	const char *pVarName,
 	int offset,
 	int sizeofVar,
 	int nBits,
@@ -571,7 +571,7 @@ SendProp SendPropAngle(
 
 
 SendProp SendPropQAngles(
-	char *pVarName,
+	const char *pVarName,
 	int offset,
 	int sizeofVar,
 	int nBits,
@@ -621,7 +621,7 @@ SendProp SendPropQAngles(
 }
   
 SendProp SendPropInt(
-	char *pVarName,
+	const char *pVarName,
 	int offset,
 	int sizeofVar,
 	int nBits,
@@ -694,7 +694,7 @@ SendProp SendPropInt(
 }
 
 SendProp SendPropString(
-	char *pVarName,
+	const char *pVarName,
 	int offset,
 	int bufferLen,
 	int flags,
@@ -717,7 +717,7 @@ SendProp SendPropString(
 }
 
 SendProp SendPropArray3(
-	char *pVarName,
+	const char *pVarName,
 	int offset,
 	int sizeofVar,
 	int elements,
@@ -764,7 +764,7 @@ SendProp SendPropArray3(
 }
 
 SendProp SendPropDataTable(
-	char *pVarName,
+	const char *pVarName,
 	int offset,
 	SendTable *pTable,
 	SendTableProxyFn varProxy,
@@ -798,7 +798,7 @@ SendProp SendPropDataTable(
 SendProp InternalSendPropArray(
 	const int elementCount,
 	const int elementStride,
-	char *pName,
+	const char *pName,
 	ArrayLengthSendProxyFn arrayLengthFn,
 	byte priority
 	)
@@ -820,8 +820,8 @@ SendProp InternalSendPropArray(
 
 
 SendProp SendPropExclude(
-	char *pDataTableName,	// Data table name (given to BEGIN_SEND_TABLE and BEGIN_RECV_TABLE).
-	char *pPropName		// Name of the property to exclude.
+	const char *pDataTableName,	// Data table name (given to BEGIN_SEND_TABLE and BEGIN_RECV_TABLE).
+	const char *pPropName		// Name of the property to exclude.
 	)
 {
 	SendProp ret;
@@ -894,7 +894,7 @@ SendTable::SendTable()
 }
 
 
-SendTable::SendTable(SendProp *pProps, int nProps, char *pNetTableName)
+SendTable::SendTable(SendProp *pProps, int nProps, const char *pNetTableName)
 {
 	Construct( pProps, nProps, pNetTableName );
 }
@@ -906,7 +906,7 @@ SendTable::~SendTable()
 }
 
 
-void SendTable::Construct( SendProp *pProps, int nProps, char *pNetTableName )
+void SendTable::Construct( SendProp *pProps, int nProps, const char *pNetTableName )
 {
 	m_pProps = pProps;
 	m_nProps = nProps;

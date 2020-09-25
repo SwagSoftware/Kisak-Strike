@@ -106,7 +106,7 @@ bool R_LoadNamedSkys( const char *skyname )
 	char		name[ MAX_OSPATH ];
 	IMaterial	*skies[ 6 ];
 	bool		success = true;
-	char		*skyboxsuffix[ 6 ] = { "rt", "bk", "lf", "ft", "up", "dn" };
+	const char	*skyboxsuffix[ 6 ] = { "rt", "bk", "lf", "ft", "up", "dn" };
 
 	for ( int i = 0; i < 6; i++ )
 	{

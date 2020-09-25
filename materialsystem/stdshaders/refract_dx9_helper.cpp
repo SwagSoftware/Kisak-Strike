@@ -279,7 +279,7 @@ void DrawRefract_DX9( CBaseVSShader *pShader, IMaterialVar** params, IShaderDyna
 			ITexture *pTarget = params[info.m_nBaseTexture]->GetTextureValue();
 			int nWidth = pTarget->GetActualWidth();
 			int nHeight = pTarget->GetActualHeight();
-			float c7[4] = { nHeight / nWidth, 1.0f, params[info.m_nLocalRefractDepth]->GetFloatValue(), 0.0f };
+			float c7[4] = { float(nHeight / nWidth), 1.0f, params[info.m_nLocalRefractDepth]->GetFloatValue(), 0.0f };
 			pShaderAPI->SetPixelShaderConstant( 7, c7, 1 );
 		}
 		else
@@ -290,7 +290,7 @@ void DrawRefract_DX9( CBaseVSShader *pShader, IMaterialVar** params, IShaderDyna
 			int nWidth = 0;
 			int nHeight = 0;
 			pShaderAPI->GetStandardTextureDimensions( &nWidth, &nHeight, TEXTURE_FRAME_BUFFER_FULL_TEXTURE_0 );
-			float c7[4] = { nHeight / nWidth, 1.0f, params[info.m_nLocalRefractDepth]->GetFloatValue(), 0.0f };
+			float c7[4] = { float(nHeight / nWidth), 1.0f, params[info.m_nLocalRefractDepth]->GetFloatValue(), 0.0f };
 			pShaderAPI->SetPixelShaderConstant( 7, c7, 1 );
 		}
 

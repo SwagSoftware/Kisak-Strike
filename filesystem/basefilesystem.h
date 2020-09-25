@@ -264,8 +264,10 @@ protected:
 #else // !_PS3
 	enum
 	{
-		MAGIC = 'CFHa',
-		FREE_MAGIC = 'FreM'
+	    // lwss: fix compiler warning with multi-char character constants.
+	    // tested and these were the same order, although still not portable.
+		MAGIC = 0x43464861, // 'CFHa',
+		FREE_MAGIC = 0x4672654D // 'FreM'
 	};
 #endif // _PS3
 	unsigned int	m_nMagic;

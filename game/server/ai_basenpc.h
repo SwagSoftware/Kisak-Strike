@@ -2447,7 +2447,7 @@ typedef CHandle<CAI_BaseNPC> AIHANDLE;
 
 #define DEFINE_SCHEDULE( id, text ) \
 	scheduleIds.PushBack( #id, id ); \
-	char * g_psz##id = \
+	const char * g_psz##id = \
 		"\n	Schedule" \
 		"\n		" #id \
 		text \

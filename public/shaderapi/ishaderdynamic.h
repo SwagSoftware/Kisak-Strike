@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2008, Valve Corporation, All rights reserved. ======//
+//===== Copyright ï¿½ 1996-2008, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -146,7 +146,7 @@ abstract_class IShaderDynamicAPI
 {
 public:
 
-	virtual void BeginPerfEEvent( wchar* name ) {}
+	virtual void BeginPerfEEvent( const wchar* name ) {}
 	virtual void EndPerfEvent() {}
 	virtual void SetVertexShaderViewProj() = 0;
 	virtual void UpdateVertexShaderMatrix( int m ) = 0;

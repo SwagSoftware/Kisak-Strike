@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2004, Valve Corporation, All rights reserved. =======
+//====== Copyright ï¿½ 1996-2004, Valve Corporation, All rights reserved. =======
 //
 // Purpose: languages definition
 //
@@ -13,8 +13,8 @@
 
 struct SourceAppInfo_t
 {	
-	char *m_pchFullName;
-	char *m_pchModName;
+	const char *m_pchFullName;
+	const char *m_pchModName;
 	int m_nSteamAppId;
 	ESourceApp m_ESourceApp;
 };

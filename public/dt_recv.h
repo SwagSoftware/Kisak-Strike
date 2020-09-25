@@ -135,7 +135,7 @@ public:
 
 public:
 
-	char					*m_pVarName;
+	const char				*m_pVarName;
 	SendPropType			m_RecvType;
 	int						m_Flags;
 	int						m_StringBufferSize;
@@ -174,10 +174,10 @@ public:
 	typedef RecvProp	PropType;
 
 				RecvTable();
-				RecvTable( RecvProp *pProps, int nProps, char *pNetTableName );
+				RecvTable( RecvProp *pProps, int nProps, const char *pNetTableName );
 				~RecvTable();
 
-	void		Construct( RecvProp *pProps, int nProps, char *pNetTableName );
+	void		Construct( RecvProp *pProps, int nProps, const char *pNetTableName );
 
 	int			GetNumProps();
 	RecvProp*	GetProp( int i );
@@ -203,7 +203,7 @@ public:
 	// will have their own decoders that include props for all their children).
 	CRecvDecoder	*m_pDecoder;
 
-	char			*m_pNetTableName;	// The name matched between client and server.
+	const char		*m_pNetTableName;	// The name matched between client and server.
 
 
 private:
@@ -270,7 +270,7 @@ inline bool RecvTable::IsInMainList() const
 	template <> int ClientClassInit<tableName::ignored>(tableName::ignored *) \
 	{ \
 		typedef className currentRecvDTClass; \
-		char *pRecvTableName = #tableName; \
+		const char *pRecvTableName = #tableName; \
 		RecvTable &RecvTable = tableName::g_RecvTable; \
 		static RecvProp RecvProps[] = { \
 			RecvPropInt("should_never_see_this", 0, sizeof(int)),		// It adds a dummy property at the start so you can define "empty" SendTables.
@@ -313,7 +313,7 @@ void DataTableRecvProxy_PointerDataTable(const RecvProp *pProp, void **pOut, voi
 
 	
 RecvProp RecvPropFloat(
-	char *pVarName, 
+	const char *pVarName,
 	int offset,
 	int sizeofVar=SIZEOF_IGNORE,	// Handled by RECVINFO macro, but set to SIZEOF_IGNORE if you don't want to bother.
 	int flags=0, 
@@ -321,7 +321,7 @@ RecvProp RecvPropFloat(
 	);
 
 RecvProp RecvPropVector(
-	char *pVarName, 
+	const char *pVarName,
 	int offset, 
 	int sizeofVar=SIZEOF_IGNORE,	// Handled by RECVINFO macro, but set to SIZEOF_IGNORE if you don't want to bother.
 	int flags=0, 
@@ -329,7 +329,7 @@ RecvProp RecvPropVector(
 	);
 
 RecvProp RecvPropVectorXY(
-	char *pVarName, 
+	const char *pVarName,
 	int offset, 
 	int sizeofVar=SIZEOF_IGNORE,	// Handled by RECVINFO macro, but set to SIZEOF_IGNORE if you don't want to bother.
 	int flags=0, 
@@ -339,19 +339,19 @@ RecvProp RecvPropVectorXY(
 // This is here so the RecvTable can look more like the SendTable.
 #define RecvPropQAngles RecvPropVector
 
-#if 0 // We can't ship this since it changes the size of DTVariant to be 20 bytes instead of 16 and that breaks MODs!!!
-
-RecvProp RecvPropQuaternion(
-	char *pVarName, 
-	int offset, 
-	int sizeofVar=SIZEOF_IGNORE,	// Handled by RECVINFO macro, but set to SIZEOF_IGNORE if you don't want to bother.
-	int flags=0, 
-	RecvVarProxyFn varProxy=RecvProxy_QuaternionToQuaternion
-	);
-#endif
+//#if 0 // We can't ship this since it changes the size of DTVariant to be 20 bytes instead of 16 and that breaks MODs!!!
+//
+//RecvProp RecvPropQuaternion(
+//	char *pVarName,
+//	int offset,
+//	int sizeofVar=SIZEOF_IGNORE,	// Handled by RECVINFO macro, but set to SIZEOF_IGNORE if you don't want to bother.
+//	int flags=0,
+//	RecvVarProxyFn varProxy=RecvProxy_QuaternionToQuaternion
+//	);
+//#endif
 
 RecvProp RecvPropInt(
-	char *pVarName, 
+	const char *pVarName,
 	int offset, 
 	int sizeofVar=SIZEOF_IGNORE,	// Handled by RECVINFO macro, but set to SIZEOF_IGNORE if you don't want to bother.
 	int flags=0, 
@@ -359,7 +359,7 @@ RecvProp RecvPropInt(
 	);
 
 RecvProp RecvPropString(
-	char *pVarName,
+	const char *pVarName,
 	int offset,
 	int bufferSize,
 	int flags=0,
@@ -367,7 +367,7 @@ RecvProp RecvPropString(
 	);
 
 RecvProp RecvPropDataTable(
-	char *pVarName,
+	const char *pVarName,
 	int offset,
 	int flags,
 	RecvTable *pTable,
@@ -375,7 +375,7 @@ RecvProp RecvPropDataTable(
 	);
 
 RecvProp RecvPropArray3(
-	char *pVarName,
+	const char *pVarName,
 	int offset,
 	int sizeofVar,
 	int elements,
@@ -389,7 +389,7 @@ RecvProp RecvPropArray3(
 RecvProp InternalRecvPropArray(
 	const int elementCount,
 	const int elementStride,
-	char *pName,
+	const char *pName,
 	ArrayLengthRecvProxyFn proxy
 	);
 

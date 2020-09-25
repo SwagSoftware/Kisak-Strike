@@ -1,4 +1,4 @@
- //========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+ //========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -2287,7 +2287,7 @@ void CCSPlayer::DisplayPenetrationDebug( Vector vecEnter, Vector vecExit, float 
 #endif
 }
 
-void CCSPlayer::ImpactTrace( trace_t *pTrace, int iDamageType, char *pCustomImpactName )
+void CCSPlayer::ImpactTrace( trace_t *pTrace, int iDamageType, const char *pCustomImpactName )
 {
 
 #ifdef CLIENT_DLL

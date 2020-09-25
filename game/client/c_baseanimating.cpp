@@ -400,7 +400,7 @@ void C_ClientRagdoll::OnRestore( void )
 	RagdollMoved();
 }
 
-void C_ClientRagdoll::ImpactTrace( trace_t *pTrace, int iDamageType, char *pCustomImpactName )
+void C_ClientRagdoll::ImpactTrace( trace_t *pTrace, int iDamageType, const char *pCustomImpactName )
 {
 	VPROF( "C_ClientRagdoll::ImpactTrace" );
 

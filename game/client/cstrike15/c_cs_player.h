@@ -391,7 +391,7 @@ public:
 	
 	virtual void TeamChange( int iNewTeam );
 
-	void ImpactTrace( trace_t *pTrace, int iDamageType, char *pCustomImpactName );
+	void ImpactTrace( trace_t *pTrace, int iDamageType, const char *pCustomImpactName );
 
 	// Have this player play the sounds from his view model's reload animation.
 	void PlayReloadEffect( int iActAnimID, const Vector *pOrigin = NULL );
@@ -1210,7 +1210,7 @@ public:
 	void GetRagdollInitBoneArraysYawMode( matrix3x4a_t *pDeltaBones0, matrix3x4a_t *pDeltaBones1, matrix3x4a_t *pCurrentBones, float boneDt );
 
 	void ApplyRandomTaserForce( void );
-	void ImpactTrace( trace_t *pTrace, int iDamageType, char *pCustomImpactName );
+	void ImpactTrace( trace_t *pTrace, int iDamageType, const char *pCustomImpactName );
 	bool IsInitialized() { return m_bInitialized; }
 	virtual void ValidateModelIndex( void );
 

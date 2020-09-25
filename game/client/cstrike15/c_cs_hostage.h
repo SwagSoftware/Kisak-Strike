@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Client side CHostage class
 //
@@ -83,7 +83,7 @@ public:
 	virtual C_BaseAnimating * BecomeRagdollOnClient();
 	virtual bool ShouldDraw( void );
 
-	void ImpactTrace( trace_t *pTrace, int iDamageType, char *pCustomImpactName );
+	void ImpactTrace( trace_t *pTrace, int iDamageType, const char *pCustomImpactName );
 
 	void SetClientSideHolidayHatAddon( bool bEnable );
 	static void SetClientSideHoldayHatAddonForAllHostagesAndTheirRagdolls( bool bEnable );

@@ -1176,7 +1176,7 @@ void CAI_BaseNPC::DecalTrace( trace_t *pTrace, char const *decalName )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CAI_BaseNPC::ImpactTrace( trace_t *pTrace, int iDamageType, char *pCustomImpactName )
+void CAI_BaseNPC::ImpactTrace( trace_t *pTrace, int iDamageType, const char *pCustomImpactName )
 {
 	if ( m_fNoDamageDecal )
 	{

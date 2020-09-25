@@ -776,7 +776,7 @@ void C_CSRagdoll::ApplyRandomTaserForce( void )
 
 }
 
-void C_CSRagdoll::ImpactTrace( trace_t *pTrace, int iDamageType, char *pCustomImpactName )
+void C_CSRagdoll::ImpactTrace( trace_t *pTrace, int iDamageType, const char *pCustomImpactName )
 {
 
 #if USE_VIOLENT_RAGDOLLS

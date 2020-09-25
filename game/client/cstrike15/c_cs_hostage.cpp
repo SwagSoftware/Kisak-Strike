@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Client side C_CHostage class 
 //
@@ -802,7 +802,7 @@ void C_CHostage::OnDataChanged( DataUpdateType_t updateType )
 }
 
 //-----------------------------------------------------------------------------
-void C_CHostage::ImpactTrace( trace_t *pTrace, int iDamageType, char *pCustomImpactName )
+void C_CHostage::ImpactTrace( trace_t *pTrace, int iDamageType, const char *pCustomImpactName )
 {
 	static ConVar *violence_hblood = cvar->FindVar( "violence_hblood" );
 	if ( violence_hblood && !violence_hblood->GetBool() )

@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:		Player for HL1.
 //
@@ -911,7 +911,7 @@ public:
 	void PlayerUsedGrenade( int nWeaponID );
 	void PlayerUsedKnife( void );
 
-	void ImpactTrace( trace_t *pTrace, int iDamageType, char *pCustomImpactName );
+	void ImpactTrace( trace_t *pTrace, int iDamageType, const char *pCustomImpactName );
 
 	bool HasHeavyArmor() const	{return m_bHasHeavyArmor;}
 	CNetworkVar( bool, m_bHasHelmet );				// Does the player have helmet armor

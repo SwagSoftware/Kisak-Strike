@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
+//====== Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -716,7 +716,7 @@ void CClientTools::UpdateProjectedTexture( ClientShadowHandle_t h, bool bForce )
 
 int CClientTools::FindGlobalFlexcontroller( char const *name )
 {
-	return C_BaseFlex::AddGlobalFlexController( (char *)name );
+	return C_BaseFlex::AddGlobalFlexController( name );
 }
 
 char const *CClientTools::GetGlobalFlexControllerName( int idx )

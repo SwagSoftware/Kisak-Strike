@@ -1824,7 +1824,7 @@ public:
 	virtual float		GetHitgroupDamageMultiplier( int iHitGroup, const CTakeDamageInfo &info );
 	void				TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr );
 	void				DecalTrace( trace_t *pTrace, char const *decalName );
-	void				ImpactTrace( trace_t *pTrace, int iDamageType, char *pCustomImpactName );
+	void				ImpactTrace( trace_t *pTrace, int iDamageType, const char *pCustomImpactName );
 	virtual	bool		PlayerInSpread( const Vector &sourcePos, const Vector &targetPos, float flSpread, float maxDistOffCenter, bool ignoreHatedPlayers = true );
 	CBaseEntity *		PlayerInRange( const Vector &vecLocation, float flDist );
 	bool				PointInSpread( CBaseCombatCharacter *pCheckEntity, const Vector &sourcePos, const Vector &targetPos, const Vector &testPoint, float flSpread, float maxDistOffCenter );

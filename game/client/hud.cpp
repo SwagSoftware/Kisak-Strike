@@ -39,7 +39,7 @@ static 	CClassMemoryPool< CHudTexture >	 g_HudTextureMemoryPool( 128 );
 //-----------------------------------------------------------------------------
 // Purpose: Parses the weapon txt files to get the sprites needed.
 //-----------------------------------------------------------------------------
-void LoadHudTextures( CUtlDict< CHudTexture *, int >& list, char *szFilenameWithoutExtension, const unsigned char *pICEKey )
+void LoadHudTextures( CUtlDict< CHudTexture *, int >& list, const char *szFilenameWithoutExtension, const unsigned char *pICEKey )
 {
 	KeyValues *pTemp, *pTextureSection;
 

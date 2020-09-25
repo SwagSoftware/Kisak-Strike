@@ -1825,8 +1825,8 @@ void CServerGameDLL::PreSave( CSaveRestoreData *s )
 // This little hack lets me marry BSP names to messages in titles.txt
 typedef struct
 {
-	char *pBSPName;
-	char *pTitleName;
+	const char *pBSPName;
+	const char *pTitleName;
 } TITLECOMMENT;
 
 // this list gets searched for the first partial match, so some are out of order

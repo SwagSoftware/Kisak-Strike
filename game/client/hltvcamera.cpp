@@ -1501,7 +1501,7 @@ void C_HLTVCamera::FireGameEvent( IGameEvent * event)
 		wchar_t outputBuf[1024];
 		const char *pszText = event->GetString( "text", "" );
 		
-		char *tmpStr = hudtextmessage->LookupString( pszText );
+		const char *tmpStr = hudtextmessage->LookupString( pszText );
 		const wchar_t *pBuf = g_pVGuiLocalize->Find( tmpStr );
 		if ( pBuf )
 		{

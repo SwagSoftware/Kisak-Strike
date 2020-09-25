@@ -67,7 +67,7 @@ int		UTIL_ComputeStringWidth( vgui::HFont& font, const wchar_t *str );
 float	UTIL_AngleDiff( float destAngle, float srcAngle );
 void	UTIL_Bubbles( const Vector& mins, const Vector& maxs, int count );
 void	UTIL_Smoke( const Vector &origin, const float scale, const float framerate );
-void	UTIL_ImpactTrace( trace_t *pTrace, int iDamageType, char *pCustomImpactName = NULL );
+void	UTIL_ImpactTrace( trace_t *pTrace, int iDamageType, const char *pCustomImpactName = NULL );
 int		UTIL_PrecacheDecal( const char *name, bool preload = false );
 void	UTIL_EmitAmbientSound( C_BaseEntity *entity, const Vector &vecOrigin, const char *samp, float vol, soundlevel_t soundlevel, int fFlags, int pitch );
 void	UTIL_SetOrigin( C_BaseEntity *entity, const Vector &vecOrigin );

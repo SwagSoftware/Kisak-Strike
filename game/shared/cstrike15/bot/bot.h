@@ -225,7 +225,7 @@ public:
 
 	bool IsLocalPlayerWatchingMe( void ) const;					///< return true if local player is observing this bot
 
-	void PrintIfWatched( char *format, ... ) const;				///< output message to console if we are being watched by the local player
+	void PrintIfWatched( const char *format, ... ) const;				///< output message to console if we are being watched by the local player
 
 	virtual void UpdatePlayer( void );							///< update player physics, movement, weapon firing commands, etc
 	virtual void BuildUserCmd( CUserCmd& cmd, const QAngle& viewangles, float forwardmove, float sidemove, float upmove, int buttons, byte impulse );
@@ -1126,7 +1126,7 @@ inline bool CBot< PlayerType >::IsLocalPlayerWatchingMe( void ) const
  * Output message to console if we are being watched by the local player
  */
 template < class PlayerType >
-inline void CBot< PlayerType >::PrintIfWatched( char *format, ... ) const
+inline void CBot< PlayerType >::PrintIfWatched( const char *format, ... ) const
 {
 	if (cv_bot_debug.GetInt() == 0)
 	{

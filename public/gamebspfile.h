@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Defines game-specific data
 //
@@ -23,10 +23,11 @@
 //-----------------------------------------------------------------------------
 enum
 {
-	GAMELUMP_DETAIL_PROPS = 'dprp',
-	GAMELUMP_DETAIL_PROP_LIGHTING = 'dplt',
-	GAMELUMP_STATIC_PROPS = 'sprp',
-	GAMELUMP_DETAIL_PROP_LIGHTING_HDR = 'dplh',
+    //lwss: changed these to hex to stop warning
+	GAMELUMP_DETAIL_PROPS = 0x64707270, //'dprp',
+	GAMELUMP_DETAIL_PROP_LIGHTING = 0x64706C74, // 'dplt',
+	GAMELUMP_STATIC_PROPS = 0x73707270, // 'sprp',
+	GAMELUMP_DETAIL_PROP_LIGHTING_HDR = 0x64706C68 // 'dplh',
 };
 
 // Versions...

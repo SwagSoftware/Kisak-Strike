@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -261,7 +261,7 @@ CON_COMMAND(dump_globals, "Dump all global entities/states")
 //#ifdef _DEBUG
 void CGlobalState::DumpGlobals( void )
 {
-	static char *estates[] = { "Off", "On", "Dead" };
+	static const char *estates[] = { "Off", "On", "Dead" };
 
 	Msg( "-- Globals --\n" );
 	for ( int i = 0; i < m_list.Count(); i++ )

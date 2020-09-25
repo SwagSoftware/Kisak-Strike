@@ -57,7 +57,7 @@ void CSkyboxSwapper::Precache( void )
 	}
 
 	char  name[ MAX_PATH ];
-	char *skyboxsuffix[ 6 ] = { "rt", "bk", "lf", "ft", "up", "dn" };
+	const char *skyboxsuffix[ 6 ] = { "rt", "bk", "lf", "ft", "up", "dn" };
 	for ( int i = 0; i < 6; i++ )
 	{
 		Q_snprintf( name, sizeof( name ), "skybox/%s%s", m_iszSkyboxName.ToCStr(), skyboxsuffix[i] );

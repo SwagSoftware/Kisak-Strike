@@ -4836,7 +4836,7 @@ END_DATADESC()
 int SceneNameAutocomplete( char const *partial, char commands[ COMMAND_COMPLETION_MAXITEMS ][ COMMAND_COMPLETION_ITEM_LENGTH ] )
 {
 	// chop the command off the begining of the string
-	char *commandName = "scene_playvcd";
+	const char *commandName = "scene_playvcd";
 	int numMatches = 0;
 	partial += Q_strlen( commandName ) + 1;
 	int partialLength = Q_strlen( partial );

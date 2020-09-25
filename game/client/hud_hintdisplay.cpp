@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2004, Valve Corporation, All rights reserved. =======
+//====== Copyright ï¿½ 1996-2004, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -272,9 +272,9 @@ bool CHudHintDisplay::MsgFunc_HintText( const CCSUsrMsg_HintText &msg )
 	// csgo handles their hint text in sfhudinfopanel
 	return true;
 #endif
-	
-	char *tmpStr = hudtextmessage->LookupString( msg.text().c_str(), NULL );
-	LocalizeAndDisplay( tmpStr, msg.text().c_str() );
+	static char tmpStrBuf[1024];
+	V_strncpy( tmpStrBuf, hudtextmessage->LookupString( msg.text().c_str(), NULL ), sizeof( tmpStrBuf ) );
+	LocalizeAndDisplay( tmpStrBuf, msg.text().c_str() );
 
 	return true;
 }
@@ -285,8 +285,9 @@ bool CHudHintDisplay::MsgFunc_HintText( const CCSUsrMsg_HintText &msg )
 void CHudHintDisplay::FireGameEvent( IGameEvent * event)
 {
 	const char *hintmessage = event->GetString( "hintmessage" );
-	char *tmpStr = hudtextmessage->LookupString( hintmessage, NULL );
-	LocalizeAndDisplay( tmpStr, hintmessage );
+    static char tmpStrBuf[1024];
+    V_strncpy( tmpStrBuf, hudtextmessage->LookupString( hintmessage, NULL ), sizeof( tmpStrBuf ) );
+	LocalizeAndDisplay( tmpStrBuf, hintmessage );
 }
 
 ConVar sv_hudhint_sound( "sv_hudhint_sound", "1", FCVAR_REPLICATED );

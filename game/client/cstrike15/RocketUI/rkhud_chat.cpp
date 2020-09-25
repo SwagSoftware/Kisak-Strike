@@ -136,11 +136,12 @@ static bool __MsgFunc_TextMsg( const CCSUsrMsg_TextMsg &msg )
 
         if( szString[0] )
         {
-            char *tmpStr = hudtextmessage->LookupString( szString, &dest );
+            static char tmpStrBuf[1024];
+            V_strncpy( tmpStrBuf, hudtextmessage->LookupString( szString, &dest ), sizeof(tmpStrBuf) );
             bool bTranslated = false;
-            if( tmpStr[0] == '#' ) // only translate parameters intended as localization tokens
+            if( tmpStrBuf[0] == '#' ) // only translate parameters intended as localization tokens
             {
-                const wchar_t *pBuf = g_pVGuiLocalize->Find( tmpStr );
+                const wchar_t *pBuf = g_pVGuiLocalize->Find( tmpStrBuf );
                 if( pBuf )
                 {
                     // copy pBuf into szBuf[i]
@@ -155,9 +156,9 @@ static bool __MsgFunc_TextMsg( const CCSUsrMsg_TextMsg &msg )
             {
                 if( i > 0 )
                 {
-                    NullLastNewlineFromString( tmpStr );  // these strings are meant for substitution into the main strings, so cull the automatic end newlines
+                    NullLastNewlineFromString( tmpStrBuf );  // these strings are meant for substitution into the main strings, so cull the automatic end newlines
                 }
-                g_pVGuiLocalize->ConvertANSIToUnicode( tmpStr, szBuf[ i ], sizeof( szBuf[ i ] ) );
+                g_pVGuiLocalize->ConvertANSIToUnicode( tmpStrBuf, szBuf[ i ], sizeof( szBuf[ i ] ) );
             }
         }
     }

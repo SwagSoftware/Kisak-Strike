@@ -403,7 +403,7 @@ LINK_ENTITY_TO_CLASS_ALIASED( weapon_cs_base, WeaponCSBase );
 	ConVar cl_crosshairgap_useweaponvalue( "cl_crosshairgap_useweaponvalue", "0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE | FCVAR_SS, "If set to 1, the gap will update dynamically based on which weapon is currently equipped" );
 	ConVar cl_crosshairsize( "cl_crosshairsize", "5", FCVAR_CLIENTDLL | FCVAR_ARCHIVE  | FCVAR_SS );
 	ConVar cl_crosshairthickness( "cl_crosshairthickness", "0.5", FCVAR_CLIENTDLL | FCVAR_ARCHIVE  | FCVAR_SS );
-	ConVar cl_crosshairdot( "cl_crosshairdot", "1", FCVAR_CLIENTDLL | FCVAR_ARCHIVE  | FCVAR_SS );
+	ConVar cl_crosshairdot( "cl_crosshairdot", "0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE  | FCVAR_SS );
 	ConVar cl_crosshaircolor_r( "cl_crosshaircolor_r", "50", FCVAR_CLIENTDLL | FCVAR_ARCHIVE  | FCVAR_SS );
 	ConVar cl_crosshaircolor_g( "cl_crosshaircolor_g", "250", FCVAR_CLIENTDLL | FCVAR_ARCHIVE  | FCVAR_SS );
 	ConVar cl_crosshaircolor_b( "cl_crosshaircolor_b", "50", FCVAR_CLIENTDLL | FCVAR_ARCHIVE  | FCVAR_SS );

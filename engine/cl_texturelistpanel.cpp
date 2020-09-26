@@ -961,7 +961,11 @@ void CVmtTextEntry::OpenVmtSelected()
 		char const *szResolvedName = g_pFileSystem->RelativePathToFullPath( chResolveNameArg, "game", chResolveName, sizeof( chResolveName ) - 1 );
 
 		if ( szResolvedName )
-			vgui::system()->ShellExecuteEx( "open", szResolvedName, "" );
+        {
+		    //			vgui::system()->ShellExecuteEx( "open", szResolvedName, "" );
+		    // TODO: lwss: fix this, it wasn't working to begin with, but i've replaced ShellExecute
+		    Warning( "TODO: Open vmt-file: %s\n", szResolvedName );
+        }
 	}
 }
 
@@ -1291,7 +1295,9 @@ void CRenderTextureEditor::OnCommand( const char *command )
 
 		char params[256];
 		Q_snprintf( params, sizeof( params ) - 1, "/E,/SELECT,%s", szResolvedName );
-		vgui::system()->ShellExecuteEx( "open", "explorer.exe", params );
+        // TODO: lwss: fix this, it wasn't working to begin with, but i've replaced ShellExecute
+        //vgui::system()->ShellExecuteEx( "open", "explorer.exe", params );
+        Warning( "TODO: Open vmt-file: %s\n", params );
 	}
 
 	if ( !stricmp( command, "Reload" ) && m_lstMaterials.Count() )

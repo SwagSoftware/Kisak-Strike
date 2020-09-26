@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -88,7 +88,7 @@ void URLLabel::OnMousePressed(MouseCode code)
     {
         if (m_pszURL)
 		{
-	        system()->ShellExecute("open", m_pszURL);
+	        system()->OpenURL(m_pszURL);
 		}
     }
 }

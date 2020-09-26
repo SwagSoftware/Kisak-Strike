@@ -2599,7 +2599,7 @@ void RichText::OnTextClicked(const wchar_t *wszText)
 	char ansi[512];
 	Q_UnicodeToUTF8(wszText, ansi, sizeof(ansi));
 
-	system()->ShellExecute("open", ansi); 
+	system()->OpenURL(ansi);
 }
 
 

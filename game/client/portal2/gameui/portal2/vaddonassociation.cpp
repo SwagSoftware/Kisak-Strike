@@ -124,9 +124,9 @@ static void RegisterAssocation( bool showFailure )
 			shExecInfo.lpDirectory = NULL;
 			shExecInfo.nShow = SW_MAXIMIZE;
 			shExecInfo.hInstApp = NULL;
-			
+
 			if ( !ShellExecuteEx(&shExecInfo) )
-			{	
+			{
 				err = GetLastError();
 			}
 			else

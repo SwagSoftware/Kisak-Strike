@@ -3918,12 +3918,12 @@ CEG_NOINLINE void ClientModeCSFullscreen::OnEvent( KeyValues *pEvent )
 
 CON_COMMAND_F( error_message_explain_vac, "Take user to Steam support article", FCVAR_CLIENTCMD_CAN_EXECUTE | FCVAR_HIDDEN )
 {
-	vgui::system()->ShellExecute( "open", "https://support.steampowered.com/kb_article.php?ref=2117-ILZV-2837" );
+	vgui::system()->OpenURL("https://support.steampowered.com/kb_article.php?ref=2117-ILZV-2837" );
 }
 
 CON_COMMAND_F( error_message_explain_pure, "Take user to Steam support article", FCVAR_CLIENTCMD_CAN_EXECUTE | FCVAR_HIDDEN )
 {
-	vgui::system()->ShellExecute( "open", "https://support.steampowered.com/kb_article.php?ref=8285-YOAZ-6049" );
+	vgui::system()->OpenURL("https://support.steampowered.com/kb_article.php?ref=8285-YOAZ-6049" );
 }
 
 void ClientModeCSFullscreen::FireGameEvent( IGameEvent *event )

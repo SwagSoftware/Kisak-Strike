@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -37,8 +37,15 @@ public:
 	// called every frame
 	virtual void RunFrame() = 0;
 
+    // lwss: Replaced these vulnerable functions for a more friendly one(OpenURL)
+    // they were pretty much only used for opening webpages.
+    //
 	// use this with the "open" command to launch web browsers/explorer windows, eg. ShellExecute("open", "www.valvesoftware.com")
-	virtual void ShellExecute(const char *command, const char *file) = 0;
+	//virtual void ShellExecute(const char *command, const char *file) = 0;
+    // use this with the "open" command to launch web browsers/explorer windows, eg. ShellExecute("open", "www.valvesoftware.com")
+    virtual void ShellExecuteEx( const char *command, const char *file, const char *pParams ) = 0;
+	virtual void OpenURL( const char *szURL ) = 0;
+	// lwss: end
 
 	// returns the time at the start of the frame, in seconds
 	virtual double GetFrameTime() = 0;
@@ -113,9 +120,6 @@ public:
 	virtual bool DeleteRegistryKey(const char *keyName) = 0;
 
 	virtual const char *GetDesktopFolderPath() = 0;
-
-	// use this with the "open" command to launch web browsers/explorer windows, eg. ShellExecute("open", "www.valvesoftware.com")
-	virtual void ShellExecuteEx( const char *command, const char *file, const char *pParams ) = 0;
 
 	// Copy a portion of the application client area to the clipboard
 	//  (x1,y1) specifies the top-left corner of the client rect to copy

@@ -162,9 +162,12 @@ public:
 	// returns the current time
 	virtual double GetCurrentTime();
 
-	virtual void ShellExecute(const char *command, const char *file);
+	// lwss: replaced these vulnerable functions for a more friendly one (OpenURL)
+	//virtual void ShellExecute(const char *command, const char *file);
+    virtual void ShellExecuteEx( const char *command, const char *file, const char *pParams );
+    virtual void OpenURL( const char *szURL );
 
-	virtual int GetClipboardTextCount();
+    virtual int GetClipboardTextCount();
 	virtual void SetClipboardText(const char *text, int textLen);
 	virtual void SetClipboardText(const wchar_t *text, int textLen);
 	virtual int GetClipboardText(int offset, char *buf, int bufLen);
@@ -199,7 +202,6 @@ public:
 
 	virtual KeyCode KeyCode_VirtualKeyToVGUI( int keyCode );
 	virtual const char *GetDesktopFolderPath();
-	virtual void ShellExecuteEx( const char *command, const char *file, const char *pParams );
 private:
 	// auto-away data
 	bool m_bStaticWatchForComputerUse;
@@ -305,13 +307,13 @@ long CSystem::GetTimeMillis()
 	return (long)(GetCurrentTime() * 1000);
 }
 
-void CSystem::ShellExecute( const char *command, const char *file )
-{
-#ifndef _GAMECONSOLE
-	::ShellExecuteA(NULL, command, file, NULL, NULL, SW_SHOWNORMAL);
-#endif
-}
-
+//void CSystem::ShellExecute( const char *command, const char *file )
+//{
+//#ifndef _GAMECONSOLE
+//	::ShellExecuteA(NULL, command, file, NULL, NULL, SW_SHOWNORMAL);
+//#endif
+//}
+//
 void CSystem::ShellExecuteEx( const char *command, const char *file, const char *pParams )
 {
 #ifndef _GAMECONSOLE
@@ -319,6 +321,26 @@ void CSystem::ShellExecuteEx( const char *command, const char *file, const char 
 #endif
 }
 
+void CSystem::OpenURL(const char *szURL)
+{
+#ifndef _GAMECONSOLE
+    // According to Mozilla in uriloader/exthandler/win/nsOSHelperAppService.cpp:
+    // "Some versions of windows (Win2k before SP3, Win XP before SP1) crash in
+    // ShellExecute on long URLs (bug 161357 on bugzilla.mozilla.org). IE 5 and 6
+    // support URLS of 2083 chars in length, 2K is safe."
+    if( strlen( kMaxUrlLength ) > 2048 )
+        return;
+
+    // has to start with one of these.
+    if( V_strnicmp( szURL, "https://", 8 ) && V_strnicmp( szURL, "http://", 7 ) && V_strnicmp( szURL, "steam://", 8 ) )
+    {
+        Warning( "OpenURL failed. Invalid input(%s)\n", szURL );
+        return;
+    }
+
+    ::ShellExecuteA(NULL, "open", szURL, NULL, NULL, SW_SHOWNORMAL);
+#endif
+}
 
 void CSystem::SetClipboardImage( void *pWnd, int x1, int y1, int x2, int y2 )
 {

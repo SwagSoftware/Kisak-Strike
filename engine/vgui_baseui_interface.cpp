@@ -1172,12 +1172,12 @@ void CEngineVGui::Shutdown()
 
 	if ( IsPC() && CL_IsHL2Demo() ) // if they are playing the demo then open the storefront on shutdown
 	{
-		system()->ShellExecute("open", "steam://store_demo/220");
+		system()->OpenURL("steam://store_demo/220");
 	}
 
 	if ( IsPC() && CL_IsPortalDemo() ) // if they are playing the demo then open the storefront on shutdown
 	{
-		vgui::system()->ShellExecute("open", "steam://store_demo/400");
+		vgui::system()->OpenURL("steam://store_demo/400");
 	}
 
 	DestroyVProfPanels();

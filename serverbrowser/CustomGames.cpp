@@ -87,7 +87,7 @@ void TagInfoLabel::DoOpenCustomServerInfoURL( void )
 {
 	if ( GetURL() )
 	{
-		system()->ShellExecute("open", GetURL() );
+		system()->OpenURL( GetURL() );
 	}
 }
 

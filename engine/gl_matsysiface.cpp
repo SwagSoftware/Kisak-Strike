@@ -141,50 +141,51 @@ CON_COMMAND_F( mat_crosshair, "Display the name of the material under the crossh
 //-----------------------------------------------------------------------------
 // A console command to open the material under the crosshair in the associated editor.
 //-----------------------------------------------------------------------------
-CON_COMMAND_F( mat_crosshair_edit, "open the material under the crosshair in the editor defined by mat_crosshair_edit_editor", FCVAR_CHEAT )
-{
-	IMaterial* pMaterial = GetMaterialAtCrossHair();
-	if (!pMaterial)
-	{
-		ConMsg ("no/bad material\n");
-	}
-	else
-	{
-		char chResolveName[ 256 ] = {0}, chResolveNameArg[ 256 ] = {0};
-		Q_snprintf( chResolveNameArg, sizeof( chResolveNameArg ) - 1, "materials/%s.vmt", pMaterial->GetName() );
-		char const *szResolvedName = g_pFileSystem->RelativePathToFullPath( chResolveNameArg, "game", chResolveName, sizeof( chResolveName ) - 1 );
-		if ( p4 )
-		{
-			CP4AutoEditAddFile autop4( szResolvedName );
-		}
-		else
-		{
-			Warning( "run with -p4 to get p4 operations upon mat_crosshair_edit\n" );
-		}
-		vgui::system()->ShellExecute( "open", szResolvedName );
-	}
-}
+// TODO: lwss: i commented these out for now because they weren't working anyway and I wanted to replace the ShellExecute() functions
+//CON_COMMAND_F( mat_crosshair_edit, "open the material under the crosshair in the editor defined by mat_crosshair_edit_editor", FCVAR_CHEAT )
+//{
+//	IMaterial* pMaterial = GetMaterialAtCrossHair();
+//	if (!pMaterial)
+//	{
+//		ConMsg ("no/bad material\n");
+//	}
+//	else
+//	{
+//		char chResolveName[ 256 ] = {0}, chResolveNameArg[ 256 ] = {0};
+//		Q_snprintf( chResolveNameArg, sizeof( chResolveNameArg ) - 1, "materials/%s.vmt", pMaterial->GetName() );
+//		char const *szResolvedName = g_pFileSystem->RelativePathToFullPath( chResolveNameArg, "game", chResolveName, sizeof( chResolveName ) - 1 );
+//		if ( p4 )
+//		{
+//			CP4AutoEditAddFile autop4( szResolvedName );
+//		}
+//		else
+//		{
+//			Warning( "run with -p4 to get p4 operations upon mat_crosshair_edit\n" );
+//		}
+//		vgui::system()->ShellExecute( "open", szResolvedName );
+//	}
+//}
 
 //-----------------------------------------------------------------------------
 // A console command to open the material under the crosshair in the associated editor.
 //-----------------------------------------------------------------------------
-CON_COMMAND_F( mat_crosshair_explorer, "open the material under the crosshair in explorer and highlight the vmt file", FCVAR_CHEAT )
-{
-	IMaterial* pMaterial = GetMaterialAtCrossHair();
-	if (!pMaterial)
-	{
-		ConMsg ("no/bad material\n");
-	}
-	else
-	{
-		char chResolveName[ 256 ] = {0}, chResolveNameArg[ 256 ] = {0};
-		Q_snprintf( chResolveNameArg, sizeof( chResolveNameArg ) - 1, "materials/%s.vmt", pMaterial->GetName() );
-		char const *szResolvedName = g_pFileSystem->RelativePathToFullPath( chResolveNameArg, "game", chResolveName, sizeof( chResolveName ) - 1 );
-		char params[256];
-		Q_snprintf( params, sizeof( params ) - 1, "/E,/SELECT,%s", szResolvedName );
-		vgui::system()->ShellExecuteEx( "open", "explorer.exe", params );
-	}
-}
+//CON_COMMAND_F( mat_crosshair_explorer, "open the material under the crosshair in explorer and highlight the vmt file", FCVAR_CHEAT )
+//{
+//	IMaterial* pMaterial = GetMaterialAtCrossHair();
+//	if (!pMaterial)
+//	{
+//		ConMsg ("no/bad material\n");
+//	}
+//	else
+//	{
+//		char chResolveName[ 256 ] = {0}, chResolveNameArg[ 256 ] = {0};
+//		Q_snprintf( chResolveNameArg, sizeof( chResolveNameArg ) - 1, "materials/%s.vmt", pMaterial->GetName() );
+//		char const *szResolvedName = g_pFileSystem->RelativePathToFullPath( chResolveNameArg, "game", chResolveName, sizeof( chResolveName ) - 1 );
+//		char params[256];
+//		Q_snprintf( params, sizeof( params ) - 1, "/E,/SELECT,%s", szResolvedName );
+//		vgui::system()->ShellExecuteEx( "open", "explorer.exe", params );
+//	}
+//}
 
 //-----------------------------------------------------------------------------
 // A console command to open the material under the crosshair in the associated editor.

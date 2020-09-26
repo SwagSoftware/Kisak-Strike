@@ -1,5 +1,3 @@
-
-
 if( GL AND NOT OSX32 )
     set(SDL "1")
 endif()
@@ -17,5 +15,10 @@ if( GL )
 endif()
 if( SDL )
     add_definitions(-DUSE_SDL)
-    include_directories("${SRCDIR}/thirdparty/SDL2")
+    #Use system SDL2 for linux.
+    if( LINUXALL )
+        include_directories("/usr/include/SDL2")
+    else()
+        include_directories("${SRCDIR}/thirdparty/SDL2")
+    endif()
 endif()

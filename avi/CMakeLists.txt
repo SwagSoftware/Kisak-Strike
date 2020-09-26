@@ -30,9 +30,9 @@ endif()
 
 #Compiler
 if( LINUXALL )
-    #these dont exist, might need FIXME
-    include_directories(${SRCDIR}/thirdparty/sdl/include)
-    include_directories(${SRCDIR}/thirdparty/sdl_mixer)
+    #these dont exist... Seems to work... Commented out
+    #include_directories(${SRCDIR}/thirdparty/sdl/include)
+    #include_directories(${SRCDIR}/thirdparty/sdl_mixer)
 endif()
 
 

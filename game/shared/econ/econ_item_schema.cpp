@@ -55,8 +55,119 @@ CEconItemSchema & GEconItemSchema()
 #endif
 }
 
-const char * g_arrQuestVars[ k_EQuestVar_Last ] = { "" };
-	/** Removed for partner depot **/
+// lwss - Adding this default EconTool class so we have at least something registered for each tool
+class CEconTool_Default : public IEconTool
+{
+public:
+    CEconTool_Default( const char *pszTypeName, const char *pszUseString, const char *pszUsageRestriction, item_capabilities_t unCapabilities, KeyValues* pUsageKV )
+            : IEconTool( pszTypeName, pszUseString, pszUsageRestriction, unCapabilities, pUsageKV )
+    {
+        Assert( pszTypeName );
+    }
+
+#ifdef CLIENT_DLL
+    virtual void OnClientUseConsumable( class C_EconItemView *pItem ) const override
+    {
+        Msg( "Client tried to Use unimplemented EconTool: (%s)\n", this->GetTypeName() );
+    }
+#endif // CLIENT_DLL
+};
+// lwss end
+
+/** Removed for partner depot **/
+//lwss - I got these from the era-appropriate debug bins, and then got more from the retail bins.
+// I think for now I just want the ones from the appropriate era.
+const char * g_arrQuestVars[ k_EQuestVar_Last ] =
+{
+    "act_kill_human",
+    "act_kill_chicken",
+    "act_kill_target",
+    "act_win_match",
+    "act_flashbang_enemy",
+    "act_pick_up_hostage",
+    "act_rescue_hostage",
+    "act_defuse_bomb",
+    "act_plant_bomb",
+    "act_damage",
+    //"act_vampiric_heal",           // newer than debug bins
+    "act_win_round",
+    //"act_round_end",               // new
+    //"act_round_mvp",               // new
+    "act_dm_bonus_points",
+    "act_income",
+    "act_cash",
+    "act_spend",
+    //"act_dz_purchase_item",        // new
+    "act_pick_up_trophy",
+    //"act_armsrace_level",          // new
+    //"act_motion_detect_enemy",     // new
+    //"act_avoid_motion_detection",  // new
+    //"act_protect_chicken",         // new
+    //"act_armsrace_steal_level",    // new
+    //"act_kill_other",              // new
+    //"act_dz_game_end_placement",   // new
+    //"act_parachute_landed",        // new
+    //"act_bumpmine_launch",         // new
+    //"act_apply_graffiti",          // new
+    //"act_detonate_smokegrenade",   // new
+    "cond_damage_headshot",
+    "cond_damage_burn",
+    //"cond_damage_penetrate",       // new
+    //"cond_damage_collateral",      // new
+    //"cond_damage_utility",         // new
+    "cond_match_unique_weapon",
+    "cond_match_unique_weapon_count",
+    "cond_roundstate_pistolround",
+    "cond_roundstate_finalround",
+    "cond_roundstate_matchpoint",
+    "cond_roundstate_bomb_planted",
+    "cond_item_own",
+    "cond_item_borrowed",
+    "cond_item_borrowed_enemy",
+    "cond_item_borrowed_teammate",
+    "cond_item_borrowed_victim",
+    "cond_item_nondefault",
+    //"cond_drone_enemy",             // new
+    //"cond_armor_none",              // new
+    //"cond_armor_vest_only",         // new
+    //"cond_armor_helmet",            // new
+    //"cond_armor_heavyassaultsuit",  // new
+    "cond_bullet_since_spawn",
+    "cond_player_rescuing",
+    "cond_player_zoomed",
+    "cond_player_blind",
+    "cond_player_terrorist",
+    "cond_player_ct",
+    //"cond_player_airborne",                         // new
+    //"cond_player_parachute_airborne_time_total",    // new
+    //"cond_player_money_current",                    // new
+    //"cond_player_money_start",                      // new
+    //"cond_player_money_spent",                      // new
+    //"cond_player_money_spent_this_round",           // new
+    "cond_life_killstreak_human",
+    "cond_life_killstreak_chicken",
+    "cond_match_rounds_won",
+    "cond_match_rounds_played",
+    //"cond_match_rounds_mvp",        // new
+    "cond_victim_blind",
+    "cond_victim_zoomed",
+    "cond_victim_rescuing",
+    "cond_victim_terrorist",
+    "cond_victim_ct",
+    "cond_victim_reloading"
+    //"cond_victim_seconds_since_fire",            // new
+    //"cond_victim_airborne",                      // new
+    //"cond_victim_armsrace_leader",               // new
+    //"cond_roundend_cts_eliminate_ts",            // new
+    //"cond_roundend_cts_eliminate_cts",           // new
+    //"cond_roundend_target_bombed",               // new
+    //"cond_roundend_failed_to_plant_bomb",        // new
+    //"cond_roundend_bomb_defused",                // new
+    //"cond_roundend_failed_to_rescue_hostage",    // new
+    //"cond_roundend_hostage_rescued",             // new
+    //"cond_score_first_half",                     // new
+    //"cond_score_second_half",                    // new
+};
 
 
 static void HelperValidateLocalizationStringToken( char const *pszToken )
@@ -866,6 +977,52 @@ void CEconQuestDefinition::PopulateQuestStringTokens( CEconQuestDefinition &ques
 					}
 					
 					/** Removed for partner depot **/
+					// lwss - restored this switch statement from era-appropriate debug bins
+					switch( (EQuestVar_t)i )
+                    {
+                        case k_EQuestVar_Cond_ItemOwn:
+                            if( !kvStringTokens.FindKey( "item_quality" ) )
+                                kvStringTokens.SetString( "item_quality", "#quest_condition_item_own" );
+                            break;
+                        case k_EQuestVar_Cond_ItemBorrowed:
+                            if( !kvStringTokens.FindKey( "item_quality" ) )
+                                kvStringTokens.SetString( "item_quality", "#quest_condition_item_borrowed" );
+                            break;
+                        case k_EQuestVar_Cond_ItemBorrowedEnemy:
+                            if( !kvStringTokens.FindKey( "item_quality" ) )
+                                kvStringTokens.SetString( "item_quality", "#quest_condition_item_borrowed_enemy" );
+                            break;
+                        case k_EQuestVar_Cond_ItemBorrowedTeammate:
+                            if( !kvStringTokens.FindKey( "item_quality" ) )
+                                kvStringTokens.SetString( "item_quality", "#quest_condition_item_borrowed_teammate" );
+                            break;
+                        case k_EQuestVar_Cond_ItemBorrowedVictim:
+                            if( !kvStringTokens.FindKey( "item_quality" ) )
+                                kvStringTokens.SetString( "item_quality", "#quest_condition_item_borrowed_victim" );
+                            break;
+                        case k_EQuestVar_Cond_ItemNonDefault:
+                            if( !kvStringTokens.FindKey( "item_quality" ) )
+                                kvStringTokens.SetString( "item_quality", "#quest_condition_item_nondefault" );
+                            break;
+                        case k_EQuestVar_Cond_PlayerTerrorist:
+                            if( !kvStringTokens.FindKey( "team" ) )
+                                kvStringTokens.SetString( "team", "#quest_team_terrorist" );
+                            break;
+                        case k_EQuestVar_Cond_PlayerCT: // 35
+                            if( !kvStringTokens.FindKey( "team" ) )
+                                kvStringTokens.SetString( "team", "#quest_team_ct" );
+                            break;
+                        case k_EQuestVar_Cond_VictimTerrorist: // 43
+                            if( !kvStringTokens.FindKey( "victim_team" ) )
+                                kvStringTokens.SetString( "victim_team", "#quest_team_terrorist" );
+                            break;
+                        case k_EQuestVar_Cond_VictimCT:
+                            if( !kvStringTokens.FindKey( "victim_team" ) )
+                                kvStringTokens.SetString( "victim_team", "#quest_team_ct" );
+                            break;
+
+                    }
+                    // lwss end
 
 					// note that we have at least one generic weapon if we use any item condition.
 					if ( V_stristr( kvSubKey->GetName( ), "cond_item" ) )
@@ -975,11 +1132,285 @@ void CEconQuestDefinition::PopulateQuestStringTokens( CEconQuestDefinition &ques
 				}
 			}
 		}
-		else if ( V_stristr( kvSubKey->GetName(), "map_" ) )
+		else if ( V_stristr( kvSubKey->GetName(), "map_" ) && !kvStringTokens.FindKey( "map" ) ) // lwss -added check here
 		{
-
 			/** Removed for partner depot **/
+            // lwss - restored this big ass if/else ladder from era-appropriate debug bins
+            const char *mapName = kvSubKey->GetName();
 
+            if( !V_stricmp( mapName, "map_de_dust" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_dust" );
+            }
+            else if( !V_stricmp( mapName, "map_de_dust2" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_dust2" );
+            }
+            else if( !V_stricmp( mapName, "map_de_train" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_train");
+            }
+            else if( !V_stricmp( mapName, "map_de_aztec" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_aztec");
+            }
+            else if( !V_stricmp( mapName, "map_de_inferno" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_inferno");
+            }
+            else if( !V_stricmp( mapName, "map_de_nuke" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_nuke");
+            }
+            else if( !V_stricmp( mapName, "map_de_vertigo" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_vertigo");
+            }
+            else if( !V_stricmp( mapName, "map_cs_office" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_cs_office");
+            }
+            else if( !V_stricmp( mapName, "map_cs_italy" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_cs_italy");
+            }
+            else if( !V_stricmp( mapName, "map_ar_baggage" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_ar_baggage");
+            }
+            else if( !V_stricmp( mapName, "map_ar_baloney" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_ar_baloney");
+            }
+            else if( !V_stricmp( mapName, "map_ar_monastery" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_ar_monastery");
+            }
+            else if( !V_stricmp( mapName, "map_ar_shoots" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_ar_shoots");
+            }
+            else if( !V_stricmp( mapName, "map_de_bank" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_bank");
+            }
+            else if( !V_stricmp( mapName, "map_de_glass" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_glass");
+            }
+            else if( !V_stricmp( mapName, "map_de_lake" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_lake");
+            }
+            else if( !V_stricmp( mapName, "map_de_safehouse" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_safehouse");
+            }
+            else if( !V_stricmp( mapName, "map_de_shorttrain" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_shorttrain");
+            }
+            else if( !V_stricmp( mapName, "map_de_stmarc" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_stmarc");
+            }
+            else if( !V_stricmp( mapName, "map_de_sugarcane" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_sugarcane");
+            }
+            else if( !V_stricmp( mapName, "map_cs_assault" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_cs_assault");
+            }
+            else if( !V_stricmp( mapName, "map_cs_militia" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_cs_militia");
+            }
+            else if( !V_stricmp( mapName, "map_de_mirage" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_mirage");
+            }
+            else if( !V_stricmp( mapName, "map_de_overpass" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_overpass");
+            }
+            else if( !V_stricmp( mapName, "map_de_cbble" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_cbble");
+            }
+            else if( !V_stricmp( mapName, "map_de_cache" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_cache");
+            }
+            else if( !V_stricmp( mapName, "map_de_gwalior" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_gwalior");
+            }
+            else if( !V_stricmp( mapName, "map_de_ali" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_ali");
+            }
+            else if( !V_stricmp( mapName, "map_de_ruins" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_ruins");
+            }
+            else if( !V_stricmp( mapName, "map_de_chinatown" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_chinatown");
+            }
+            else if( !V_stricmp( mapName, "map_de_seaside" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_seaside");
+            }
+            else if( !V_stricmp( mapName, "map_cs_siege" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_cs_siege");
+            }
+            else if( !V_stricmp( mapName, "map_cs_agency" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_cs_agency");
+            }
+            else if( !V_stricmp( mapName, "map_cs_motel" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_cs_motel");
+            }
+            else if( !V_stricmp( mapName, "map_cs_downtown" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_cs_downtown");
+            }
+            else if( !V_stricmp( mapName, "map_cs_thunder" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_cs_thunder");
+            }
+            else if( !V_stricmp( mapName, "map_de_favela" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_favela");
+            }
+            else if( !V_stricmp( mapName, "map_cs_rush" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_cs_rush");
+            }
+            else if( !V_stricmp( mapName, "map_de_mist" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_mist");
+            }
+            else if( !V_stricmp( mapName, "map_de_castle" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_castle");
+            }
+            else if( !V_stricmp( mapName, "map_de_overgrown" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_overgrown");
+            }
+            else if( !V_stricmp( mapName, "map_cs_insertion" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_cs_insertion");
+            }
+            else if( !V_stricmp( mapName, "map_de_blackgold" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_blackgold");
+            }
+            else if( !V_stricmp( mapName, "map_de_season" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_season");
+            }
+            else if( !V_stricmp( mapName, "map_de_marquis" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_marquis");
+            }
+            else if( !V_stricmp( mapName, "map_de_facade" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_facade");
+            }
+            else if( !V_stricmp( mapName, "map_cs_backalley" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_cs_backalley");
+            }
+            else if( !V_stricmp( mapName, "map_cs_workout" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_cs_workout");
+            }
+            else if( !V_stricmp( mapName, "map_de_bazaar" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_bazaar");
+            }
+            else if( !V_stricmp( mapName, "map_de_shortdust" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_shortdust");
+            }
+            else if( !V_stricmp( mapName, "map_de_rails" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_rails");
+            }
+            else if( !V_stricmp( mapName, "map_de_resort" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_resort");
+            }
+            else if( !V_stricmp( mapName, "map_de_zoo" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_zoo");
+            }
+            else if( !V_stricmp( mapName, "map_de_log" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_log");
+            }
+            else if( !V_stricmp( mapName, "map_gd_crashsite" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_gd_crashsite");
+            }
+            else if( !V_stricmp( mapName, "map_gd_lake" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_gd_lake");
+            }
+            else if( !V_stricmp( mapName, "map_gd_bank" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_gd_bank");
+            }
+            else if( !V_stricmp( mapName, "map_gd_cbble" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_gd_cbble");
+            }
+            else if( !V_stricmp( mapName, "map_gd_sugarcane" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_gd_sugarcane");
+            }
+            else if( !V_stricmp( mapName, "map_coop_cementplant" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_coop_cementplant");
+            }
+            else if( !V_stricmp( mapName, "map_cs_cruise" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_cs_cruise");
+            }
+            else if( !V_stricmp( mapName, "map_de_coast" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_coast");
+            }
+            else if( !V_stricmp( mapName, "map_de_empire" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_empire");
+            }
+            else if( !V_stricmp( mapName, "map_de_mikla" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_mikla");
+            }
+            else if( !V_stricmp( mapName, "map_de_royal" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_royal");
+            }
+            else if( !V_stricmp( mapName, "map_de_santorini" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_santorini");
+            }
+            else if( !V_stricmp( mapName, "map_de_tulip" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_tulip");
+            }
+            else if( !V_stricmp( mapName, "map_de_canals" ) )
+            {
+                kvStringTokens.SetString( "map", "#SFUI_Map_de_canals");
+            }
+            // lwss end
 		}
 
 		// debug save
@@ -1073,6 +1504,54 @@ void CEconQuestDefinition::ZeroOutQuestExpressionVariables( CExpressionCalculato
 
 	// ACTIONS and CONDITIONS
 	/** Removed for partner depot **/
+	// lwss - restored these from era-appropriate bins, see g_arrQuestVars
+	expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_KillHuman] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Act_KillChicken] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Act_KillTarget] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Act_WinMatch] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Act_FlashbangEnemy] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Act_PickupHostage] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Act_RescueHostage] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Act_DefuseBomb] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Act_PlantBomb] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Act_Damage] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Act_WinRound] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Act_DmBonusPoints] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Act_Income] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Act_Cash] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Act_Spend] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Act_PickupTrophy] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_Headshot] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_Burn] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_Match_UniqueWeapon] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_Match_UniqueWeaponCount] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_Roundstate_PistolRound] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_Roundstate_FinalRound] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_Roundstate_MatchPoint] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_Roundstate_BombPlanted] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_ItemOwn] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_ItemBorrowed] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_ItemBorrowedEnemy] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_ItemBorrowedTeammate] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_ItemBorrowedVictim] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_ItemNonDefault] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_BulletSinceSpawn] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_PlayerRescuing] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_PlayerZoomed] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_PlayerBlind] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_PlayerTerrorist] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_PlayerCT] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_LifeKillstreakHuman] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_LifeKillstreakChicken] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_MatchRoundsWon] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_MatchRoundsPlayed] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_VictimBlind] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_VictimZoomed] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_VictimRescuing] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_VictimTerrorist] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_VictimCT] ), 0 );
+    expr.SetVariable( CFmtStr( "%%%s%%", g_arrQuestVars[k_EQuestVar_Cond_VictimReloading] ), 0 );
+    // lwss end
 
 	// WEAPON TYPES
 	for ( int i = 0; i < LOADOUT_POSITION_COUNT; i++ )
@@ -1112,7 +1591,75 @@ void CEconQuestDefinition::ZeroOutQuestExpressionVariables( CExpressionCalculato
 
 	// MAPS
 	/** Removed for partner depot **/
-
+	// lwss - restored these from era-appropriate bins, the maps are hard-coded here.
+    expr.SetVariable( "%map_de_dust%", 0 );
+    expr.SetVariable( "%map_de_dust2%", 0 );
+    expr.SetVariable( "%map_de_train%", 0 );
+    expr.SetVariable( "%map_de_aztec%", 0 );
+    expr.SetVariable( "%map_de_inferno%", 0 );
+    expr.SetVariable( "%map_de_nuke%", 0 );
+    expr.SetVariable( "%map_de_vertigo%", 0 );
+    expr.SetVariable( "%map_cs_office%", 0 );
+    expr.SetVariable( "%map_cs_italy%", 0 );
+    expr.SetVariable( "%map_ar_baggage%", 0 );
+    expr.SetVariable( "%map_ar_baloney%", 0 );
+    expr.SetVariable( "%map_ar_monastery%", 0 );
+    expr.SetVariable( "%map_ar_shoots%", 0 );
+    expr.SetVariable( "%map_de_bank%", 0 );
+    expr.SetVariable( "%map_de_glass%", 0 );
+    expr.SetVariable( "%map_de_lake%", 0 );
+    expr.SetVariable( "%map_de_safehouse%", 0 );
+    expr.SetVariable( "%map_de_shorttrain%", 0 );
+    expr.SetVariable( "%map_de_stmarc%", 0 );
+    expr.SetVariable( "%map_de_sugarcane%", 0 );
+    expr.SetVariable( "%map_cs_assault%", 0 );
+    expr.SetVariable( "%map_cs_militia%", 0 );
+    expr.SetVariable( "%map_de_mirage%", 0 );
+    expr.SetVariable( "%map_de_overpass%", 0 );
+    expr.SetVariable( "%map_de_cbble%", 0 );
+    expr.SetVariable( "%map_de_gwalior%", 0 );
+    expr.SetVariable( "%map_de_ali%", 0 );
+    expr.SetVariable( "%map_de_ruins%", 0 );
+    expr.SetVariable( "%map_de_chinatown%", 0 );
+    expr.SetVariable( "%map_de_seaside%", 0 );
+    expr.SetVariable( "%map_cs_siege%", 0 );
+    expr.SetVariable( "%map_cs_agency%", 0 );
+    expr.SetVariable( "%map_cs_motel%", 0 );
+    expr.SetVariable( "%map_cs_downtown%", 0 );
+    expr.SetVariable( "%map_cs_thunder%", 0 );
+    expr.SetVariable( "%map_de_favela%", 0 );
+    expr.SetVariable( "%map_cs_rush%", 0 );
+    expr.SetVariable( "%map_de_mist%", 0 );
+    expr.SetVariable( "%map_de_castle%", 0 );
+    expr.SetVariable( "%map_de_overgrown%", 0 );
+    expr.SetVariable( "%map_cs_insertion%", 0 );
+    expr.SetVariable( "%map_de_blackgold%", 0 );
+    expr.SetVariable( "%map_de_season%", 0 );
+    expr.SetVariable( "%map_de_marquis%", 0 );
+    expr.SetVariable( "%map_de_facade%", 0 );
+    expr.SetVariable( "%map_cs_backalley%", 0 );
+    expr.SetVariable( "%map_cs_workout%", 0 );
+    expr.SetVariable( "%map_de_bazaar%", 0 );
+    expr.SetVariable( "%map_de_shortdust%", 0 );
+    expr.SetVariable( "%map_de_rails%", 0 );
+    expr.SetVariable( "%map_de_resort%", 0 );
+    expr.SetVariable( "%map_de_zoo%", 0 );
+    expr.SetVariable( "%map_de_log%", 0 );
+    expr.SetVariable( "%map_gd_crashsite%", 0 );
+    expr.SetVariable( "%map_gd_lake%", 0 );
+    expr.SetVariable( "%map_gd_bank%", 0 );
+    expr.SetVariable( "%map_gd_cbble%", 0 );
+    expr.SetVariable( "%map_gd_sugarcane%", 0 );
+    expr.SetVariable( "%map_coop_cementplant%", 0 );
+    expr.SetVariable( "%map_cs_cruise%", 0 );
+    expr.SetVariable( "%map_de_coast%", 0 );
+    expr.SetVariable( "%map_de_empire%", 0 );
+    expr.SetVariable( "%map_de_mikla%", 0 );
+    expr.SetVariable( "%map_de_royal%", 0 );
+    expr.SetVariable( "%map_de_santorini%", 0 );
+    expr.SetVariable( "%map_de_tulip%", 0 );
+    expr.SetVariable( "%map_de_canals%", 0 );
+    // lwss end
 }
 
 
@@ -5661,7 +6208,15 @@ CEconItemSchema::CEconItemSchema( )
 IEconTool *CEconItemSchema::CreateEconToolImpl( const char *pszToolType, const char *pszUseString, const char *pszUsageRestriction, item_capabilities_t unCapabilities, KeyValues *pUsageKV )
 {
     // lwss: noticed this removed for partner depot
-	return nullptr;
+
+    //TODO: this function is not finished, see the TF2 leak for more details
+    // basically what it does is check the pszToolType and return a new class object based on that
+    // unfortunately Valve removed all the CEcon_XXXX classes.
+
+
+    // I will implement the default behavior for now.
+    return new CEconTool_Default( pszToolType, pszUseString, pszUsageRestriction, unCapabilities, pUsageKV );
+	//return nullptr;
 }
 
 //-----------------------------------------------------------------------------

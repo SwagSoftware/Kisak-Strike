@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -29,7 +29,7 @@ enum BotDifficultyType
 };
 
 #ifdef DEFINE_DIFFICULTY_NAMES
-	char *BotDifficultyName[] = 
+	const char *BotDifficultyName[] =
 	{
 		"EASY", "NORMAL", "HARD", "EXPERT", NULL
 	};

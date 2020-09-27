@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -35,8 +35,8 @@ public:
 	virtual void		Destroy( void );
 	
 	virtual void		SetTextColor( int r, int g, int b, int a );
-	virtual void		Print( char *text );
-	virtual void		Print( wchar_t *text );
+	virtual void		Print( const char *text );
+	virtual void		Print( const wchar_t *text );
 	virtual void		ColorPrint( int r, int g, int b, int a, char *text );
 	virtual void		ColorPrint( int r, int g, int b, int a, wchar_t *text );
 	virtual void		Clear( void );

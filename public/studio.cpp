@@ -530,7 +530,7 @@ void studiohdr_t::SetAttachmentBone( int iAttachment, int iBone )
 // Purpose:
 //-----------------------------------------------------------------------------
 
-char *studiohdr_t::pszNodeName( int iNode )
+const char *studiohdr_t::pszNodeName( int iNode )
 {
 	if (numincludemodels == 0)
 	{
@@ -1155,7 +1155,7 @@ void CStudioHdr::SetAttachmentBone( int iAttachment, int iBone )
 // Purpose:
 //-----------------------------------------------------------------------------
 
-char *CStudioHdr::pszNodeName( int iNode )
+const char *CStudioHdr::pszNodeName( int iNode )
 {
 	if (m_pVModel == NULL)
 	{

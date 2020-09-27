@@ -223,7 +223,7 @@ public:
 	CStartOfRoundAudioPlayback() { m_NextAvailableTime = 1.0f; m_bPlaybackEnabled = false; }
 
 	// Adds a sound event to be played at the next round restart
-	void	AddSound( CBaseEntity* pEntityPlayingSound, char* pName, float fDelayTime );
+	void	AddSound( CBaseEntity* pEntityPlayingSound, const char* pName, float fDelayTime );
 
 	// Play all the queued sounds
 	void	PlaySounds( void );

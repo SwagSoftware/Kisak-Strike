@@ -762,7 +762,7 @@ CBaseModPanel::~CBaseModPanel()
 	g_pBasePanel = NULL;
 }
 
-static char *g_rgValidCommands[] =
+static const char *g_rgValidCommands[] =
 {
 	"OpenGameMenu",
 	"OpenPlayerListDialog",

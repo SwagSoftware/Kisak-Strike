@@ -641,7 +641,7 @@ void C_CHostage::UpdateClientSideAnimation()
 	m_PlayerAnimState->Update( GetAbsAngles()[YAW], GetAbsAngles()[PITCH] );
 
 	// initialize pose parameters
-	char *setToZero[] =
+	const char *setToZero[] =
 	{
 		"spine_yaw",
 		"head_roll"

@@ -3,7 +3,7 @@
 // Desc: 		Manages client side stat storage, accumulation, and access
 // Author: 		Peter Freese <peter@hiddenpath.com>
 // Date: 		2009/09/11
-// Copyright:	© 2009 Hidden Path Entertainment
+// Copyright:	ï¿½ 2009 Hidden Path Entertainment
 //
 // Keywords: 	
 //-------------------------------------------------------------
@@ -65,7 +65,7 @@ static CAsyncLeaderboardWriteThread g_AsyncLeaderboardWriteThread;
 
 struct MapName_LBStatID
 {
-	char		*szMapName;
+	const char	*szMapName;
 	DWORD		mapLeaderboardStat;
 };
 
@@ -98,15 +98,15 @@ const int kNumMapLeaderboardEntries = sizeof(MapName_LBStatId_Table)/sizeof(MapN
 struct LeaderboardMap_t
 {
 	DWORD winsId;
-	char* winsName;
+	const char* winsName;
 	DWORD csId;
-	char* csName;
+    const char* csName;
 	DWORD kdId;
-	char* kdName;
+    const char* kdName;
 	DWORD starsId;
-	char* starsName;
+    const char* starsName;
 	DWORD gpId;
-	char* gpName;
+    const char* gpName;
 };
 
 // Mapping of game mode/type to leaderboard id

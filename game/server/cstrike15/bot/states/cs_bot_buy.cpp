@@ -236,7 +236,7 @@ struct BuyInfo
 {
 	WeaponType type;
 	bool preferred;			///< more challenging bots prefer these weapons
-	char *buyAlias;			///< the buy alias for this equipment
+	const char *buyAlias;   ///< the buy alias for this equipment
 };
 
 #define PRIMARY_WEAPON_BUY_COUNT 16

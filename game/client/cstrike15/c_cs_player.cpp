@@ -8506,7 +8506,7 @@ CCSPlayerInventory *C_CSPlayer::Inventory( void )
 
 
 // Adds a sound event to be played at the next round restart
-void CStartOfRoundAudioPlayback::AddSound( CBaseEntity* pEntityPlayingSound, char* pName, float fPlaybackDuration )
+void CStartOfRoundAudioPlayback::AddSound( CBaseEntity* pEntityPlayingSound, const char* pName, float fPlaybackDuration )
 {
 	// Ensure that the sound is not already in the playback list
 	for ( int i = 0; i < m_SoundEvents.Count(); ++i )

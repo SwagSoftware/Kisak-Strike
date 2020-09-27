@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -517,7 +517,7 @@ void CServerGameDLL::ApplyGameSettings( KeyValues *pKV )
 
 		// For team games we add the prefix "team" to the game type. This is to
 		// eliminate team game lobbies from searches for QuickMatch and Custom Match
-		char *teamStr = "team";
+		const char *teamStr = "team";
 		const char *pTeamPrefix = Q_strstr( pGameType, teamStr);
 		if ( pTeamPrefix == pGameType )
 		{

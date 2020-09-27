@@ -137,8 +137,8 @@ void TE_DynamicLight( IRecipientFilter& filter, float delay,
 
 struct WeaponAliasTranslationInfoStruct
 {
-	char* alias;
-	char* translatedAlias;
+	const char* alias;
+	const char* translatedAlias;
 };
 
 static const WeaponAliasTranslationInfoStruct s_WeaponAliasTranslationInfo[] = 

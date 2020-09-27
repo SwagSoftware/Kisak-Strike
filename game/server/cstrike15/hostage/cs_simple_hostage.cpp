@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -86,7 +86,7 @@ BEGIN_PREDICTION_DATA( CHostageCarriableProp )
 END_PREDICTION_DATA()
 
 const int DEFAULT_NUM_HOSTAGE_MODELS = 4;
-static char *HostageModel[DEFAULT_NUM_HOSTAGE_MODELS] = 
+static const char *HostageModel[DEFAULT_NUM_HOSTAGE_MODELS] =
 {
 	"models/hostage/hostage.mdl",
 	"models/hostage/hostage_variantA.mdl",

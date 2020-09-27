@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -192,9 +192,9 @@ protected:
 	AshSplit_t						m_Ash[ MAX_SPLITSCREEN_PLAYERS ];
 
 	float							m_flParticleInnerDist;	//The distance at which to start drawing the inner system
-	char							*m_pParticleInnerNearDef; //Name of the first inner system
-	char							*m_pParticleInnerFarDef;  //Name of the second inner system
-	char							*m_pParticleOuterDef;     //Name of the outer system
+	const char						*m_pParticleInnerNearDef; //Name of the first inner system
+	const char						*m_pParticleInnerFarDef;  //Name of the second inner system
+	const char						*m_pParticleOuterDef;     //Name of the outer system
 	HPARTICLEFFECT					m_pParticlePrecipInnerNear[ MAX_SPLITSCREEN_PLAYERS ];
 	HPARTICLEFFECT					m_pParticlePrecipInnerFar[ MAX_SPLITSCREEN_PLAYERS ];
 	HPARTICLEFFECT					m_pParticlePrecipOuter[ MAX_SPLITSCREEN_PLAYERS ];

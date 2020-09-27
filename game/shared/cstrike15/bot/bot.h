@@ -81,7 +81,7 @@ template < class T > T * CreateBot( const BotProfile *profile, int team )
 
 	if ( UTIL_ClientsInGame() >= gpGlobals->maxClients )
 	{
-		CONSOLE_ECHO( "Unable to create bot: Server is full (%d/%d clients).\n", UTIL_ClientsInGame(), gpGlobals->maxClients );
+        Msg( "Unable to create bot: Server is full (%d/%d clients).\n", UTIL_ClientsInGame(), gpGlobals->maxClients );
 		return NULL;
 	}
 
@@ -107,7 +107,7 @@ template < class T > T * CreateBot( const BotProfile *profile, int team )
 
 	if ( botEdict == NULL )
 	{
-		CONSOLE_ECHO( "Unable to create bot: CreateFakeClient() returned null.\n" );
+        Msg( "Unable to create bot: CreateFakeClient() returned null.\n" );
 		return NULL;
 	}
 

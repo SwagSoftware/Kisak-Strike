@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Encapsulation of the current scenario/game state. Allows each bot imperfect knowledge.
 //
@@ -339,7 +339,7 @@ void CSGameState::UpdatePlantedBomb( const Vector &pos )
 
 	if (zone == NULL)
 	{
-		CONSOLE_ECHO( "ERROR: Bomb planted outside of a zone!\n" );
+        Msg( "ERROR: Bomb planted outside of a zone!\n" );
 		m_plantedBombsite = UNKNOWN;
 	}
 	else

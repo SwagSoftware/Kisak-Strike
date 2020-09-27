@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -418,7 +418,7 @@ void BuyState::OnUpdate( CCSBot *me )
 	if (!me->IsInBuyZone())
 	{
 		m_doneBuying = true;
-		CONSOLE_ECHO( "%s bot spawned outside of a buy zone (%d, %d, %d)\n",
+        Msg( "%s bot spawned outside of a buy zone (%d, %d, %d)\n",
 						(me->GetTeamNumber() == TEAM_CT) ? "CT" : "Terrorist",
 						(int)me->GetAbsOrigin().x,
 						(int)me->GetAbsOrigin().y,

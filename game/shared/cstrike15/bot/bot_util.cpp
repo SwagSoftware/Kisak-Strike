@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -515,21 +515,6 @@ void UTIL_DrawBeamPoints( Vector vecStart, Vector vecEnd, int iLifetime, byte bR
 					MESSAGE_END();
 					*/
 }
-
-
-//------------------------------------------------------------------------------------------------------------
-void CONSOLE_ECHO( char * pszMsg, ... )
-{
-	va_list     argptr;
-	static char szStr[1024];
-
-	va_start( argptr, pszMsg );
-	vsprintf( szStr, pszMsg, argptr );
-	va_end( argptr );
-
-	Msg( "%s", szStr );
-}
-
 
 //------------------------------------------------------------------------------------------------------------
 void BotPrecache( void )

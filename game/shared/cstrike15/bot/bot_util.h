@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -91,12 +91,6 @@ extern bool UTIL_IsRandomSpawnFarEnoughAwayFromTeam( const Vector &spot, int tea
 extern bool IsCrossingLineOfFire( const Vector &start, const Vector &finish, CBaseEntity *ignore = NULL, int ignoreTeam = 0 );
 
 extern void UTIL_ConstructBotNetName(char *name, int nameLength, const BotProfile *bot);	///< constructs a complete name including prefix
-
-/**
- * Echos text to the console, and prints it on the client's screen.  This is NOT tied to the developer cvar.
- * If you are adding debugging output in cstrike, use UTIL_DPrintf() (debug.h) instead.
- */
-extern void CONSOLE_ECHO( char * pszMsg, ... );
 
 extern void InitBotTrig( void );
 extern float BotCOS( float angle );

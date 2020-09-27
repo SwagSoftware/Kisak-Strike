@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -218,7 +218,7 @@ void BotProfileManager::Init( const char *filename, unsigned int *checksum )
 	{
 		if ( true ) // UTIL_IsGame( "czero" ) )
 		{
-			CONSOLE_ECHO( "WARNING: Cannot access bot profile database '%s'\n", filename );
+            Msg( "WARNING: Cannot access bot profile database '%s'\n", filename );
 		}
 		return;
 	}
@@ -268,7 +268,7 @@ void BotProfileManager::Init( const char *filename, unsigned int *checksum )
 			dataFile = SharedParse( dataFile );
 			if (!dataFile)
 			{
-				CONSOLE_ECHO( "Error parsing %s - expected skin name\n", filename );
+                Msg( "Error parsing %s - expected skin name\n", filename );
 				delete [] dataPointer;
 				return;
 			}
@@ -279,14 +279,14 @@ void BotProfileManager::Init( const char *filename, unsigned int *checksum )
 			dataFile = SharedParse( dataFile );
 			if (!dataFile)
 			{
-				CONSOLE_ECHO( "Error parsing %s - expected 'Model'\n", filename );
+                Msg( "Error parsing %s - expected 'Model'\n", filename );
 				delete [] dataPointer;
 				return;
 			}
 			token = SharedGetToken();
 			if (stricmp( "Model", token ))
 			{
-				CONSOLE_ECHO( "Error parsing %s - expected 'Model'\n", filename );
+                Msg( "Error parsing %s - expected 'Model'\n", filename );
 				delete [] dataPointer;
 				return;
 			}
@@ -295,14 +295,14 @@ void BotProfileManager::Init( const char *filename, unsigned int *checksum )
 			dataFile = SharedParse( dataFile );
 			if (!dataFile)
 			{
-				CONSOLE_ECHO( "Error parsing %s - expected '='\n", filename );
+                Msg( "Error parsing %s - expected '='\n", filename );
 				delete [] dataPointer;
 				return;
 			}
 			token = SharedGetToken();
 			if (strcmp( "=", token ))
 			{
-				CONSOLE_ECHO( "Error parsing %s - expected '='\n", filename );
+                Msg( "Error parsing %s - expected '='\n", filename );
 				delete [] dataPointer;
 				return;
 			}
@@ -311,7 +311,7 @@ void BotProfileManager::Init( const char *filename, unsigned int *checksum )
 			dataFile = SharedParse( dataFile );
 			if (!dataFile)
 			{
-				CONSOLE_ECHO( "Error parsing %s - expected attribute value\n", filename );
+				Msg( "Error parsing %s - expected attribute value\n", filename );
 				delete [] dataPointer;
 				return;
 			}
@@ -335,14 +335,14 @@ void BotProfileManager::Init( const char *filename, unsigned int *checksum )
 			dataFile = SharedParse( dataFile );
 			if (!dataFile)
 			{
-				CONSOLE_ECHO( "Error parsing %s - expected 'End'\n", filename );
+				Msg( "Error parsing %s - expected 'End'\n", filename );
 				delete [] dataPointer;
 				return;
 			}
 			token = SharedGetToken();
 			if (strcmp( "End", token ))
 			{
-				CONSOLE_ECHO( "Error parsing %s - expected 'End'\n", filename );
+				Msg( "Error parsing %s - expected 'End'\n", filename );
 				delete [] dataPointer;
 				return;
 			}
@@ -390,7 +390,7 @@ void BotProfileManager::Init( const char *filename, unsigned int *checksum )
 
 				if (inherit == NULL)
 				{
-					CONSOLE_ECHO( "Error parsing '%s' - invalid template reference '%s'\n", filename, token );
+					Msg( "Error parsing '%s' - invalid template reference '%s'\n", filename, token );
 					delete [] dataPointer;
 					return;
 				}
@@ -412,7 +412,7 @@ void BotProfileManager::Init( const char *filename, unsigned int *checksum )
 			dataFile = SharedParse( dataFile );
 			if (!dataFile)
 			{
-				CONSOLE_ECHO( "Error parsing '%s' - expected name\n", filename );
+				Msg( "Error parsing '%s' - expected name\n", filename );
 				delete [] dataPointer;
 				return;
 			}
@@ -437,7 +437,7 @@ void BotProfileManager::Init( const char *filename, unsigned int *checksum )
 			dataFile = SharedParse( dataFile );
 			if (!dataFile)
 			{
-				CONSOLE_ECHO( "Error parsing %s - expected 'End'\n", filename );
+				Msg( "Error parsing %s - expected 'End'\n", filename );
 				delete [] dataPointer;
 				return;
 			}
@@ -455,7 +455,7 @@ void BotProfileManager::Init( const char *filename, unsigned int *checksum )
 			dataFile = SharedParse( dataFile );
 			if (!dataFile)
 			{
-				CONSOLE_ECHO( "Error parsing %s - expected '='\n", filename );
+				Msg( "Error parsing %s - expected '='\n", filename );
 				delete [] dataPointer;
 				return;
 			}
@@ -463,7 +463,7 @@ void BotProfileManager::Init( const char *filename, unsigned int *checksum )
 			token = SharedGetToken();
 			if (strcmp( "=", token ))
 			{
-				CONSOLE_ECHO( "Error parsing %s - expected '='\n", filename );
+				Msg( "Error parsing %s - expected '='\n", filename );
 				delete [] dataPointer;
 				return;
 			}
@@ -472,7 +472,7 @@ void BotProfileManager::Init( const char *filename, unsigned int *checksum )
 			dataFile = SharedParse( dataFile );
 			if (!dataFile)
 			{
-				CONSOLE_ECHO( "Error parsing %s - expected attribute value\n", filename );
+				Msg( "Error parsing %s - expected attribute value\n", filename );
 				delete [] dataPointer;
 				return;
 			}
@@ -587,7 +587,7 @@ void BotProfileManager::Init( const char *filename, unsigned int *checksum )
 			}
 			else
 			{
-				CONSOLE_ECHO( "Error parsing %s - unknown attribute '%s'\n", filename, attributeName );
+				Msg( "Error parsing %s - unknown attribute '%s'\n", filename, attributeName );
 			}
 		}
 

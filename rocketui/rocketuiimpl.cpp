@@ -17,6 +17,7 @@ RocketUIImpl RocketUIImpl::m_Instance;
 EXPOSE_SINGLE_INTERFACE_GLOBALVAR( RocketUIImpl, IRocketUI, ROCKETUI_INTERFACE_VERSION, RocketUIImpl::m_Instance )
 
 ConVar rocket_enable( "rocket_enable", "1", 0, "Enables RocketUI" );
+ConVar rocket_verbose( "rocket_verbose", "0", 0, "Enables more logging" );
 
 CON_COMMAND_F( rocket_reload, "Reloads all RocketUI Documents", FCVAR_NONE )
 {
@@ -337,12 +338,15 @@ void RocketUIImpl::DenyInputToGame( bool value, const char *why )
 
     EnableCursor( (m_numInputConsumers > 0) );
 
-    ConMsg("input Consumers[%d]: ", m_numInputConsumers);
-    for( int i = 0; i < m_inputConsumers.Count(); i++ )
+    if( rocket_verbose.GetBool() )
     {
-        ConMsg("(%s) ", m_inputConsumers[i].Get() );
+        ConMsg("input Consumers[%d]: ", m_numInputConsumers);
+        for( int i = 0; i < m_inputConsumers.Count(); i++ )
+        {
+            ConMsg("(%s) ", m_inputConsumers[i].Get() );
+        }
+        ConMsg("\n");
     }
-    ConMsg("\n");
 }
 
 bool RocketUIImpl::IsConsumingInput()
@@ -353,8 +357,6 @@ bool RocketUIImpl::IsConsumingInput()
 void RocketUIImpl::EnableCursor(bool state)
 {
     ConVarRef cl_mouseenable( "cl_mouseenable" );
-
-    ConMsg("Turnin %s the mouse\n", state ? "on" : "off" );
 
     cl_mouseenable.SetValue( !state );
 

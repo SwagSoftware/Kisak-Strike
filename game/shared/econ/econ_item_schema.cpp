@@ -5660,6 +5660,7 @@ CEconItemSchema::CEconItemSchema( )
 //-----------------------------------------------------------------------------
 IEconTool *CEconItemSchema::CreateEconToolImpl( const char *pszToolType, const char *pszUseString, const char *pszUsageRestriction, item_capabilities_t unCapabilities, KeyValues *pUsageKV )
 {
+    // lwss: noticed this removed for partner depot
 	return nullptr;
 }
 

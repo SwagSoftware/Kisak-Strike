@@ -684,6 +684,22 @@ typedef void * HINSTANCE;
 // Maximum and minimum representable values
 #ifndef PLATFORM_OSX
 
+// lwss: Undefine any existing #define's for these numbers. SDL seems to use the same names.
+#if defined( USE_SDL )
+	#undef  INT8_MAX
+	#undef  INT16_MAX
+	#undef  INT32_MAX
+	#undef  INT64_MAX
+	#undef  INT8_MIN
+	#undef  INT16_MIN
+	#undef  INT32_MIN
+	#undef  INT64_MIN
+	#undef  UINT8_MAX
+	#undef  UINT16_MAX
+	#undef  UINT32_MAX
+	#undef  UINT64_MAX
+#endif
+
 #if _MSC_VER >= 1800 // VS 2013 or higher
 	// Copied from stdint.h
 	#define INT8_MIN         (-127i8 - 1)

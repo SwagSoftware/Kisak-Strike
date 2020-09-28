@@ -316,7 +316,12 @@ public:
 	virtual const char *GetViewModel( int viewmodelindex = 0 ) const;
 	virtual void WeaponReset( void ) {}
 	virtual bool	WeaponHasBurst() const { return false; }
-	virtual bool	IsInBurstMode() { return m_bBurstMode; }
+    virtual bool	IsInBurstMode() { return m_bBurstMode; }
+    //lwss - added some more that were missing
+    virtual float 	GetBurstModeTimeBetweenShots() { return 0.0f; }
+    virtual float 	GetBurstModeCycleTime() { return 0.0f; }
+    virtual float 	GetZoomedCycleTime() { return 0.0f; }
+    //lwss end
 	virtual bool	IsRevolver() const { return false; }
 
 	void			ItemPostFrame_ProcessPrimaryAttack( CCSPlayer *pPlayer );

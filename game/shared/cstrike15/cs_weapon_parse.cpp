@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -1202,6 +1202,11 @@ GET_WEAPON_ATTR_FUNC( int,		GetDefaultSecondaryClipSize,	"secondary default clip
 
 GET_WEAPON_ATTR_FUNC( int,		GetKillAward,					"kill award" )
 GET_WEAPON_ATTR_FUNC( bool,		HasBurstMode,					"has burst mode" )
+//lwss - add some more of these that are missing
+GET_WEAPON_ATTR_FUNC( float,    GetBurstModeTimeBetweenShots,   "time between burst shots")
+GET_WEAPON_ATTR_FUNC( float,    GetBurstModeCycleTime,          "cycletime when in burst mode")
+GET_WEAPON_ATTR_FUNC( float,    GetZoomedCycleTime,                      "cycletime when zoomed")
+//lwss end
 GET_WEAPON_ATTR_FUNC( bool,		IsRevolver,						"is revolver" )
 GET_WEAPON_ATTR_FUNC( bool,		HasAlternateFastSlowReload,		"alternate fastslow reload" )
 GET_WEAPON_ATTR_FUNC( float,	GetArmorRatio,					"armor ratio" )

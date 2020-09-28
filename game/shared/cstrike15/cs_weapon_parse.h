@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -262,6 +262,11 @@ public:
 
 	int		GetKillAward					( const CEconItemView* pWepView = NULL, int nAlt = 0, float flScale = 1.0f ) const;
 	bool	HasBurstMode					( const CEconItemView* pWepView = NULL, int nAlt = 0, float flScale = 1.0f ) const;
+    //lwss - add some more of these that are missing
+    float 	GetBurstModeTimeBetweenShots	( const CEconItemView* pWepView = NULL, int nAlt = 0, float flScale = 1.0f ) const;
+	float 	GetBurstModeCycleTime	        ( const CEconItemView* pWepView = NULL, int nAlt = 0, float flScale = 1.0f ) const;
+    float 	GetZoomedCycleTime	            ( const CEconItemView* pWepView = NULL, int nAlt = 0, float flScale = 1.0f ) const;
+    //lwss end
 	bool	IsRevolver						( const CEconItemView* pWepView = NULL, int nAlt = 0, float flScale = 1.0f ) const;
 	bool	HasAlternateFastSlowReload		( const CEconItemView* pWepView = NULL, int nAlt = 0, float flScale = 1.0f ) const;
 	float	GetArmorRatio					( const CEconItemView* pWepView = NULL, int nAlt = 0, float flScale = 1.0f ) const;

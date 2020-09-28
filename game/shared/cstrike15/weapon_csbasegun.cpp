@@ -320,17 +320,16 @@ void CWeaponCSBaseGun::PrimaryAttack()
 	// change a few things if we're in burst mode
 	if ( IsInBurstMode() )
 	{
-		CALL_ATTRIB_HOOK_FLOAT( flCycleTime, cycletime_when_in_burst_mode );
-
+        //lwss - replaced usage of CALL_ATTRIB_HOOK* for GET_WEAPON_ATTR_FUNC() instead.
+        flCycleTime = GetBurstModeCycleTime();
 		m_iBurstShotsRemaining = 2;
-
-		m_fNextBurstShot = gpGlobals->curtime;
-		CALL_ATTRIB_HOOK_FLOAT( m_fNextBurstShot, time_between_burst_shots );		
+		m_fNextBurstShot = gpGlobals->curtime + GetBurstModeTimeBetweenShots();
 	}
 
 	if ( IsZoomed() )
 	{
-		CALL_ATTRIB_HOOK_FLOAT( flCycleTime, cycletime_when_zoomed );
+        //lwss - replaced usage of CALL_ATTRIB_HOOK* for GET_WEAPON_ATTR_FUNC() instead.
+        flCycleTime = GetZoomedCycleTime();
 	}
 																	
 	if ( !CSBaseGunFire( flCycleTime, m_weaponMode ) )								// <--	'PEW PEW' HAPPENS HERE
@@ -631,6 +630,7 @@ void CWeaponCSBaseGun::BurstFireRemaining()
 		return;
 	}
 
+    const CCSWeaponInfo& weaponInfo = GetCSWpnData();
     uint16 nItemDefIndex = GetEconItemView()->GetItemIndex();
 
 	FX_FireBullets(
@@ -657,14 +657,13 @@ void CWeaponCSBaseGun::BurstFireRemaining()
 
 	if ( m_iBurstShotsRemaining > 0 )
 	{
-		CALL_ATTRIB_HOOK_FLOAT( m_fNextBurstShot, time_between_burst_shots );
+	    //lwss - replaced usage of CALL_ATTRIB_HOOK* for GET_WEAPON_ATTR_FUNC() instead.
+		m_fNextBurstShot = gpGlobals->curtime + weaponInfo.GetBurstModeTimeBetweenShots( GetEconItemView() );
 	}
 	else
 	{
 		m_fNextBurstShot = 0.0f;
 	}
-
-	const CCSWeaponInfo& weaponInfo = GetCSWpnData();
 
 	// update accuracy
 	m_fAccuracyPenalty += weaponInfo.GetInaccuracyFire( GetEconItemView(), m_weaponMode );

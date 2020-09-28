@@ -45,10 +45,10 @@ Linux Binaries: Depot ID: 734 4197642562793798650
     * ./game/bin/linux64/libtogl_client.so #this is on github, we can probably build this
     * ./game/bin/linux64/libphonon3d.so #proprietary HRTF 3d audio system.
     * ./game/bin/linux64/vphysics_client.so #proprietary Havok physics system.
-    * ./game/bin/linux64/scaleformui_client.so #proprietary Scaleform flash UI, this is needed by main menu
+    * ~~./game/bin/linux64/scaleformui_client.so #proprietary Scaleform flash UI, this is needed by main menu~~
     * ./game/bin/linux64/shaderapidx9_client.so 
 
-Each one of these proprietary files is an enemy to our freedoms, over time we aim to remove these.
+Each one of these proprietary `.so` files is an enemy to our freedoms, over time we aim to remove these.
 
 
 ## Launch

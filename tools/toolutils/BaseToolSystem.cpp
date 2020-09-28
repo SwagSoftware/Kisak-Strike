@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
+//====== Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: Core Movie Maker UI API
 //
@@ -125,8 +125,8 @@ bool CBaseToolSystem::Init( )
 	// Read shared localization info
 	g_pVGuiLocalize->AddFile( "resource/dmecontrols_%language%.txt" );
 	g_pVGuiLocalize->AddFile( "resource/toolshared_%language%.txt" );
-	g_pVGuiLocalize->AddFile( "Resource/vgui_%language%.txt" );
-	g_pVGuiLocalize->AddFile( "Resource/platform_%language%.txt" );
+	g_pVGuiLocalize->AddFile( "resource/vgui_%language%.txt" );
+	g_pVGuiLocalize->AddFile( "resource/platform_%language%.txt" );
 	g_pVGuiLocalize->AddFile( "resource/boxrocket_%language%.txt" );
 
 	// Create the tool workspace

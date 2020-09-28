@@ -289,14 +289,14 @@ void CGameUI::Initialize( CreateInterfaceFn factory )
 
 	// load localization file
 #if !defined( CSTRIKE15 )
-	g_pVGuiLocalize->AddFile( "Resource/gameui_%language%.txt", "GAME", true );
+	g_pVGuiLocalize->AddFile( "resource/gameui_%language%.txt", "GAME", true );
 #endif
 
 	// load mod info
 	ModInfo().LoadCurrentGameInfo();
 
 	// load localization file for kb_act.lst
-	g_pVGuiLocalize->AddFile( "Resource/valve_%language%.txt", "GAME", true );
+	g_pVGuiLocalize->AddFile( "resource/valve_%language%.txt", "GAME", true );
 
 	bool bFailed = false;
 	enginevguifuncs = (IEngineVGui *)factory( VENGINE_VGUI_VERSION, NULL );
@@ -534,8 +534,8 @@ void CGameUI::Start()
 	}
 
 	// localization
-	g_pVGuiLocalize->AddFile( "Resource/platform_%language%.txt");
-	g_pVGuiLocalize->AddFile( "Resource/vgui_%language%.txt");
+	g_pVGuiLocalize->AddFile( "resource/platform_%language%.txt");
+	g_pVGuiLocalize->AddFile( "resource/vgui_%language%.txt");
 
 	// dgoodenough - This should not be necessary.
 	// PS3_BUILDFIX

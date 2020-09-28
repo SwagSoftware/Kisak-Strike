@@ -143,8 +143,8 @@ CBaseModPanel::CBaseModPanel(): BaseClass(0, "CBaseModPanel"),
 	Assert(m_CFactoryBasePanel == 0);
 	m_CFactoryBasePanel = this;
 
-	g_pVGuiLocalize->AddFile( "Resource/basemodui_%language%.txt");
-	g_pVGuiLocalize->AddFile( "Resource/basemodui_tu_%language%.txt" );
+	g_pVGuiLocalize->AddFile( "resource/basemodui_%language%.txt");
+	g_pVGuiLocalize->AddFile( "resource/basemodui_tu_%language%.txt" );
 
 	m_LevelLoading = false;
 	

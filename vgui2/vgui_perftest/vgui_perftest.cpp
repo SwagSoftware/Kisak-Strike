@@ -318,9 +318,9 @@ int CVguiPerfTestApp::Main()
 	//vgui::PHandle hMainPanel;
 
 	// load the base localization file
-	g_pVGuiLocalize->AddFile( "Resource/valve_%language%.txt" );
+	g_pVGuiLocalize->AddFile( "resource/valve_%language%.txt" );
 	g_pFullFileSystem->AddSearchPath( "platform", "PLATFORM" );
-	g_pVGuiLocalize->AddFile( "Resource/vgui_%language%.txt");
+	g_pVGuiLocalize->AddFile( "resource/vgui_%language%.txt");
 
 
 	// run app frame loop

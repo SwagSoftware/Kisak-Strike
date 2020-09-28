@@ -995,7 +995,7 @@ void CEngineVGui::Init()
 
 
 	// load the base localization file
-	g_pVGuiLocalize->AddFile( "Resource/valve_%language%.txt" );
+	g_pVGuiLocalize->AddFile( "resource/valve_%language%.txt" );
 
 	char szFileName[MAX_PATH];
 

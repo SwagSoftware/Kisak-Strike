@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//===== Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -75,8 +75,8 @@ int StartVGUI( CreateInterfaceFn dedicatedFactory )
 	vgui::scheme()->LoadSchemeFromFile("Resource/SourceScheme.res", "SourceScheme");
 
 	// localization
-	g_pVGuiLocalize->AddFile( "Resource/platform_%language%.txt" );
-	g_pVGuiLocalize->AddFile( "Resource/vgui_%language%.txt" );
+	g_pVGuiLocalize->AddFile( "resource/platform_%language%.txt" );
+	g_pVGuiLocalize->AddFile( "resource/vgui_%language%.txt" );
 	g_pVGuiLocalize->AddFile( "Admin/server_%language%.txt" );
 
 	// Start vgui

@@ -2647,17 +2647,20 @@ static float SND_GetMusicVolumeGainMultiplierInOverlay()
 	if ( flTimeNow - s_flLastUpdateTime > 0.1 )
 	{
 		// Update every 0.1 sec
-		static ConVarRef cl_embedded_stream_video_playing( "cl_embedded_stream_video_playing" );
-		bool bInClientVideoPlaying = ( cl_embedded_stream_video_playing.IsValid() && cl_embedded_stream_video_playing.GetBool() );
-		bool bCurrentlyActive = Steam3Client().IsGameOverlayActive() || bInClientVideoPlaying;
+		// lwss - This convar is completely missing, commenting this part out
+		//static ConVarRef cl_embedded_stream_video_playing( "cl_embedded_stream_video_playing" );
+		//bool bInClientVideoPlaying = ( cl_embedded_stream_video_playing.IsValid() && cl_embedded_stream_video_playing.GetBool() );
+		bool bCurrentlyActive = Steam3Client().IsGameOverlayActive();// || bInClientVideoPlaying;
 		if ( bCurrentlyActive != s_bOverlayActiveLastKnown )
 		{
 			s_flMusicVolumeOverlayMultiplierPrevious = ( flTimeNow > s_flLastUpdateTime + 1.0 ) ? s_flMusicVolumeOverlayMultiplierTarget : ( s_flMusicVolumeOverlayMultiplierPrevious + ( flTimeNow - s_flLastUpdateTime ) * ( s_flMusicVolumeOverlayMultiplierTarget - s_flMusicVolumeOverlayMultiplierPrevious ) );
 			s_flLastUpdateTime = flTimeNow;
 			s_bOverlayActiveLastKnown = bCurrentlyActive;
-			s_flMusicVolumeOverlayMultiplierTarget = bCurrentlyActive ? ( bInClientVideoPlaying ? 0.0f : snd_musicvolume_multiplier_inoverlay.GetFloat() ) : 1.0f;
+			//s_flMusicVolumeOverlayMultiplierTarget = bCurrentlyActive ? ( bInClientVideoPlaying ? 0.0f : snd_musicvolume_multiplier_inoverlay.GetFloat() ) : 1.0f;
+			s_flMusicVolumeOverlayMultiplierTarget = bCurrentlyActive ? ( snd_musicvolume_multiplier_inoverlay.GetFloat() ) : 1.0f;
 		}
-	}
+        // lwss end
+    }
 	return ( flTimeNow > s_flLastUpdateTime + 1.0 ) ? s_flMusicVolumeOverlayMultiplierTarget : ( s_flMusicVolumeOverlayMultiplierPrevious + ( flTimeNow - s_flLastUpdateTime ) * ( s_flMusicVolumeOverlayMultiplierTarget - s_flMusicVolumeOverlayMultiplierPrevious ) );
 }
 float SND_GetGain( int nSlot, gain_t *gs, const channel_t *ch, const Vector &vecListenerOrigin, bool fplayersound, bool fmusicsound, bool flooping, vec_t dist, bool bAttenuated, bool bOkayToTrace )

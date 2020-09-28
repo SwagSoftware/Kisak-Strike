@@ -204,10 +204,13 @@ ConVar cl_hud_color( "cl_hud_color", "0", FCVAR_CLIENTDLL | FCVAR_RELEASE | FCVA
 static void Hud_Radar_Scale_Callback( IConVar *pConVar, const char *pOldString, float flOldValue )
 {
 	// refresh here
+	//lwss - this convar is only in scaleform lib
+#if defined( INCLUDE_SCALEFORM )
 	ConVarRef m_hudscaling( "hud_scaling" );
 	float flScale = m_hudscaling.GetFloat();
 	m_hudscaling.SetValue( flScale + 1 );
 	m_hudscaling.SetValue( flScale );
+#endif
 }
 
 ConVar cl_hud_radar_scale( "cl_hud_radar_scale", "1", FCVAR_CLIENTDLL | FCVAR_RELEASE | FCVAR_ARCHIVE, "", true, 0.8, true, 1.3, Hud_Radar_Scale_Callback );

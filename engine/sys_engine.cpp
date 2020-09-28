@@ -419,13 +419,15 @@ void CEngine::Frame( void )
 {
 	// yield the CPU for a little while when paused, minimized, or not the focus
 	// FIXME:  Move this to main windows message pump?
-	static ConVarRef cl_embedded_stream_video_playing( "cl_embedded_stream_video_playing" );
-	if ( IsPC() && !game->IsActiveApp() && !sv.IsDedicated()
-		&& !( cl_embedded_stream_video_playing.IsValid() && cl_embedded_stream_video_playing.GetBool() )
-		&& engine_no_focus_sleep.GetInt() > 0 )
-	{
-		g_pInputSystem->SleepUntilInput( engine_no_focus_sleep.GetInt() );
-	}
+	// lwss - This convar is completely missing, commenting this out
+	//static ConVarRef cl_embedded_stream_video_playing( "cl_embedded_stream_video_playing" );
+	//if ( IsPC() && !game->IsActiveApp() && !sv.IsDedicated()
+	//	&& !( cl_embedded_stream_video_playing.IsValid() && cl_embedded_stream_video_playing.GetBool() )
+	//	&& engine_no_focus_sleep.GetInt() > 0 )
+	//{
+	//	g_pInputSystem->SleepUntilInput( engine_no_focus_sleep.GetInt() );
+	//}
+	// lwss end
 
 	// Get current time
 	m_flCurrentTime	= Sys_FloatTime();

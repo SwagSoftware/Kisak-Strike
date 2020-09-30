@@ -80,17 +80,6 @@ void RocketRender::PrepareGLState()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBlendEquation(GL_FUNC_ADD);
 
-    //glStencilFunc( GL_GEQUAL, 253, -1 );
-    //glAlphaFunc(GL_GEQUAL, 0);
-
-}
-
-void RocketRender::RenderGeometry( Rml::Vertex *vertices, int num_vertices, int *indices, int num_indices,
-                                   Rml::TextureHandle texture, const Rml::Vector2f &translation )
-{
-    RMLUI_UNUSED(num_vertices);
-    glPushMatrix();
-
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0, m_width, 0, m_height, -10000, 10000);
@@ -101,6 +90,17 @@ void RocketRender::RenderGeometry( Rml::Vertex *vertices, int num_vertices, int 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
+
+    //glStencilFunc( GL_GEQUAL, 253, -1 );
+    //glAlphaFunc(GL_GEQUAL, 0);
+
+}
+
+void RocketRender::RenderGeometry( Rml::Vertex *vertices, int num_vertices, int *indices, int num_indices,
+                                   Rml::TextureHandle texture, const Rml::Vector2f &translation )
+{
+    RMLUI_UNUSED(num_vertices);
+    glPushMatrix();
 
     glTranslatef(translation.x, translation.y, 0);
 
@@ -318,7 +318,6 @@ void RocketRender::ReleaseTexture(Rml::TextureHandle texture)
 
 void RocketRender::SetTransform(const Rml::Matrix4f *transform)
 {
-    //TODO: the OpenGL state is not setup right for transforms yet.
     m_transformEnabled = (bool)transform;
 
     if (transform)

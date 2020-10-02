@@ -58,7 +58,7 @@ void RocketPauseMenuDocument::LoadDialog()
 {
     if( !m_pInstance )
     {
-        m_pInstance = RocketUI()->LoadDocumentFileIntoHud( "body", "GAME", "rocketui/hud_pausemenu.rml", RocketPauseMenuDocument::LoadDialog, RocketPauseMenuDocument::UnloadDialog );
+        m_pInstance = RocketUI()->LoadDocumentFile( ROCKET_CONTEXT_HUD, "hud_pausemenu.rml", RocketPauseMenuDocument::LoadDialog, RocketPauseMenuDocument::UnloadDialog );
         if( !m_pInstance )
         {
             Error( "Couldn't create rocketui pause menu!\n");

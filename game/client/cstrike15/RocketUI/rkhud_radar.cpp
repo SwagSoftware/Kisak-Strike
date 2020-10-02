@@ -252,7 +252,7 @@ static void LoadRkRadar()
         return;
     }
 
-    pRadar->m_pInstance = RocketUI()->LoadDocumentFileIntoHud( "body", "GAME", "rocketui/hud_radar.rml", &LoadRkRadar, UnloadRkRadar );
+    pRadar->m_pInstance = RocketUI()->LoadDocumentFile( ROCKET_CONTEXT_HUD, "hud_radar.rml", &LoadRkRadar, UnloadRkRadar );
     if( !pRadar->m_pInstance )
     {
         Error( "Couldn't create hud_radar document!\n" );

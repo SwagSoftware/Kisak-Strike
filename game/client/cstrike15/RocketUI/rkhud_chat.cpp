@@ -270,7 +270,7 @@ static void LoadRkChat()
         return;
     }
 
-    pChat->m_pInstance = RocketUI()->LoadDocumentFileIntoHud("body", "GAME", "rocketui/hud_chat.rml", LoadRkChat, UnloadRkChat );
+    pChat->m_pInstance = RocketUI()->LoadDocumentFile( ROCKET_CONTEXT_HUD, "hud_chat.rml", LoadRkChat, UnloadRkChat );
 
     if( !pChat->m_pInstance )
     {

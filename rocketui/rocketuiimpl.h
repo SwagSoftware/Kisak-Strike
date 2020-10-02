@@ -109,10 +109,8 @@ public:
     virtual void EnableCursor( bool state );
 
     // Document manipulation.
-    virtual Rml::ElementDocument *LoadDocumentFileIntoHud( const char *tag, const char *pPath, const char *filepath,
-                                                           LoadDocumentFn loadDocumentFunc = nullptr, UnloadDocumentFn unloadDocumentFunc = nullptr);
-    virtual Rml::ElementDocument *LoadDocumentFileIntoMenu( const char *tag, const char *pPath, const char *filepath,
-                                                            LoadDocumentFn loadDocumentFunc = nullptr, UnloadDocumentFn unloadDocumentFunc = nullptr);
+    virtual Rml::ElementDocument *LoadDocumentFile( RocketDesinationContext_t ctx, const char *filepath,
+                                                    LoadDocumentFn loadDocumentFunc = nullptr, UnloadDocumentFn unloadDocumentFunc = nullptr );
 
     // Rendering
     virtual void RenderHUDFrame();

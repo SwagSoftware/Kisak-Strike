@@ -201,7 +201,7 @@ static void LoadRkInfoBar()
 
     pInfoBar->m_dataModel = constructor.GetModelHandle();
 
-    pInfoBar->m_pInstance = RocketUI()->LoadDocumentFileIntoHud( "body", "GAME", "rocketui/hud_infobar.rml", LoadRkInfoBar, UnloadRkInfoBar );
+    pInfoBar->m_pInstance = RocketUI()->LoadDocumentFile( ROCKET_CONTEXT_HUD, "hud_infobar.rml", LoadRkInfoBar, UnloadRkInfoBar );
 
     if( !pInfoBar->m_pInstance )
     {

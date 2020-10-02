@@ -32,7 +32,7 @@ void RocketLoadingScreenDocument::LoadDialog()
 {
     if( !m_pInstance )
     {
-        m_pInstance = RocketUI()->LoadDocumentFileIntoHud( "body", "GAME", "rocketui/hud_loadingscreen.rml", RocketLoadingScreenDocument::LoadDialog, RocketLoadingScreenDocument::UnloadDialog );
+        m_pInstance = RocketUI()->LoadDocumentFile( ROCKET_CONTEXT_HUD, "hud_loadingscreen.rml", RocketLoadingScreenDocument::LoadDialog, RocketLoadingScreenDocument::UnloadDialog );
 
         if( !m_pInstance )
         {

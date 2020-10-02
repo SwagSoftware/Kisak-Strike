@@ -148,7 +148,7 @@ static void LoadRkKillFeed()
     pKillFeed->m_dataModel = constructor.GetModelHandle();
 
     // Load document from file.
-    pKillFeed->m_pInstance = RocketUI()->LoadDocumentFileIntoHud( "body", "GAME", "rocketui/hud_killfeed.rml", &LoadRkKillFeed, &UnloadRkKillFeed );
+    pKillFeed->m_pInstance = RocketUI()->LoadDocumentFile( ROCKET_CONTEXT_HUD, "hud_killfeed.rml", &LoadRkKillFeed, &UnloadRkKillFeed );
     if( !pKillFeed->m_pInstance )
     {
         Error( "Couldn't create hud_killfeed document!\n" );

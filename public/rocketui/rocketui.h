@@ -14,6 +14,12 @@ namespace Rml
     class Context;
 }
 
+enum RocketDesinationContext_t
+{
+    ROCKET_CONTEXT_MENU,
+    ROCKET_CONTEXT_HUD
+};
+
 inline IRocketUI* RocketUI()
 {
     extern IRocketUI* g_pRocketUI;
@@ -44,9 +50,7 @@ public:
     // Document manipulation
     // The Load/Unload functions are for hot-reloading, they will be called on rocket_reload.
     // If you want reloading to work with your element, they must be set.
-    virtual Rml::ElementDocument *LoadDocumentFileIntoHud( const char *tag, const char *pPath, const char *filepath,
-            LoadDocumentFn loadDocumentFunc = nullptr, UnloadDocumentFn unloadDocumentFunc = nullptr ) = 0;
-    virtual Rml::ElementDocument *LoadDocumentFileIntoMenu( const char *tag, const char *pPath, const char *filepath,
+    virtual Rml::ElementDocument *LoadDocumentFile( RocketDesinationContext_t ctx, const char *filepath,
             LoadDocumentFn loadDocumentFunc = nullptr, UnloadDocumentFn unloadDocumentFunc = nullptr ) = 0;
 
     // The actual rendering

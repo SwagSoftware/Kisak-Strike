@@ -97,7 +97,7 @@ void RocketTeamMenuDocument::LoadDialog()
 {
     if( !m_pInstance )
     {
-        m_pInstance = RocketUI()->LoadDocumentFileIntoHud( "body", "GAME", "rocketui/hud_teammenu.rml", RocketTeamMenuDocument::LoadDialog, RocketTeamMenuDocument::UnloadDialog );
+        m_pInstance = RocketUI()->LoadDocumentFile( ROCKET_CONTEXT_HUD, "hud_teammenu.rml", RocketTeamMenuDocument::LoadDialog, RocketTeamMenuDocument::UnloadDialog );
 
         if( !m_pInstance )
         {

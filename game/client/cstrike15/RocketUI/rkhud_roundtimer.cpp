@@ -92,7 +92,7 @@ static void LoadRkRoundTimer()
 
     pRoundTimer->m_dataModel = constructor.GetModelHandle();
 
-    pRoundTimer->m_pInstance = RocketUI()->LoadDocumentFileIntoHud( "body", "GAME", "rocketui/hud_roundtimer.rml", &LoadRkRoundTimer, &UnloadRkRoundTimer );
+    pRoundTimer->m_pInstance = RocketUI()->LoadDocumentFile( ROCKET_CONTEXT_HUD, "hud_roundtimer.rml", &LoadRkRoundTimer, &UnloadRkRoundTimer );
 
     if( !pRoundTimer->m_pInstance )
     {

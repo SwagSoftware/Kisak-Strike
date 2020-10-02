@@ -251,7 +251,7 @@ static void LoadRkBuyMenu()
     pBuyMenu->m_dataModel = constructor.GetModelHandle();
 
     // Load document from file.
-    pBuyMenu->m_pInstance = RocketUI()->LoadDocumentFileIntoHud( "body", "GAME", "rocketui/hud_buymenu.rml", &LoadRkBuyMenu, &UnloadRkBuyMenu );
+    pBuyMenu->m_pInstance = RocketUI()->LoadDocumentFile( ROCKET_CONTEXT_HUD, "hud_buymenu.rml", &LoadRkBuyMenu, &UnloadRkBuyMenu );
     if( !pBuyMenu->m_pInstance )
     {
         Error( "Couldn't create hud_buymenu document!\n" );

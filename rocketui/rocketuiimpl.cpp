@@ -171,53 +171,25 @@ bool RocketUIImpl::LoadFonts()
     return fontsOK;
 }
 
-static Rml::ElementDocument *LoadDocumentFile( Rml::Context *ctx, const char *tag, const char *pPath, const char *filepath )
+Rml::ElementDocument *RocketUIImpl::LoadDocumentFile(RocketDesinationContext_t ctx, const char *filepath,
+        LoadDocumentFn loadDocumentFunc, UnloadDocumentFn unloadDocumentFunc)
 {
-    static char documentBuffer[ 4 * 1024 * 1024 ]; //4mb
-    std::string documentStr;
-    CUtlBuffer buffer;
     Rml::ElementDocument *document;
+    Rml::Context *destinationCtx;
 
-    if( !g_pFullFileSystem->ReadFile( filepath, pPath, buffer ) )
+    switch( ctx )
     {
-        fprintf(stderr, "[RocketUI]Failed to read file (%s)\n", filepath );
-        return NULL;
-    }
-    buffer.GetString( documentBuffer, sizeof( documentBuffer ) );
-    documentStr = documentBuffer;
-    document = ctx->LoadDocumentFromMemory( documentStr );
-    if( !document )
-    {
-        fprintf(stderr, "[RocketUI]Failed to load document from memory (%s)\n", filepath);
-        return NULL;
-    }
-
-    return document;
-}
-
-Rml::ElementDocument *RocketUIImpl::LoadDocumentFileIntoHud( const char *tag, const char *pPath, const char *filepath, LoadDocumentFn loadDocumentFunc, UnloadDocumentFn unloadDocumentFunc )
-{
-    Rml::ElementDocument *document = LoadDocumentFile( m_ctxHud, tag, pPath, filepath );
-
-    if( !document )
-        return nullptr;
-
-    // Need both
-    if( loadDocumentFunc && unloadDocumentFunc )
-    {
-        CUtlPair<LoadDocumentFn, UnloadDocumentFn> documentFuncPair( loadDocumentFunc, unloadDocumentFunc );
-        m_documentReloadFuncs.AddToTail( documentFuncPair );
+        case ROCKET_CONTEXT_MENU:
+            destinationCtx = m_ctxMenu;
+            break;
+        case ROCKET_CONTEXT_HUD:
+            destinationCtx = m_ctxHud;
+            break;
+        default:
+            return nullptr;
     }
 
-    return document;
-}
-
-Rml::ElementDocument *RocketUIImpl::LoadDocumentFileIntoMenu( const char *tag, const char *pPath, const char *filepath, LoadDocumentFn loadDocumentFunc, UnloadDocumentFn unloadDocumentFunc )
-{
-    Rml::ElementDocument *document = LoadDocumentFile( m_ctxMenu, tag, pPath, filepath );
-
-    if( !document )
-        return nullptr;
+    document = destinationCtx->LoadDocument( filepath );
 
     // Need both
     if( loadDocumentFunc && unloadDocumentFunc )

@@ -115,7 +115,7 @@ static void LoadRkScoreboard()
     pScoreboard->m_dataModel = constructor.GetModelHandle();
 
     // Load document from file.
-    pScoreboard->m_pInstance = RocketUI()->LoadDocumentFileIntoHud( "body", "GAME", "rocketui/hud_scoreboard.rml", LoadRkScoreboard, UnloadRkScoreboard );
+    pScoreboard->m_pInstance = RocketUI()->LoadDocumentFile( ROCKET_CONTEXT_HUD, "hud_scoreboard.rml", LoadRkScoreboard, UnloadRkScoreboard );
     if( !pScoreboard->m_pInstance )
     {
         Error("Couldn't create hud_scoreboard document!\n");

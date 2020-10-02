@@ -14,7 +14,7 @@ void RocketMainMenuDocument::LoadDialog()
 {
     if( !m_pInstance )
     {
-        m_pInstance = RocketUI()->LoadDocumentFileIntoMenu("body", "GAME", "rocketui/menu.rml", RocketMainMenuDocument::LoadDialog, RocketMainMenuDocument::UnloadDialog );
+        m_pInstance = RocketUI()->LoadDocumentFile( ROCKET_CONTEXT_MENU, "menu.rml", RocketMainMenuDocument::LoadDialog, RocketMainMenuDocument::UnloadDialog );
         if( !m_pInstance )
         {
             Error("Couldn't create rocketui menu!\n");

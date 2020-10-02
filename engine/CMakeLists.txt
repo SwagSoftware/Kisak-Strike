@@ -51,12 +51,6 @@ endif()
 remove_definitions(-DBASE) #used by cryptopp REEE
 add_definitions(-DALLOW_TEXT_MODE=1)
 
-if( LINUXALL )
-    #gcc >=5 uses a different ABI. Protobuf was built with gcc4, so we need to use the old ABI
-    #use old ABI for now..
-    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
-endif()
-
 if( WINDOWS )
 #		$AdditionalDependencies			"$BASE dinput8.lib winmm.lib wsock32.lib ws2_32.lib wininet.lib vfw32.lib Rpcrt4.lib Iphlpapi.lib imm32.lib" [$WINDOWS]
 #		$AdditionalLibraryDirectories	"$BASE;${SRCDIR}\lib\common\vc7;${SRCDIR}\dx9sdk\lib" [$WINDOWS]

@@ -484,7 +484,7 @@ target_link_libraries(${OUTBINNAME} bzip2_client)
 if( WINDOWS OR OSXALL OR (LINUXALL AND NOT DEDICATED) )
     target_link_libraries(${OUTBINNAME} ${LIBCOMMON}/jpeglib_client.a) #Link with Mysterious jpeglib. This can probably be built ourselves later.
 endif()
-target_link_libraries(${OUTBINNAME} protobuf)
+target_link_libraries(${OUTBINNAME} ${SRCDIR}/lib${PLATSUBDIR}/release/libprotobuf.a) #copied out from the thirdparty/protobuf2.5 folder
 if( LINUXALL AND NOT DEDICATED )
     #Link with mystery blobs. again we can probably replace these.
     target_link_libraries(${OUTBINNAME} ${LIBCOMMON}/libcurlssl.a)

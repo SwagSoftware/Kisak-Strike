@@ -15,8 +15,7 @@ include(${CMAKE_MODULE_PATH}/source_lib_base.cmake)
 
 if( LINUXALL )
     include_directories(/usr/include/freetype2)
-    target_compile_options(${OUTLIBNAME} PRIVATE "-fpermissive")
-    target_compile_options(${OUTLIBNAME} PRIVATE "-fPIC")
+    target_compile_options(${OUTLIBNAME} PRIVATE -fpermissive -fpic -fno-semantic-interposition)
 endif()
 
 add_definitions(-DALLOW_TEXT_MODE=1)

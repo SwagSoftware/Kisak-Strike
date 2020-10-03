@@ -8,7 +8,7 @@ include(${CMAKE_MODULE_PATH}/detect_platform.cmake)
 include(${CMAKE_MODULE_PATH}/source_lib_base.cmake)
 
 if( LINUXALL )
-    target_compile_options(${OUTLIBNAME} PRIVATE -Wno-narrowing -fPIC)
+    target_compile_options(${OUTLIBNAME} PRIVATE -Wno-narrowing -fpic -fno-semantic-interposition)
 endif()
 
 target_sources(${OUTLIBNAME} PRIVATE "tier3.cpp")

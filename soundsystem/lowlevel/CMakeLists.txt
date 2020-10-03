@@ -25,7 +25,7 @@ include(${CMAKE_MODULE_PATH}/source_lib_base.cmake)
 #$File	"device_dsound.cpp" [$WINDOWS]
 #$File	"device_xaudio2.cpp" [$WINDOWS]
 if( LINUXALL )
-    target_compile_options(${OUTLIBNAME} PRIVATE -fPIC)
+    target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition)
 endif()
 
 if( POSIX )

@@ -16,7 +16,7 @@ include(${CMAKE_MODULE_PATH}/source_lib_base.cmake)
 include_directories(${SRCDIR}/utils/common)
 
 if( LINUXALL )
-    target_compile_options(${OUTLIBNAME} PRIVATE -Wno-narrowing -fPIC)
+    target_compile_options(${OUTLIBNAME} PRIVATE -Wno-narrowing -fpic -fno-semantic-interposition)
 endif()
 
 target_sources(${OUTLIBNAME} PRIVATE "raytrace.cpp")

@@ -16,7 +16,7 @@ include_directories(../game/shared)
 include_directories(../utils/common)
 
 if( LINUXALL )
-    target_compile_options(${OUTLIBNAME} PRIVATE -fPIC)
+    target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition)
 endif()
 
 target_sources(${OUTLIBNAME} PRIVATE "${SRCDIR}/game/shared/choreoactor.cpp")

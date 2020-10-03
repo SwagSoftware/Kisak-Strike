@@ -16,7 +16,7 @@ include_directories(../public/mathlib)
 target_compile_definitions(${OUTLIBNAME} PRIVATE -DMATHLIB_LIB)
 
 if( LINUXALL )
-    target_compile_options(${OUTLIBNAME} PRIVATE -Wno-narrowing -fPIC)
+    target_compile_options(${OUTLIBNAME} PRIVATE -Wno-narrowing -fpic -fno-semantic-interposition)
 endif()
 
 target_sources(${OUTLIBNAME} PRIVATE "expressioncalculator.cpp")
@@ -64,7 +64,7 @@ include(${CMAKE_MODULE_PATH}/source_lib_base.cmake)
 target_compile_definitions(${OUTLIBNAME} PRIVATE -DMATHLIB_EXTENDED_LIB -DSOURCE1)
 
 if( LINUXALL )
-    target_compile_options(${OUTLIBNAME} PRIVATE -fPIC)
+    target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition)
 endif()
 
 target_sources(${OUTLIBNAME} PRIVATE "disjoint_set_forest.cpp")

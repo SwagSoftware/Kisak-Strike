@@ -10,7 +10,7 @@ target_compile_definitions(${OUTLIBNAME} PRIVATE -DNO_STRING_T -DVECTOR -DVERSIO
 target_include_directories(${OUTLIBNAME} PRIVATE ${SRCDIR}/thirdparty/protobuf-2.5.0/src)
 
 if( LINUXALL )
-    target_compile_options(${OUTLIBNAME} PRIVATE "-fPIC")
+    target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition)
 endif()
 
 #$Folder "Matchmaking"

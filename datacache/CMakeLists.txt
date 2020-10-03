@@ -16,7 +16,7 @@ include(${CMAKE_MODULE_PATH}/source_dll_base.cmake)
 add_definitions(-DMDLCACHE_DLL_EXPORT)
 
 if( LINUXALL )
-    target_compile_options(${OUTBINNAME} PRIVATE -shared -fPIC)
+    target_compile_options(${OUTBINNAME} PRIVATE -shared -fpic -fno-semantic-interposition)
 endif()
 
 target_sources(${OUTBINNAME} PRIVATE "datacache.cpp")

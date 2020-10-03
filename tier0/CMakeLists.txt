@@ -26,7 +26,7 @@ if( NOFPO )
 endif()
 
 if( LINUXALL )
-    target_compile_options(${OUTBINNAME} PRIVATE -shared -fPIC)
+    target_compile_options(${OUTBINNAME} PRIVATE -shared -fpic -fno-semantic-interposition)
 endif()
 
 target_sources(${OUTBINNAME} PRIVATE "../unitlib/unitlib.cpp")

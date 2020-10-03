@@ -19,7 +19,7 @@ if( WINDOWS )
 endif()
 
 if( LINUXALL )
-    target_compile_options(${OUTLIBNAME} PRIVATE -fPIC)
+    target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition)
 endif()
 
 #target_sources(${OUTLIBNAME} PRIVATE "convert_x360.cpp")

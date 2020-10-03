@@ -18,7 +18,7 @@ include_directories(${SRCDIR}/common)
 include_directories(${SRCDIR}/public/quickhull)
 
 if( LINUXALL )
-    target_compile_options(${OUTLIBNAME} PRIVATE -fPIC)
+    target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition)
 endif()
 
 # the ones here without code can be removed.

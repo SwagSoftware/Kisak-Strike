@@ -1,0 +1,97 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "havana_constraints"=.\win32\havana_constraints.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    havana_constraints
+    .\win32
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "hk_base"=..\havana\havok\hk_base\hk_base.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    hk_base
+    ..\havana\havok\hk_base
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "hk_math"=..\havana\havok\hk_math\hk_math.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    hk_math
+    ..\havana\havok\hk_math
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "ivp_compactbuilder.lib"=.\Win32\ivp_compactbuilder_lib.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    ivp_compactbuilder_lib
+    ..
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "ivp_physics.lib"=.\Win32\ivp_physics_lib.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    ivp_physics_lib
+    ..
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

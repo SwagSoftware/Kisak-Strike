@@ -79,4 +79,12 @@ add_subdirectory(launcher_main) #The actual executable that just dlopen's launch
 add_subdirectory(launcher)
 
 add_subdirectory(scaleformui) #DUMMY cmake project so CLion can do analysis
-add_subdirectory(rocketui) #DUMMY cmake project so CLion can do analysis
+add_subdirectory(rocketui)
+
+#Frankenstein physics lib sewn together from 3 different leaks by mad scientist lwss
+add_subdirectory(ivp/havana/havok/hk_base)
+add_subdirectory(ivp/havana/havok/hk_math)
+add_subdirectory(ivp/havana/havok/hk_physics/constraint)
+add_subdirectory(ivp/ivp_compact_builder)
+add_subdirectory(ivp/ivp_physics)
+add_subdirectory(vphysics)

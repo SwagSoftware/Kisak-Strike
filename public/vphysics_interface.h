@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//===== Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: Public interfaces to vphysics DLL
 //
@@ -1059,7 +1059,8 @@ public:
 	// NOTE: Same as GetPhysicsProperties, but maybe more convenient
 	virtual void	GetPhysicsParameters( int surfaceDataIndex, surfacephysicsparams_t *pParamsOut ) const = 0;
 
-	virtual ISaveRestoreOps* GetMaterialIndexDataOps() const = 0;
+	//lwss - commented this out, not used.
+	//virtual ISaveRestoreOps* GetMaterialIndexDataOps() const = 0;
 };
 
 abstract_class IPhysicsFluidController

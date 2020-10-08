@@ -328,8 +328,7 @@ void CWeaponCSBaseGun::PrimaryAttack()
 
 	if ( IsZoomed() )
 	{
-        //lwss - replaced usage of CALL_ATTRIB_HOOK* for GET_WEAPON_ATTR_FUNC() instead.
-        flCycleTime = GetZoomedCycleTime();
+        CALL_ATTRIB_HOOK_FLOAT( flCycleTime, cycletime_when_zoomed );
 	}
 																	
 	if ( !CSBaseGunFire( flCycleTime, m_weaponMode ) )								// <--	'PEW PEW' HAPPENS HERE

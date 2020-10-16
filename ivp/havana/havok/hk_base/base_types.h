@@ -20,8 +20,9 @@
 #	define HK_IF_CHECK(a) if (a)
 #	define HK_CHECK(a){ if(!(a)) hk_check(a,#a,__LINE__,__FILE__); }
 #else
-#	define HK_IF_CHECK(a) if (0)
-#	define HK_CHECK(a) 
+
+//#	define HK_IF_CHECK(a) if (0)
+//#	define HK_CHECK(a)
 #endif
 
 #define HK_DECLARE_NONVIRTUAL_CLASS_ALLOCATOR(a,b)

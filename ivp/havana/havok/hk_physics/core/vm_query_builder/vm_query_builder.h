@@ -239,6 +239,7 @@ class hk_VM_Query_Builder
 		inline void apply_impulses( hk_Body_Index body_index, hk_Rigid_Body *rb,
 									const hk_real impulses[] )
 		{
+#ifdef HK_CHECK // lwss: add ifdef so hk_checks aren't ran on release
 			HK_IF_CHECK (HK_FALSE)
 			{
 				for (int i = 0; i < m_dense_matrix_offset;i++)
@@ -246,6 +247,7 @@ class hk_VM_Query_Builder
 					HK_CHECK( impulses[i] < HK_MAX_IMPULSE );
 				}
 			}
+#endif
 			rb->get_rigid_body_core()->apply_impulses(	m_input[ body_index ],	impulses);
 		}
 	protected:

@@ -29,6 +29,7 @@ bld/
 
 # Ignore cmake-build, but keep placeholder.
 cmake-build/*
+cmake-dev-test/*
 !cmake-build/placeholder.txt
 cmake-build-*/*
 rocketui/cmake-build-*/*

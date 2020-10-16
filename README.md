@@ -44,8 +44,10 @@ Linux Binaries: Depot ID: 734 4197642562793798650
     * ./game/bin/linux64/libsteam_api.so
     * ./game/bin/linux64/libtogl_client.so #this is on github, we can probably build this
     * ./game/bin/linux64/libphonon3d.so #proprietary HRTF 3d audio system.
-    * ./game/bin/linux64/vphysics_client.so #proprietary Havok physics system.
+    * ~./game/bin/linux64/vphysics_client.so #proprietary Havok physics system.~
+        * Rebuilt/Reverse engineered as [Kisak Physics](https://github.com/SwagSoftware/Kisak-Strike/issues/8). Use Cmake option: `-DUSE_KISAK_PHYSICS=1` to enable, otherwise the vphysics_client.so blob from Valve will be used.
     * ~~./game/bin/linux64/scaleformui_client.so #proprietary Scaleform flash UI, this is needed by main menu~~
+        * Replaced with [RocketUI](https://github.com/SwagSoftware/Kisak-Strike/issues/7) implementation. Use Cmake option: `-DUSE_ROCKETUI=1` to enable, otherwise UI will be a broken mess of vgui.
     * ./game/bin/linux64/shaderapidx9_client.so 
 
 Each one of these proprietary `.so` files is an enemy to our freedoms, over time we aim to remove these.

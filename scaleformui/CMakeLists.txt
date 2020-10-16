@@ -11,7 +11,7 @@ cmake_minimum_required(VERSION 3.16)
 set(SRCDIR "${CMAKE_CURRENT_SOURCE_DIR}/../")
 set(CMAKE_MODULE_PATH ${SRCDIR}/cmake)
 set(OUTBINDIR ${SRCDIR}/../game/bin)
-set(OUTBINNAME "dummy")
+set(OUTBINNAME "scaleform_dummy")
 
 include(${CMAKE_MODULE_PATH}/detect_platform.cmake)
 include(${CMAKE_MODULE_PATH}/source_dll_base.cmake)

@@ -21,7 +21,7 @@ set_target_properties(${OUTBINNAME} PROPERTIES PREFIX "")
 
 target_compile_definitions(${OUTBINNAME} PRIVATE -DDLLNAME=${OUTBINNAME})
 
-message("Adding dll target: ${OUTBINNAME}${OUTDLLEXT}")
+message("Adding dll target: ${OUTBINNAME}${OUTDLLEXT}\n")
 
 set_target_properties( ${OUTBINNAME} PROPERTIES
         ARCHIVE_OUTPUT_DIRECTORY "${OUTBINDIR}"

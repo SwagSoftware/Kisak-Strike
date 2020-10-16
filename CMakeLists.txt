@@ -82,7 +82,7 @@ add_subdirectory(rocketui)
 #Frankenstein physics lib sewn together from 3 different leaks by mad scientist lwss
 if( USE_KISAK_PHYSICS )
 add_definitions(-DUSE_KISAK_PHYSICS)
-message("Using Open-Source Kisakstrike Physics rebuild")
+message("Using Open-Source Kisakstrike Physics rebuild!\n")
 add_subdirectory(ivp/havana/havok/hk_base)
 add_subdirectory(ivp/havana/havok/hk_math)
 add_subdirectory(ivp/havana/havok/hk_physics/constraint)
@@ -90,7 +90,7 @@ add_subdirectory(ivp/ivp_compact_builder)
 add_subdirectory(ivp/ivp_physics)
 add_subdirectory(vphysics)
 else()
-message("Using Valve Standard VPhysics .so blob")
+message("Using Valve Standard VPhysics .so blob!\n")
 endif()
 
 #These 2 are the ones that load the physics lib and look for USE_KISAK_PHYSICS,

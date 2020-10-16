@@ -8,7 +8,7 @@ MacroRequired(OUTLIBNAME)
 
 #Target
 add_library(${OUTLIBNAME} STATIC)
-message("Adding static-library target: (${OUTLIBNAME})")
+message("Adding static-library target: (${OUTLIBNAME})\n")
 
 set_target_properties(${OUTLIBNAME} PROPERTIES OUTPUT_NAME "${OUTLIBNAME}")
 set_target_properties(${OUTLIBNAME} PROPERTIES SUFFIX "${_STATICLIB_EXT}")

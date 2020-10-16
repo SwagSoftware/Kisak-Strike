@@ -69,7 +69,7 @@ if(LINUXALL)
     if( DONT_DOWNGRADE_ABI )
         message(STATUS "KEEPING CXX11 ABI FOR PROJECT")
     else()
-        message(STATUS "DOWNGRADING CXX11 ABI")
+        #message(STATUS "DOWNGRADING CXX11 ABI")
         #disable cpp11 ABI so libraries <gcc 5 will work
         add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
     endif()

@@ -15,7 +15,7 @@ set_target_properties(${OUTBINNAME} PROPERTIES OUTPUT_NAME "${OUTBINNAME}")
 set_target_properties(${OUTBINNAME} PROPERTIES SUFFIX "")
 set_target_properties(${OUTBINNAME} PROPERTIES PREFIX "")
 
-message("Adding executable target: ${OUTBINNAME}")
+message("Adding executable target: ${OUTBINNAME}\n")
 
 set_target_properties( ${OUTBINNAME} PROPERTIES
         ARCHIVE_OUTPUT_DIRECTORY "${OUTBINDIR}"

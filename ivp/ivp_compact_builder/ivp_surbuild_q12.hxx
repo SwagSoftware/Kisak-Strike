@@ -36,7 +36,10 @@ typedef struct
 {
     IVP_FLOAT		mins[3], maxs[3];
     IVP_FLOAT		origin[3];
-    int			headnode[MAX_MAP_HULLS];
+    //lwss - x64 fixes
+    //int			headnode[MAX_MAP_HULLS];
+    int64_t 		headnode[MAX_MAP_HULLS];
+    //lwss end
     int			visleafs;		// not including the solid leaf 0
     int			firstface, numfaces;
 } dmodel_t;
@@ -129,7 +132,10 @@ private:
 
     IVP_U_Vector<IVP_Compact_Ledge> *ledges;
 
-    IVP_U_Vector<int>         nodes;
+    //lwss - x64 fixes
+    //IVP_U_Vector<int>         nodes;
+    IVP_U_Vector<int64_t>         nodes;
+    //lwss end
     IVP_Halfspacesoup			  *halfspaces;
     
     void cleanup();
@@ -141,7 +147,7 @@ private:
     //void convert_solid_clipnode();       // not used right now, but don't delete!
 
     void nodes_to_planes();
-    void convert_node(int node);
+    void convert_node(int64_t node);
     void convert_solid_node();
 
     void convert_model(int model);

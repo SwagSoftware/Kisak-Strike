@@ -1986,13 +1986,14 @@ void CPhysicsEnvironment::ReadStats( physics_stats_t *pOutput )
 //lwss add
 void CPhysicsEnvironment::SetAlternateGravity(const Vector &gravityVector)
 {
-    float y = HL2IVP(gravityVector.y);
-    float x = HL2IVP( gravityVector.x);
-    float z = -HL2IVP( gravityVector.z);
-    IVP_U_Point gravity( x, y, z );
-    //lwss hack - this requires going into IVP and implementing alternate gravity checks all through-out the code.
-    Warning("LWSS Hack - using standard gravity in IVP instead of alternate(unimplemented)\n");
-    m_pPhysEnv->get_gravity_controller()->set_standard_gravity( &gravity );
+    //lwss hack - This is for ragdoll specific gravity. Unimplemented - it'll be the same as regular gravity.
+    //float y = HL2IVP(gravityVector.y);
+    //float x = HL2IVP( gravityVector.x);
+    //float z = -HL2IVP( gravityVector.z);
+    //IVP_U_Point gravity( x, y, z );
+    ////lwss hack - this requires going into IVP and implementing alternate gravity checks all through-out the code.
+    //Warning("LWSS Hack - using standard gravity in IVP instead of alternate(unimplemented)\n");
+    //m_pPhysEnv->get_gravity_controller()->set_standard_gravity( &gravity );
 }
 
 void CPhysicsEnvironment::GetAlternateGravity(Vector *pGravityVector) const
@@ -2032,12 +2033,18 @@ void CPhysicsEnvironment::SetPredicted(bool bPredicted)
         /* Exit */
     }
 
+    if( bPredicted )
+        Warning("WARNING: Kisak physics does NOT have prediction!\n");
+
     m_predictionEnabled = bPredicted;
 }
 
 bool CPhysicsEnvironment::IsPredicted()
 {
-    return m_predictionEnabled;
+    //lwss hack - I didn't redo the whole physics prediction.
+    // return false so it doesn't try to use it.
+    return false;
+    //return m_predictionEnabled;
 }
 
 void CPhysicsEnvironment::SetPredictionCommandNum(int iCommandNum)
@@ -2057,16 +2064,19 @@ int CPhysicsEnvironment::GetPredictionCommandNum()
 
 void CPhysicsEnvironment::DoneReferencingPreviousCommands(int iCommandNum)
 {
-    Warning("LWSS didn't implement DoneReferencingPreviousCommands\n");
+    //lwss hack
+    //Warning("LWSS didn't implement DoneReferencingPreviousCommands\n");
 }
 
 void CPhysicsEnvironment::RestorePredictedSimulation()
 {
+    //lwss hack
     Warning("LWSS didn't implement RestorePredictedSimulation\n");
 }
 
 void CPhysicsEnvironment::DestroyCollideOnDeadObjectFlush(CPhysCollide *)
 {
+    //lwss hack
     Warning("LWSS didn't implement DestroyCollideOnDeadObjectFlush\n");
     // m_lastObjectThisTick // +20 bytes
 }
@@ -2138,7 +2148,7 @@ public:
 		if ( !pHash )
 			return m_objectList.InvalidIndex();
 
-		unsigned int hash = (unsigned int)pHash;
+		unsigned int hash = *(unsigned int*)&pHash; //lwss x64 fix
 		// mask off the extra bit we added to avoid zeros
 		hash &= 0xFFFF;
 		return (unsigned short)hash;

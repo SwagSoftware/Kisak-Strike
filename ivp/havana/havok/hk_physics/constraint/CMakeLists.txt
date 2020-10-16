@@ -17,15 +17,20 @@ include_directories(${SRCDIR}/ivp/ivp_utility)
 include_directories(${SRCDIR}/ivp/ivp_controller)
 
 if( LINUXALL )
-    target_compile_options(${OUTLIBNAME} PRIVATE -fpermissive -fpic -fno-semantic-interposition)
+    target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition)
     add_definitions(-D_LIB -DLINUX -DHAVANA_CONSTRAINTS -DIVP_VERSION_SDK)
 endif()
 
 target_sources(${OUTLIBNAME} PRIVATE constraint.cpp)
 target_sources(${OUTLIBNAME} PRIVATE ball_socket/ball_socket_constraint.cpp)
 target_sources(${OUTLIBNAME} PRIVATE limited_ball_socket/limited_ball_socket_constraint.cpp)
+
+#TODO: These files Need O1! otherwise the ragdolls will spasm and fly around.
 target_sources(${OUTLIBNAME} PRIVATE ragdoll/ragdoll_constraint.cpp)
+set_source_files_properties(ragdoll/ragdoll_constraint.cpp PROPERTIES COMPILE_FLAGS -O1)
 target_sources(${OUTLIBNAME} PRIVATE ragdoll/ragdoll_constraint_bp_builder.cpp)
+set_source_files_properties(ragdoll/ragdoll_constraint_bp_builder.cpp PROPERTIES COMPILE_FLAGS -O1)
+
 target_sources(${OUTLIBNAME} PRIVATE hinge/hinge_constraint.cpp)
 target_sources(${OUTLIBNAME} PRIVATE hinge/hinge_bp_builder.cpp)
 target_sources(${OUTLIBNAME} PRIVATE breakable_constraint/breakable_constraint.cpp)

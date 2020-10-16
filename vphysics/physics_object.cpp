@@ -1897,17 +1897,20 @@ void CPhysicsObject::InitFromTemplate( CPhysicsEnvironment *pEnvironment, void *
 //lwss add
 void CPhysicsObject::SetUseAlternateGravity(bool bSet)
 {
-    Warning("LWSS didn't implement SetUseAlternateGravity!");
+    //lwss hack
+    //Warning("LWSS didn't implement SetUseAlternateGravity!");
 }
 
 void CPhysicsObject::SetCollisionHints(uint32 collisionHints)
 {
-    Warning("LWSS didn't implement SetCollisionHints!");
+    //lwss hack
+    //Warning("LWSS didn't implement SetCollisionHints!");
 }
 
 uint32 CPhysicsObject::GetCollisionHints() const
 {
-    Warning("LWSS didn't implement GetCollisionHints!");
+    //lwss hack
+    //Warning("LWSS didn't implement GetCollisionHints!");
     return 0;
 }
 

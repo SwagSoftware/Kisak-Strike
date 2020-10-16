@@ -148,8 +148,8 @@ public:
 	// holds a cache of these by id.  So you can get by id to search for the previously created set
 	// UNDONE: Sets are currently limited to 32 elements.  More elements will return NULL in create.
 	// NOTE: id is not allowed to be zero.
-	virtual IPhysicsCollisionSet		*FindOrCreateCollisionSet( unsigned int id, int maxElementCount ) = 0;
-	virtual IPhysicsCollisionSet		*FindCollisionSet( unsigned int id ) = 0;
+	virtual IPhysicsCollisionSet		*FindOrCreateCollisionSet( uintptr_t id, int maxElementCount ) = 0;
+	virtual IPhysicsCollisionSet		*FindCollisionSet( uintptr_t id ) = 0;
 	virtual void						DestroyAllCollisionSets() = 0;
 };
 

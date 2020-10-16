@@ -12,7 +12,7 @@ include(${CMAKE_MODULE_PATH}/source_lib_base.cmake)
 include_directories(${SRCDIR}/ivp/havana/havok)
 
 if( LINUXALL )
-    target_compile_options(${OUTLIBNAME} PRIVATE -fpermissive -fpic -fno-semantic-interposition)
+    target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition)
     add_definitions(-D_LIB -DLINUX)
 endif()
 

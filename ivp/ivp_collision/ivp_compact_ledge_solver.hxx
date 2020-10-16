@@ -234,7 +234,7 @@ const IVP_Compact_Poly_Point *IVP_Compact_Ledge_Solver::give_object_coords(const
     int point_index = edge->get_start_point_index();
     const IVP_Compact_Poly_Point *res = &clp->compact_poly_points[point_index];
 
-	IVP_ASSERT ( (int(res) & 15) == 0);
+	IVP_ASSERT ( (intptr_t(res) & 15) == 0);
 
     return res;
 }

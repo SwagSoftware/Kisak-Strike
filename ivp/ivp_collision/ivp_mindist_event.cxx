@@ -1255,7 +1255,13 @@ void IVP_Mindist_Event_Solver::next_event_default_poly_poly(IVP_Mindist_Event_So
 
 void IVP_Mindist_Event_Solver::next_event_illegal(IVP_Mindist_Event_Solver *){
     // error: inconsistency between IVP_Mindist_Event_Solver and IVP_Mindist_Minimize_Solver
+//lwss hack - change this to not break on non-debug builds. It goes off sometimes
+#ifdef _DEBUG
     CORE;
+#else
+    fprintf(stderr, "next_event_illegal called!!!\n");
+#endif
+//lwss end
 }
 
 void (*IVP_Mindist_Event_Solver::mim_function_table[IVP_ST_MAX_LEGAL][IVP_ST_MAX_LEGAL])(IVP_Mindist_Event_Solver *mim);

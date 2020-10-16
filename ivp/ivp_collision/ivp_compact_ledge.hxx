@@ -18,6 +18,8 @@
 #	include "ivu_vector.hxx"
 #endif
 
+#include <cstdint> //lwss - x64 fixes. Hard to do without uintptr_t
+
 class IVP_Compact_Triangle;
 
 class IVP_Compact_Surface;
@@ -250,7 +252,15 @@ public:
 const IVP_Compact_Triangle *IVP_Compact_Edge::get_triangle() const
 {
     // mask 4 lowest adress bits to receive triangle
+    //lwss - x64 fixes ( original is x86 )
+#if defined(__i386__)
     return (IVP_Compact_Triangle *)(((unsigned int)this) & 0xfffffff0);
+#elif defined( __x86_64__ )
+    return (IVP_Compact_Triangle *)(((unsigned long int)this) & 0xFFFFFFFFFFFFFFF0);
+#else
+#error fix this for your platform
+#endif
+    //lwss end
 }
 
 
@@ -269,36 +279,36 @@ const IVP_Compact_Poly_Point *IVP_Compact_Edge::get_start_point(const IVP_Compac
 }
 
 
-
+// lwss - x64 fixes
 const IVP_Compact_Edge *IVP_Compact_Edge::get_next() const
 {
-    int idx = (int)(((unsigned int)this) & 0x0c);
+    int idx = (int)(((uintptr_t)this) & 0x0c);
     return (IVP_Compact_Edge *)(((char *)this) + ((int *)(((char *)this->next_table)+idx))[0]);
 }
 
 int IVP_Compact_Edge::get_edge_index()const{
-  int idx = (int((((unsigned int)this) & 0x0c))>>2) - 1;
+  int idx = (int((((uintptr_t)this) & 0x0c))>>2) - 1;
     return idx;
 }
 
 IVP_Compact_Edge *IVP_Compact_Edge::get_next()
 {
-    int idx = (int)(((unsigned int)this) & 0x0c);
+    int idx = (int)(((uintptr_t)this) & 0x0c);
     return (IVP_Compact_Edge *)(((char *)this) + ((int *)(((char *)this->next_table)+idx))[0]);
 }
 
 const IVP_Compact_Edge *IVP_Compact_Edge::get_prev() const
 {
-    int idx = (int)(((unsigned int)this) & 0x0c);
+    int idx = (int)(((uintptr_t)this) & 0x0c);
     return (IVP_Compact_Edge *)(((char *)this) + ((int *)(((char *)this->prev_table)+idx))[0]);
 }
 
 IVP_Compact_Edge *IVP_Compact_Edge::get_prev() 
 {
-    int idx = (int)(((unsigned int)this) & 0x0c);
+    int idx = (int)(((uintptr_t)this) & 0x0c);
     return (IVP_Compact_Edge *)(((char *)this) + ((int *)(((char *)this->prev_table)+idx))[0]);
 }
-
+//lwss end
 const IVP_Compact_Edge *IVP_Compact_Edge::get_opposite() const
 {
     int idx = opposite_index; // index is relative!
@@ -309,6 +319,7 @@ IVP_Compact_Edge *IVP_Compact_Edge::get_opposite()
 {
     int idx = get_opposite_index(); // index is relative!
     return (IVP_Compact_Edge *)(this + idx);
+    //return (IVP_Compact_Edge *)((uintptr_t)this + (sizeof(IVP_Compact_Edge) * idx)); //lwss - 100% equal to this statement
 }
 
 

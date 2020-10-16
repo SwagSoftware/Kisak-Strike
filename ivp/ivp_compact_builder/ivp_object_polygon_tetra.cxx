@@ -994,7 +994,9 @@ IVP_ERROR_STRING IVP_Object_Polygon_Tetra::make_triangles()
     
     n_edges = 0;
     num_of_edges = 6 * (templ->n_points-2); // accurately calculated
-    hash = new IVP_Hash(num_of_edges/*size*/, 8 /*keylen*/, 0/*notfound*/);
+    //num_of_edges = 6 * templ->n_points - 12;    //lwss - from debug bins
+    //hash = new IVP_Hash(num_of_edges/*size*/, 8 /*keylen*/, 0/*notfound*/);
+    hash = new IVP_Hash(num_of_edges/*size*/, sizeof(void*)*2 /*keylen*/, 0/*notfound*/); //lwss - from debug bins
     {
 	int i;    
 	IVP_Tri_Edge *edge;

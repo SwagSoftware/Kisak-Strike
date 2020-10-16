@@ -75,14 +75,35 @@ void IVP_Mindist_Recursive::do_impact(){
 		// search smaller radius	    
 		const IVP_Compact_Ledge *l0 = syn0->get_edge()->get_triangle()->get_compact_ledge();
 		const IVP_Compact_Ledge *l1 = syn1->get_edge()->get_triangle()->get_compact_ledge();
-		
+
 		const IVP_Compact_Ledgetree_Node *n0 = l0->get_ledgetree_node();
 		const IVP_Compact_Ledgetree_Node *n1 = l1->get_ledgetree_node();
-		if ( n0->radius > n1->radius){
-		    recursive_status = IVP_MR_FIRST_SYNAPSE_RECURSIVE;
-		}else{
-		    recursive_status = IVP_MR_SECOND_SYNAPSE_RECURSIVE;
+		//lwss hack - add null checks here :(
+		if( !n0 && !n1 )
+        {
+            // if they are both null just do normal I guess
+            // TODO: what is normal? this is not used really, do we need one of the recursive ones instead?
+            recursive_status = IVP_MR_NORMAL;
+        }
+		else if( n0 && n1 )
+        {
+		    // ORIGINAL CHECKS
+            if ( n0->radius > n1->radius){
+                recursive_status = IVP_MR_FIRST_SYNAPSE_RECURSIVE;
+            }else{
+                recursive_status = IVP_MR_SECOND_SYNAPSE_RECURSIVE;
+            }
+        }
+		else
+        {
+            // if the 1st one is null, then we can assume the 2nd one is bigger?
+            if( !n0 )
+                recursive_status = IVP_MR_SECOND_SYNAPSE_RECURSIVE;
+            // if the 2nd one is null, we can assume first one is bigger.
+            if( !n1 )
+                recursive_status = IVP_MR_FIRST_SYNAPSE_RECURSIVE;
 		}
+		//lwss end
 	    }
 	    break;
 	default: CORE;
@@ -136,14 +157,30 @@ void IVP_Mindist_Recursive::exact_mindist_went_invalid(IVP_Mindist_Manager *mm){
 	recursive_status = IVP_MR_SECOND_SYNAPSE_RECURSIVE;
     }else if ( l1->is_terminal() ){
 	recursive_status = IVP_MR_FIRST_SYNAPSE_RECURSIVE;
-    }else{
-	const IVP_Compact_Ledgetree_Node *n0 = l0->get_ledgetree_node();
-	const IVP_Compact_Ledgetree_Node *n1 = l1->get_ledgetree_node();
-	if ( n0->radius > n1->radius){
-	    recursive_status = IVP_MR_FIRST_SYNAPSE_RECURSIVE;
-	}else{
-	    recursive_status = IVP_MR_SECOND_SYNAPSE_RECURSIVE;
-        }    
+    }else {
+        const IVP_Compact_Ledgetree_Node *n0 = l0->get_ledgetree_node();
+        const IVP_Compact_Ledgetree_Node *n1 = l1->get_ledgetree_node();
+        //lwss hack - add null checks here :(
+        if (!n0 && !n1) {
+            // if they are both null just do normal I guess
+            // TODO: what is normal? this is not used really, do we need one of the recursive ones instead?
+            recursive_status = IVP_MR_NORMAL;
+        } else if (n0 && n1) {
+            // ORIGINAL CHECKS
+            if (n0->radius > n1->radius) {
+                recursive_status = IVP_MR_FIRST_SYNAPSE_RECURSIVE;
+            } else {
+                recursive_status = IVP_MR_SECOND_SYNAPSE_RECURSIVE;
+            }
+        } else {
+            // if the 1st one is null, then we can assume the 2nd one is bigger?
+            if (!n0)
+                recursive_status = IVP_MR_SECOND_SYNAPSE_RECURSIVE;
+            // if the 2nd one is null, we can assume first one is bigger.
+            if (!n1)
+                recursive_status = IVP_MR_FIRST_SYNAPSE_RECURSIVE;
+        }
+        //lwss end
     }
     mm->remove_exact_mindist(this);
     //mindists.ensure_capacity(16);

@@ -17,6 +17,16 @@ void hk_Hinge_BP_Builder::set_axis_ws( hk_Rigid_Body *a, hk_Rigid_Body *b, const
 	
 }
 
+//lwss add - rebuilt from debug bins
+void hk_Hinge_BP_Builder::set_axis_perp_os(int obj_index, const hk_Vector3 &perp_os)
+{
+    float normalizedLength = 1.0f / sqrtf(perp_os.length_squared());
+    m_hinge_bp.m_axis_perp_os[ obj_index ].x = (perp_os.x * normalizedLength);
+    m_hinge_bp.m_axis_perp_os[ obj_index ].y = (perp_os.y * normalizedLength);
+    m_hinge_bp.m_axis_perp_os[ obj_index ].z = (perp_os.z * normalizedLength);
+}
+//lwss end
+
 void hk_Hinge_BP_Builder::set_angular_motor(hk_real angular_velocity, hk_real max_torque)
 {
 	m_hinge_bp.m_limit.set_motor( angular_velocity, max_torque );

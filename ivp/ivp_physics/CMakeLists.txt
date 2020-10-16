@@ -18,7 +18,7 @@ include_directories(${SRCDIR}/ivp/ivp_surface_manager)
 include_directories(${SRCDIR}/ivp/ivp_intern)
 
 if( LINUXALL )
-    target_compile_options(${OUTLIBNAME} PRIVATE -fpermissive -fpic -fno-semantic-interposition)
+    target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition)
     #TODO: pretty sure the valve guy made a typo here, it's supposed to be MAVOK_MOPP
     add_definitions(-D_LIB -DIVP_VERSION_SDK -DHAVANA_CONSTRAINTS -DHAVOK_MOOP -DLINUX)
 endif()
@@ -39,7 +39,10 @@ target_sources(${OUTLIBNAME} PRIVATE ../ivp_collision/ivp_mindist_debug.cxx)
 target_sources(${OUTLIBNAME} PRIVATE ../ivp_collision/ivp_mindist_event.cxx)
 target_sources(${OUTLIBNAME} PRIVATE ../ivp_collision/ivp_mindist_mcases.cxx)
 target_sources(${OUTLIBNAME} PRIVATE ../ivp_collision/ivp_mindist_minimize.cxx)
+#TODO: This file needs -O0 or it will start skipping if statements WTF!!!
 target_sources(${OUTLIBNAME} PRIVATE ../ivp_collision/ivp_mindist_recursive.cxx)
+set_source_files_properties(../ivp_collision/ivp_mindist_recursive.cxx PROPERTIES COMPILE_FLAGS -O0)
+
 target_sources(${OUTLIBNAME} PRIVATE ../ivp_collision/ivp_oo_watcher.cxx)
 target_sources(${OUTLIBNAME} PRIVATE ../ivp_collision/ivp_range_manager.cxx)
 target_sources(${OUTLIBNAME} PRIVATE ../ivp_collision/ivp_ray_solver.cxx)

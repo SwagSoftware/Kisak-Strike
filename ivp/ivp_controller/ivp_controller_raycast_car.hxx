@@ -198,9 +198,10 @@ public:
     
     virtual void set_booster_acceleration( IVP_FLOAT acceleration);
     virtual void activate_booster(IVP_FLOAT thrust, IVP_FLOAT duration, IVP_FLOAT delay);
-    virtual void update_booster(IVP_FLOAT /*delta_time*/){;};    
-	virtual IVP_FLOAT IVP_Controller_Raycast_Car::get_booster_delay();
-    
+    virtual void update_booster(IVP_FLOAT /*delta_time*/){;};
+	//virtual IVP_FLOAT IVP_Controller_Raycast_Car::get_booster_delay();
+	virtual IVP_FLOAT get_booster_delay(); //lwss remove extra qualification
+
     IVP_Controller_Raycast_Car(IVP_Environment *environment, const IVP_Template_Car_System *);
     virtual ~IVP_Controller_Raycast_Car();
 

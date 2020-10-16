@@ -141,6 +141,12 @@ void IVP_SurfaceBuilder_Polygon_Convex::init_surface_manager_polygon()
     IVP_ERROR_STRING error = this->tetras->make_triangles();
     P_DELETE(this->tetras->points_to_edge_hash);
 
+//lwss add
+#ifdef DEBUG
+    fprintf(stderr, "num triangles: %d\n", tetras->triangles.len);
+    IVP_ASSERT( this->tetras->triangles.len > 0 )
+#endif
+//lwss end
     if (error){
 	this->tetras = NULL;
 	this->c_ledge = NULL;
@@ -169,7 +175,7 @@ void IVP_SurfaceBuilder_Polygon_Convex::init_surface_manager_polygon()
 	    ledge_gen.generate_compact_ledge(mem);
 #ifdef DEBUG
 	    if(ledge_gen.validate()!=IVP_OK){
-		printf("Compact ledge generation fizzled :-(\n");	
+		printf("Compact ledge generation fizzled :-(\n");
 	    }
 #endif	    
 	}

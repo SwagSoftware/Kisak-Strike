@@ -92,8 +92,12 @@ IVP_BOOL IVP_Mindist_Minimize_Solver::check_loop_hash(IVP_SYNAPSE_POLYGON_STATUS
     IVP_ASSERT( i_s0 < 4);
     IVP_ASSERT( i_s1 < 4);
 
-    int x0 = int(i_e0) | i_s0;
-    int x1 = int(i_e1) | i_s1;
+    //lwss -x64 fixes
+    //int x0 = int(i_e0) | i_s0;
+    //int x1 = int(i_e1) | i_s1;
+    intptr_t x0 = intptr_t (i_e0) | i_s0;
+    intptr_t x1 = intptr_t (i_e1) | i_s1;
+    //lwss end
 
     if (x0 < x1) {
 	int h = x0; x0 = x1; x1 = h;
@@ -282,7 +286,7 @@ IVP_MRC_TYPE IVP_Mindist::recalc_mindist()
 	    CORE;
 	    break;
 	}
-	CORE;	
+	CORE;
     }	// while
     CORE;
 }

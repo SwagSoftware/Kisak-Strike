@@ -65,7 +65,10 @@ public:
      *****************************************************************************/
     const hkMoppCode* get_compact_ledge_tree_root() const 
 	{
-		char* base = (char*)(((int)this) + this->offset_ledgetree_root);
+        //lwss - x64 fixes
+		//char* base = (char*)(((int)this) + this->offset_ledgetree_root);
+		char* base = (char*)(((intptr_t)this) + this->offset_ledgetree_root);
+		//lwss end
 		return((const hkMoppCode*)base);
     }
 

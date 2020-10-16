@@ -11,6 +11,7 @@
 #include <ivp_mindist_intern.hxx>
 #include <ivp_hull_manager.hxx>
 #include <ivu_min_hash.hxx>
+#include <cstdint> //lwss- x64 fixes
 
 IVP_Template_Phantom::IVP_Template_Phantom(){
 	P_MEM_CLEAR(this);
@@ -54,7 +55,10 @@ void IVP_Controller_Phantom::mindist_entered_volume(class IVP_Mindist *mindist)
 		{
 			other_object = mindist->get_synapse(0)->get_object();
 		}
-		int x = (int)mindist_object_counter->find_elem( other_object );
+		//lwss - x64 fixes
+		//int x = (int)mindist_object_counter->find_elem( other_object );
+		intptr_t x = (intptr_t)mindist_object_counter->find_elem( other_object );
+		//lwss end
 		if (x)
 		{
 			mindist_object_counter->change_elem( other_object, (void *)(x+1));
@@ -77,7 +81,10 @@ void IVP_Controller_Phantom::mindist_entered_volume(class IVP_Mindist *mindist)
 			other_object = mindist->get_synapse(0)->get_object();
 		}
 		IVP_Core *other_core= other_object->get_core();
-		int x = (int)mindist_core_counter->find_elem( other_core );
+		//lwss -x64 fixes
+		//int x = (int)mindist_core_counter->find_elem( other_core );
+		intptr_t x = (intptr_t)mindist_core_counter->find_elem( other_core );
+		//lwss end
 		if (x)
 		{
 			mindist_core_counter->change_elem( other_core, (void *)(x+1));
@@ -115,7 +122,10 @@ void IVP_Controller_Phantom:: mindist_left_volume(class IVP_Mindist *mindist)
 		{
 			other_object = mindist->get_synapse(0)->get_object();
 		}
-		int x = (int)mindist_object_counter->find_elem( other_object );
+		//lwss -x64 fixes
+		//int x = (int)mindist_object_counter->find_elem( other_object );
+		intptr_t x = (intptr_t)mindist_object_counter->find_elem( other_object );
+		//lwss end
 		if (x>1)
 		{
 			mindist_object_counter->change_elem( other_object, (void *)(x-1));
@@ -138,7 +148,10 @@ void IVP_Controller_Phantom:: mindist_left_volume(class IVP_Mindist *mindist)
 			other_object = mindist->get_synapse(0)->get_object();
 		}
 		IVP_Core *other_core= other_object->get_core();
-		int x = (int)mindist_core_counter->find_elem( other_core );
+		//lwss -x64 fixes
+		//int x = (int)mindist_core_counter->find_elem( other_core );
+		intptr_t x = (intptr_t)mindist_core_counter->find_elem( other_core );
+		//lwss end
 		if (x>1)
 		{
 			mindist_core_counter->change_elem( other_core, (void *)(x-1));

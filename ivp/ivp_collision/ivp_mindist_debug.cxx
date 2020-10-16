@@ -42,7 +42,7 @@ IVP_BOOL ivp_check_debug_mindist( IVP_Mindist *md){
 		!P_String::string_cmp(name0, search1, IVP_FALSE) && !P_String::string_cmp(name1, search0, IVP_FALSE)){
 	const IVP_Time &time = md->get_synapse(0)->l_obj->get_environment()->get_current_time();
 	if ( time - IVP_DEBUG_TIME >= 0.0f){
-	    printf("%10s %10s %8f-%X: ", name0, name1, time.get_time(), (int)md & 0xffff );
+	    printf("%10s %10s %8f-%X: ", name0, name1, time.get_time(), (intptr_t)md & 0xffff );
 	    return IVP_TRUE;
 	}
     }

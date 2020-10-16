@@ -22,7 +22,7 @@ class hk_Ball_Socket_Work
 			return addr;
 		}
 #else
-		static inline void *operator new (unsigned int size, void *addr){
+		static inline void *operator new (unsigned long int size, void *addr){
 			return addr;
 		}
 		

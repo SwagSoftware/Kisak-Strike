@@ -4,10 +4,10 @@
 #//	Project Script
 #//-----------------------------------------------------------------------------
 cmake_minimum_required(VERSION 3.16)
-project(vphysics_client)
+project(kisakvphysics_client)
 set(SRCDIR "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH ${SRCDIR}/cmake)
-set(OUTBINNAME "vphysics_client")
+set(OUTBINNAME "kisakvphysics_client")
 set(OUTBINDIR ${SRCDIR}/../game/bin)
 
 include(${CMAKE_MODULE_PATH}/detect_platform.cmake)
@@ -27,7 +27,7 @@ include_directories(${SRCDIR}/ivp/havana)
 add_definitions(-DVPHYSICS_EXPORTS -DHAVANA_CONSTRAINTS -DHAVOK_MOPP)
 
 if( LINUXALL )
-    target_compile_options(${OUTBINNAME} PRIVATE -fpermissive -fpic -fno-semantic-interposition)
+    target_compile_options(${OUTBINNAME} PRIVATE -fpic -fno-semantic-interposition)
 endif()
 
 #Source files

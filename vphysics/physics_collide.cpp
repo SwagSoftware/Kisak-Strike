@@ -458,7 +458,8 @@ void CPhysCollideCompactSurface::InitCollideMap()
 
 void CPhysCollideCompactSurface::Init( const char *pBuffer, unsigned int size, int index, bool bSwap )
 {
-	m_pCompactSurface = (IVP_Compact_Surface *)ivp_malloc_aligned( size, 32 );
+	//m_pCompactSurface = (IVP_Compact_Surface *)ivp_malloc_aligned( size, 32 );
+	m_pCompactSurface = (IVP_Compact_Surface *)ivp_malloc_aligned( size, 16 ); //lwss - this align is 16 in bins
 	memcpy( m_pCompactSurface, pBuffer, size );
 	if ( bSwap )
 	{
@@ -1316,6 +1317,7 @@ CPhysCollide *CPhysicsCollision::BBoxToCollide( const Vector &mins, const Vector
 
 	// find this bbox in the cache
 	CPhysCollide *pCollide = GetBBoxCache( mins, maxs );
+	//lwss break - good spot to breakpoint.
 	if ( pCollide )
 		return pCollide;
 

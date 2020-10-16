@@ -530,6 +530,14 @@ int CPhysicsSurfaceProps::ParseSurfaceData( const char *pFileName, const char *p
                 {
                     prop.data.sounds.runStepRight = m_strings.AddString( value );
                 }
+				else if ( !strcmpi( key, "penetrationmodifier" ) )
+                {
+				    prop.data.game.penetrationModifier = m_strings.AddString( value );
+                }
+				else if ( !strcmpi( key, "damagemodifier" ) )
+                {
+				    prop.data.game.damageModifier = m_strings.AddString( value );
+                }
 				// lwss end
 				else if ( !strcmpi( key, "impactsoft" ) )
 				{

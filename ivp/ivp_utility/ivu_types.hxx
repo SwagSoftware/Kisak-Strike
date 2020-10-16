@@ -68,7 +68,7 @@ inline void BREAKPOINT()
 #endif // PSXII
 
 #ifdef	NDEBUG
-#	define IVP_ASSERT(cond)	
+#	define IVP_ASSERT(cond)
 #	define IVP_USE(a) 
 #	define IVP_IF(flag)	if (0==1)
 #else

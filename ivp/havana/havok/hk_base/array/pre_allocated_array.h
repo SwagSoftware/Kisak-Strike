@@ -23,7 +23,8 @@ class hk_Pre_Allocated_Array : public hk_Array<T>
 
 		inline ~hk_Pre_Allocated_Array()
 		{
-			if ( get_elems() == (T*)(this+1))
+		    //lwss - add explicit this-> to fix error
+			if ( this->get_elems() == (T*)(this+1))
 			{
 			    //lwss: add explicit this
 				this->m_elems = 0;

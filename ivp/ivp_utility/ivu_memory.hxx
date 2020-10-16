@@ -7,6 +7,7 @@
 #	pragma interface
 #endif
 
+#include <cstdint> //lwss -x64 fixes
 
 #define IVU_MEM_ALIGN 0x20 //align to chach line data 32Byte
 #define IVU_MEM_MASK 0xffffffe0; 
@@ -109,7 +110,7 @@ inline void    *IVP_U_Memory::get_mem(unsigned int groesse)
 	    return ((void *) this->neuer_sp_block(groesse));
 	} else {
 	    speicherbeginn = p;
-		IVP_IF( ((int)op > 0x780000 ) && ((int)op < 0x792f48)) {
+		IVP_IF( ((intptr_t)op > 0x780000 ) && ((intptr_t)op < 0x792f48)) {
 			op++;
 			op--;
 		}

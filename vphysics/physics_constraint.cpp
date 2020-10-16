@@ -657,7 +657,7 @@ void CPhysicsConstraint::InitRagdoll( IVP_Environment *pEnvironment, CPhysicsCon
 		InitHinge( pEnvironment, constraint_group, hinge );
 		return;
 	}
-	
+
 	m_constraintType = CONSTRAINT_RAGDOLL;
 
 	hk_Rigid_Body *ref = (hk_Rigid_Body*)m_pObjReference->GetObject();
@@ -692,7 +692,7 @@ void CPhysicsConstraint::InitRagdoll( IVP_Environment *pEnvironment, CPhysicsCon
 	hk_Ragdoll_Constraint_BP_Builder r_builder;
 	r_builder.initialize_from_limited_ball_socket_bp( &ballsocketBP, ref, att );
 	hk_Ragdoll_Constraint_BP *bp = (hk_Ragdoll_Constraint_BP  *)r_builder.get_blueprint();  // get non const bp
-	
+
 	int revAxisMapHK[3];
 	//lwss hack
 	// ok this looks like it's converting the axis' from the physics engine to source.
@@ -762,13 +762,11 @@ void CPhysicsConstraint::InitHinge( IVP_Environment *pEnvironment, CPhysicsConst
 	builder.set_position_os( 0, TransformHLWorldToHavanaLocal( hinge.worldPosition, m_pObjReference->GetObject() ) );
 	builder.set_position_os( 1, TransformHLWorldToHavanaLocal( hinge.worldPosition, m_pObjAttached->GetObject() ) );
 
-	//lwss hack -comment out for now
-	//ConvertDirectionToIVP( hinge.referencePerpAxisDirection, axisPerpIVP_os );
-	//builder.set_axis_perp_os( 0, vec(axisPerpIVP_os) );
-	//ConvertDirectionToIVP( hinge.attachedPerpAxisDirection, axisPerpIVP_os );
-	//builder.set_axis_perp_os( 1, vec(axisPerpIVP_os) );
-	//lwss end
-	
+    ConvertDirectionToIVP( hinge.referencePerpAxisDirection, axisPerpIVP_os );
+    builder.set_axis_perp_os( 0, vec(axisPerpIVP_os) );
+    ConvertDirectionToIVP( hinge.attachedPerpAxisDirection, axisPerpIVP_os );
+    builder.set_axis_perp_os( 1, vec(axisPerpIVP_os) );
+
 	builder.set_tau( hinge.constraint.strength );
 	// torque is an impulse radians/sec * inertia
 	if ( hinge.hingeAxis.torque != 0 )

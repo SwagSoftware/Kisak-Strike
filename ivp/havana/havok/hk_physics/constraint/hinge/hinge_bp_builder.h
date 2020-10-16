@@ -13,6 +13,9 @@ protected:
 public:
 	void set_position_os( int body_index, const hk_Vector3 &position );
 	void set_axis_ws( hk_Rigid_Body *a, hk_Rigid_Body *b, const hk_Vector3& axis_ws );
+	//lwss add
+    void set_axis_perp_os( int obj_index, const hk_Vector3& perp_os );
+    //lwss end
 	void set_tau( hk_real );
 	void set_joint_friction(hk_real Nm);
 		// sets a joint friction === set_angular_motor( 0.0f, Nm )

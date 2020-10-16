@@ -30,7 +30,7 @@ class hk_Limited_Ball_Socket_Work
 			return addr;
 		}
 #else
-		static inline void *operator new (unsigned int size, void *addr){
+		static inline void *operator new (unsigned long int size, void *addr){
 			return addr;
 		}
 		static inline void operator delete (void *, void *){ }

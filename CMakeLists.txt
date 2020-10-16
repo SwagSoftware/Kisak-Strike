@@ -51,7 +51,6 @@ add_subdirectory(choreoobjects)
 add_subdirectory(datacache)
 add_subdirectory(dmserializers)
 add_subdirectory(dmxloader)
-add_subdirectory(dedicated)
 add_subdirectory(engine)
 add_subdirectory(filesystem)
 add_subdirectory(inputsystem)
@@ -76,15 +75,25 @@ add_subdirectory(game/server) #CSGO Server
 add_subdirectory(matchmaking) #Does all 4 matchmaking projects
 
 add_subdirectory(launcher_main) #The actual executable that just dlopen's launcher
-add_subdirectory(launcher)
 
 add_subdirectory(scaleformui) #DUMMY cmake project so CLion can do analysis
 add_subdirectory(rocketui)
 
 #Frankenstein physics lib sewn together from 3 different leaks by mad scientist lwss
+if( USE_KISAK_PHYSICS )
+add_definitions(-DUSE_KISAK_PHYSICS)
+message("Using Open-Source Kisakstrike Physics rebuild")
 add_subdirectory(ivp/havana/havok/hk_base)
 add_subdirectory(ivp/havana/havok/hk_math)
 add_subdirectory(ivp/havana/havok/hk_physics/constraint)
 add_subdirectory(ivp/ivp_compact_builder)
 add_subdirectory(ivp/ivp_physics)
 add_subdirectory(vphysics)
+else()
+message("Using Valve Standard VPhysics .so blob")
+endif()
+
+#These 2 are the ones that load the physics lib and look for USE_KISAK_PHYSICS,
+#so they need to be down here.
+add_subdirectory(dedicated)
+add_subdirectory(launcher)

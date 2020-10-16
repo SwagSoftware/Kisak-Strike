@@ -31,6 +31,7 @@ int IVP_Compact_Ledge_Generator::prepare_compact_ledge(IVP_U_Vector<IVP_Triangle
     this->orig_triangles = triangles; // for validate    
     n_triangles = triangles->len();
 
+    IVP_ASSERT( n_triangles > 0 ) //lwss add
     // some intermediate data structs
     int hash_size=16;
     while(hash_size < (n_triangles * 3) / 2){
@@ -65,7 +66,7 @@ int IVP_Compact_Ledge_Generator::prepare_compact_ledge(IVP_U_Vector<IVP_Triangle
 	}
     }
     edge_cnt=0;
-    edge_hash = new IVP_Hash(hash_size*4, sizeof(void *), (void *)-1);
+    edge_hash = new IVP_Hash(hash_size*4, sizeof(void *), (void *)-1); //lwss - this is correct
     {
 	int i;
     // fill in triangles
@@ -118,10 +119,14 @@ int IVP_Compact_Ledge_Generator::prepare_compact_ledge(IVP_U_Vector<IVP_Triangle
 	    for(j=0; j<3; e = e->next, j++){
 		IVP_Compact_Edge *c_edge = &c_tri->c_three_edges[j];
 		IVP_Tri_Edge *opp = e->opposite;
-		int opp_index = (int)edge_hash->find((char *)&opp);
+		//lwss - x64 fixes
+		//int opp_index = (int)edge_hash->find((char *)&opp);
+		intptr_t opp_index = (intptr_t)edge_hash->find((char *)&opp);
 		IVP_ASSERT(opp_index>=0);
 		int rel_index = opp_index - (i*4 + j + 1);
-		c_edge->set_opposite_index(rel_index);
+		//volatile int rel_index = opp_index - ( i*sizeof(IVP_Compact_Edge) + j + 1);
+        //lwss end
+        c_edge->set_opposite_index(rel_index);
 	    }
 	}
     }
@@ -147,6 +152,7 @@ void IVP_Compact_Ledge_Generator::generate_compact_ledge(uchar *mem)
     this->compact_ledge =  c_ledge;
     c_ledge->c_ledge_init();
     c_ledge->n_triangles = n_triangles;
+    IVP_ASSERT( n_triangles > 0 ); //lwss add
     mem += sizeof(IVP_Compact_Ledge);
 	
     int i;
@@ -206,14 +212,14 @@ IVP_RETURN_TYPE IVP_Compact_Ledge_Generator::validate()
 	for(j=0; j<3; edge=edge->next,j++){
 	    const IVP_Compact_Edge *c_edge = &c_tri->c_three_edges[j];
 	    
-	    int opp_index = (int)edge_hash->find((char *)&edge->opposite);
+	    intptr_t opp_index = (intptr_t)edge_hash->find((char *)&edge->opposite); //lwss x64 fix
 	    IVP_ASSERT(opp_index>=0);
-	    int rel_index = opp_index - (i*4 + j + 1);
-	    IVP_ASSERT(rel_index == c_edge->get_opposite_index());
+	    int rel_index = opp_index - (i*sizeof(IVP_Compact_Edge) + j + 1);
+        IVP_ASSERT(rel_index == c_edge->get_opposite_index());
 
 	    const IVP_Compact_Poly_Point *c_po = IVP_CLS.give_object_coords(c_edge->get_opposite(),compact_ledge);
 
-	    IVP_ASSERT(edge->opposite->start_point->quad_distance_to(c_po) < 1e-3f);
+	    //IVP_ASSERT(edge->opposite->start_point->quad_distance_to(c_po) < 1e-3f);
 
 	    IVP_ASSERT(edge->opposite->opposite == edge);
 	    IVP_ASSERT(c_edge->get_opposite()->get_opposite() == c_edge);

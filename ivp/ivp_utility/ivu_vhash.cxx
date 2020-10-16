@@ -278,7 +278,10 @@ void IVP_VHash::print()const{
     int i;
     printf("%i:",len());
     for (i = 0; i<= size_mm;i++){
-	printf (" %i:%X:%X  ", elems[i].hash_index & size_mm, (int)elems[i].elem, elems[i].hash_index);
+    //lwss - x64 fixes
+	//printf (" %i:%X:%X  ", elems[i].hash_index & size_mm, (int)elems[i].elem, elems[i].hash_index);
+	printf (" %i:%p:%X  ", elems[i].hash_index & size_mm, (void*)elems[i].elem, elems[i].hash_index);
+	//lwss end
     }
     printf("\n");
 }
@@ -573,7 +576,10 @@ void IVP_VHash_Store::print(){
     int i;
     printf("%i:",size);
     for (i = 0; i< size;i++){
-	printf (" %i:%X:%X:%X  ", elems_store[i].hash_index & size_mm, (int)elems_store[i].key_elem, (int)elems_store[i].elem, elems_store[i].hash_index);
+    //lwss - x64 fixes
+	//printf (" %i:%X:%X:%X  ", elems_store[i].hash_index & size_mm, (int)elems_store[i].key_elem, (int)elems_store[i].elem, elems_store[i].hash_index);
+	printf (" %i:%p:%p:%X  ", elems_store[i].hash_index & size_mm, elems_store[i].key_elem, elems_store[i].elem, elems_store[i].hash_index);
+	//lwss end
     }
     printf("\n");
 }

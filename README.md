@@ -41,7 +41,6 @@ Linux Binaries: Depot ID: 734 4197642562793798650
 * Copy over *only needed* files from the 734 linux binary depot (manifest: 4197642562793798650)
     * ./bin/map_publish/* - (FOLDER which seems to contain some vgui assets)
     * ./csgo.sh
-    * ./game/bin/linux64/libsteam_api.so
     * ./game/bin/linux64/libphonon3d.so #proprietary HRTF 3d audio system.
     * ~./game/bin/linux64/vphysics_client.so #proprietary Havok physics system.~
         * Rebuilt/Reverse engineered as [Kisak Physics](https://github.com/SwagSoftware/Kisak-Strike/issues/8). Use Cmake option: `-DUSE_KISAK_PHYSICS=1` to enable, otherwise the vphysics_client.so blob from Valve will be used.
@@ -50,6 +49,15 @@ Linux Binaries: Depot ID: 734 4197642562793798650
 
 Each one of these proprietary `.so` files is an enemy to our freedoms, over time we aim to remove these.
 
+## Current Nonfree blobs
+* ./game/bin/linux64/libphonon3d.so #proprietary HRTF 3d audio system.
+* ${LIBPUBLIC}/gcsdk_client.a
+* ${LIBPUBLIC}/libsteam_api.so
+* ${LIBPUBLIC}/steamdatagramlib_client.a
+* ${LIBCOMMON}/jpeglib_client.a
+* ${LIBCOMMON}/libcurlssl.a
+* ${LIBCOMMON}/libssl.a
+* ${LIBCOMMON}/libcrypto_client.a
 
 ## Launch
 `./csgo_linux64`

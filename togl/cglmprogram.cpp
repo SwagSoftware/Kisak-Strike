@@ -634,7 +634,7 @@ GLMShaderLimitDesc	g_glmShaderLimitDescs[] =
 
 bool CGLMProgram::CheckValidity( EGLMProgramLang lang )
 {
-	static char *targnames[] = { "vertex", "fragment" };
+	static const char *targnames[] = { "vertex", "fragment" };
 
 	bool bTimeShaderCompiles = (CommandLine()->FindParm( "-gl_time_shader_compiles" ) != 0);
 	// If using "-gl_time_shader_compiles", keeps track of total cycle count spent on shader compiles.

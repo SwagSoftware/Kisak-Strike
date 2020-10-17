@@ -2589,8 +2589,10 @@ bool	GLMDetectOGLP( void )
 #endif
 #include <sys/types.h>  
 #ifndef _WIN32
-	#include <unistd.h>  
-	#include <sys/sysctl.h>  
+	#include <unistd.h>
+	//lwss: remove deprecated header.
+	//#include <sys/sysctl.h>
+	//lwss end
 #endif
 
 // From Technical Q&A QA1361  

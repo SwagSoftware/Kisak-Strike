@@ -2345,7 +2345,7 @@ class GLMTester
 
 	// error reporting
 	void	CheckGLError( const char *comment );					// obey m_params setting for console / debugger response
-	void	InternalError( int errcode, char *comment );	// if errcode!=0, obey m_params setting for console / debugger response
+	void	InternalError( int errcode, const char *comment );	// if errcode!=0, obey m_params setting for console / debugger response
 	
 	void	RunTests();
 

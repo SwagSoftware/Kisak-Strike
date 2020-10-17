@@ -3890,7 +3890,7 @@ HRESULT IDirect3DDevice9::CreatePixelShader(CONST DWORD* pFunction,IDirect3DPixe
 			
 			{
 				// find the highwater mark
-				char *highWaterPrefix = "//HIGHWATER-";		// try to arrange this so it can work with pure GLSL if needed
+				const char *highWaterPrefix = "//HIGHWATER-";		// try to arrange this so it can work with pure GLSL if needed
 				char *highWaterStr = strstr( (char *)transbuf.Base(), highWaterPrefix );
 				if (highWaterStr)
 				{
@@ -3910,7 +3910,7 @@ HRESULT IDirect3DDevice9::CreatePixelShader(CONST DWORD* pFunction,IDirect3DPixe
 
 			{
 				// find the sampler map
-				char *samplerMaskPrefix = "//SAMPLERMASK-";		// try to arrange this so it can work with pure GLSL if needed
+				const char *samplerMaskPrefix = "//SAMPLERMASK-";		// try to arrange this so it can work with pure GLSL if needed
 			
 				char *samplerMaskStr = strstr( (char *)transbuf.Base(), samplerMaskPrefix );
 				if (samplerMaskStr)
@@ -3944,7 +3944,7 @@ HRESULT IDirect3DDevice9::CreatePixelShader(CONST DWORD* pFunction,IDirect3DPixe
 
 			{
 				// find the sampler map
-				char *samplerTypesPrefix = "//SAMPLERTYPES-";		// try to arrange this so it can work with pure GLSL if needed
+				const char *samplerTypesPrefix = "//SAMPLERTYPES-";		// try to arrange this so it can work with pure GLSL if needed
 
 				char *samplerTypesStr = strstr( (char *)transbuf.Base(), samplerTypesPrefix );
 				if (samplerTypesStr)
@@ -3967,7 +3967,7 @@ HRESULT IDirect3DDevice9::CreatePixelShader(CONST DWORD* pFunction,IDirect3DPixe
 				// find the fb outputs used by this shader/combo
 				const GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT, GL_COLOR_ATTACHMENT3_EXT };
 
-				char *fragDataMaskPrefix = "//FRAGDATAMASK-";		
+				const char *fragDataMaskPrefix = "//FRAGDATAMASK-";
 
 				char *fragDataMaskStr = strstr( (char *)transbuf.Base(), fragDataMaskPrefix );
 				if ( fragDataMaskStr )
@@ -4169,7 +4169,7 @@ HRESULT IDirect3DDevice9::CreateVertexShader(CONST DWORD* pFunction, IDirect3DVe
 						
 			// find the highwater mark..
 						
-			char *highWaterPrefix = "//HIGHWATER-";		// try to arrange this so it can work with pure GLSL if needed
+			const char *highWaterPrefix = "//HIGHWATER-";		// try to arrange this so it can work with pure GLSL if needed
 			char *highWaterStr = strstr( (char *)transbuf.Base(), highWaterPrefix );
 			if (highWaterStr)
 			{
@@ -4186,7 +4186,7 @@ HRESULT IDirect3DDevice9::CreateVertexShader(CONST DWORD* pFunction, IDirect3DVe
 				Assert(!"couldn't find highwater mark in vertex shader");
 			}
 
-			char *highWaterBonePrefix = "//HIGHWATERBONE-";		// try to arrange this so it can work with pure GLSL if needed
+			const char *highWaterBonePrefix = "//HIGHWATERBONE-";		// try to arrange this so it can work with pure GLSL if needed
 			char *highWaterBoneStr = strstr( (char *)transbuf.Base(), highWaterBonePrefix );
 			if (highWaterBoneStr)
 			{
@@ -4205,7 +4205,7 @@ HRESULT IDirect3DDevice9::CreateVertexShader(CONST DWORD* pFunction, IDirect3DVe
 			}
 									
 			// find the attrib map..
-			char *attribMapPrefix = "//ATTRIBMAP-";		// try to arrange this so it can work with pure GLSL if needed
+			const char *attribMapPrefix = "//ATTRIBMAP-";		// try to arrange this so it can work with pure GLSL if needed
 			char *attribMapStr = strstr( (char *)transbuf.Base(), attribMapPrefix );
 			
 			if (attribMapStr)

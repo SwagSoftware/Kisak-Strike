@@ -615,7 +615,7 @@ GLMTexLayout *CGLMTexLayoutTable::NewLayoutRef( GLMTexLayoutKey *pDesiredKey )
 		// "target, format, +/- mips, base size"
 		char scratch[1024];
 
-		char	*targetname = "?";
+		const char	*targetname = "?";
 		switch( key->m_texGLTarget )
 		{
 			case GL_TEXTURE_2D:			targetname = "2D  ";		break;

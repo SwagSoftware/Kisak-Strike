@@ -18,6 +18,12 @@
 #define	IUNKNOWN_ALLOC_SPEW 0
 #define	IUNKNOWN_ALLOC_SPEW_MARK_ALL 0	
 
+//lwss add - this function is missing, idk where it's from
+inline void Debugger()
+{
+    *(int *)0 = 0;
+}
+//lwss end
 
 TOGL_INTERFACE void toglGetClientRect( VD3DHWND hWnd, RECT *destRect );
 
@@ -51,7 +57,7 @@ struct TOGL_CLASS IUnknown
 		#endif
 	};
 		
-	void	AddRef( int which=0, char *comment = NULL )
+	void	AddRef( int which=0, const char *comment = NULL )
 	{
 		Assert( which >= 0 );
 		Assert( which < 2 );
@@ -69,7 +75,7 @@ struct TOGL_CLASS IUnknown
 		#endif
 	};
 		
-	ULONG __stdcall	Release( int which=0, char *comment = NULL )
+	ULONG __stdcall	Release( int which=0, const char *comment = NULL )
 	{
 		Assert( which >= 0 );
 		Assert( which < 2 );
@@ -109,7 +115,7 @@ struct TOGL_CLASS IUnknown
 		}
 	};
 		
-	void	SetMark( bool markValue, char *comment=NULL )
+	void	SetMark( bool markValue, const char *comment=NULL )
 	{
 		#if IUNKNOWN_ALLOC_SPEW
 			if (!m_mark && markValue)	// leading edge detect

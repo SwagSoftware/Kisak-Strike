@@ -68,6 +68,7 @@ add_subdirectory(scenefilecache)
 add_subdirectory(serverbrowser)
 add_subdirectory(soundemittersystem)
 add_subdirectory(studiorender)
+add_subdirectory(togl)
 add_subdirectory(vguimatsurface)
 
 add_subdirectory(game/client) #CSGO Client

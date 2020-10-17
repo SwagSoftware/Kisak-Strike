@@ -5565,7 +5565,7 @@ return;
 	}
 }
 
-void GLMTester::InternalError( int errcode, char *comment )
+void GLMTester::InternalError( int errcode, const char *comment )
 {
 	if (errcode)
 	{

@@ -63,4 +63,4 @@ endif()
 #target_link_libraries(${OUTBINNAME} "${LIBPUBLIC}/tier2.a")
 #target_link_libraries(${OUTBINNAME} "${LIBPUBLIC}/mathlib_client.a")
 
-target_link_libraries(${OUTBINNAME} tier2_client mathlib_client libvstdlib_client)
+target_link_libraries(${OUTBINNAME} tier2_client libvstdlib_client mathlib_client )

@@ -47,7 +47,6 @@ Linux Binaries: Depot ID: 734 4197642562793798650
         * Rebuilt/Reverse engineered as [Kisak Physics](https://github.com/SwagSoftware/Kisak-Strike/issues/8). Use Cmake option: `-DUSE_KISAK_PHYSICS=1` to enable, otherwise the vphysics_client.so blob from Valve will be used.
     * ~~./game/bin/linux64/scaleformui_client.so #proprietary Scaleform flash UI, this is needed by main menu~~
         * Replaced with [RocketUI](https://github.com/SwagSoftware/Kisak-Strike/issues/7) implementation. Use Cmake option: `-DUSE_ROCKETUI=1` to enable, otherwise UI will be a broken mess of vgui.
-    * ./game/bin/linux64/shaderapidx9_client.so 
 
 Each one of these proprietary `.so` files is an enemy to our freedoms, over time we aim to remove these.
 

@@ -48,4 +48,4 @@ if( LINUXALL )
     target_link_libraries(${OUTBINNAME} fontconfig freetype SDL2)
 endif()
 
-target_link_libraries(${OUTBINNAME} vgui_controls_client vgui_surfacelib_client dmxloader_client tier2_client tier3_client mathlib_client bitmap_client tier0_client libvstdlib_client )
+target_link_libraries(${OUTBINNAME} vgui_controls_client vgui_surfacelib_client dmxloader_client tier2_client tier3_client mathlib_client bitmap_client libtier0_client libvstdlib_client )

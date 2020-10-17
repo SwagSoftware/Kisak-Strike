@@ -24,4 +24,4 @@ target_sources(${OUTBINNAME} PRIVATE rocketrenderGL.cpp)
 
 target_link_libraries(${OUTBINNAME} ${SRCDIR}/thirdparty/RmlUi/build/libRmlCore.so)
 target_link_libraries(${OUTBINNAME} ${SRCDIR}/thirdparty/RmlUi/build/libRmlDebugger.so)
-target_link_libraries(${OUTBINNAME} GL tier2_client tier3_client togl_client)
+target_link_libraries(${OUTBINNAME} GL tier2_client tier3_client libtogl_client)

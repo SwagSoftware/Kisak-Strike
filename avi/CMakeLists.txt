@@ -59,7 +59,7 @@ if( QUICKTIME_VIDEO OR QUICKTIME_WINDOWS )
 endif()
 
 if( WINDOWS OR X360 OR POSIX )
-    target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/tier2_client.a ${LIBPUBLIC}/tier3_client.a)
+    target_link_libraries(${OUTBINNAME} tier2_client tier3_client)
     if( LINUXALL )
         target_link_libraries(${OUTBINNAME} ${SRCDIR}/lib/common/libSDL2_mixer.a)
     endif()

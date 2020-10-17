@@ -59,8 +59,4 @@ endif()
 #// Link
 #//-----------------------------------------------------------------------------
 
-#target_link_libraries(${OUTBINNAME} "${LIBPUBLIC}/libtogl_client.so")
-#target_link_libraries(${OUTBINNAME} "${LIBPUBLIC}/tier2.a")
-#target_link_libraries(${OUTBINNAME} "${LIBPUBLIC}/mathlib_client.a")
-
 target_link_libraries(${OUTBINNAME} tier2_client libvstdlib_client mathlib_client )

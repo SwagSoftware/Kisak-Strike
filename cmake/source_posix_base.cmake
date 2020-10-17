@@ -10,7 +10,7 @@ MacroRequired(SRCDIR)
 MacroRequired(_DLL_EXT)
 
 set(LIBPUBLIC "${SRCDIR}/lib/public${PLATSUBDIR}") #this is where static libs are
-link_directories(${LIBPUBLIC}) #add to search path for linker
+#link_directories(${LIBPUBLIC}) #add to search path for linker - lwss: use the project name instead of linking the files manually.
 set(LIBCOMMON "${SRCDIR}/lib/common${PLATSUBDIR}")
 set(DEVTOOLS "${SRCDIR}/devtools")
 

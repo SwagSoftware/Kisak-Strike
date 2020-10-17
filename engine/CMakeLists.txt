@@ -462,12 +462,12 @@ else()
     message(FATAL_ERROR "We have to build with steam currently =(")
 endif()
 
-#Link matter actually does matter, so be careful if you cleanup these nasty if's
+#Link order actually does matter, so be careful if you cleanup these nasty if's
 target_link_libraries(${OUTBINNAME} appframework_client bitmap_client dmxloader_client mathlib_client)
 if( NOT DEDICATED )
     target_link_libraries(${OUTBINNAME} matsys_controls_client soundsystem_lowlevel)
 endif()
-target_link_libraries(${OUTBINNAME} tier0_client tier2_client tier3_client libvstdlib_client)
+target_link_libraries(${OUTBINNAME} libtier0_client tier2_client tier3_client libvstdlib_client)
 if( WINDOWS OR OSXALL OR (LINUXALL AND NOT DEDICATED) )
     target_link_libraries(${OUTBINNAME} videocfg_client)
 endif()

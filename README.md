@@ -42,7 +42,6 @@ Linux Binaries: Depot ID: 734 4197642562793798650
     * ./bin/map_publish/* - (FOLDER which seems to contain some vgui assets)
     * ./csgo.sh
     * ./game/bin/linux64/libsteam_api.so
-    * ./game/bin/linux64/libtogl_client.so #this is on github, we can probably build this
     * ./game/bin/linux64/libphonon3d.so #proprietary HRTF 3d audio system.
     * ~./game/bin/linux64/vphysics_client.so #proprietary Havok physics system.~
         * Rebuilt/Reverse engineered as [Kisak Physics](https://github.com/SwagSoftware/Kisak-Strike/issues/8). Use Cmake option: `-DUSE_KISAK_PHYSICS=1` to enable, otherwise the vphysics_client.so blob from Valve will be used.

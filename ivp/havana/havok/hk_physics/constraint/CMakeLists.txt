@@ -25,9 +25,9 @@ target_sources(${OUTLIBNAME} PRIVATE constraint.cpp)
 target_sources(${OUTLIBNAME} PRIVATE ball_socket/ball_socket_constraint.cpp)
 target_sources(${OUTLIBNAME} PRIVATE limited_ball_socket/limited_ball_socket_constraint.cpp)
 
-#TODO: This file Need O1! otherwise the ragdolls will spasm and fly around.
 target_sources(${OUTLIBNAME} PRIVATE ragdoll/ragdoll_constraint.cpp)
 
+#TODO: This file Need O1! otherwise the ragdolls will spasm and fly around.
 target_sources(${OUTLIBNAME} PRIVATE ragdoll/ragdoll_constraint_bp_builder.cpp)
 set_source_files_properties(ragdoll/ragdoll_constraint_bp_builder.cpp PROPERTIES COMPILE_FLAGS -O1)
 

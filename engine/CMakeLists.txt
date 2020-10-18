@@ -486,11 +486,8 @@ if( WINDOWS OR OSXALL OR (LINUXALL AND NOT DEDICATED) )
 endif()
 target_link_libraries(${OUTBINNAME} ${SRCDIR}/lib${PLATSUBDIR}/release/libprotobuf.a) #copied out from the thirdparty/protobuf2.5 folder
 if( LINUXALL AND NOT DEDICATED )
-    #Link with mystery blobs. again we can probably replace these.
-    target_link_libraries(${OUTBINNAME} ${LIBCOMMON}/libcurlssl.a)
-    target_link_libraries(${OUTBINNAME} ${LIBCOMMON}/libssl.a)
-
-    target_link_libraries(${OUTBINNAME} z) #libz
+    #Link to System-wide curl, openssl, and zlib
+    target_link_libraries(${OUTBINNAME} curl ssl z)
 
     target_link_libraries(${OUTBINNAME} ${LIBCOMMON}/libcrypto_client.a) #another blob that needs inspecting.
 endif()

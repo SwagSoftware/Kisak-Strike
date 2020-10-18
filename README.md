@@ -54,7 +54,6 @@ Each one of these proprietary `.so` files is an enemy to our freedoms, over time
 * ${LIBPUBLIC}/gcsdk_client.a
 * ${LIBPUBLIC}/libsteam_api.so
 * ${LIBPUBLIC}/steamdatagramlib_client.a
-* ${LIBCOMMON}/jpeglib_client.a
 * ${LIBCOMMON}/libcurlssl.a
 * ${LIBCOMMON}/libssl.a
 * ${LIBCOMMON}/libcrypto_client.a

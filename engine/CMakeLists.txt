@@ -482,7 +482,7 @@ else()
 endif()
 target_link_libraries(${OUTBINNAME} bzip2_client)
 if( WINDOWS OR OSXALL OR (LINUXALL AND NOT DEDICATED) )
-    target_link_libraries(${OUTBINNAME} ${LIBCOMMON}/jpeglib_client.a) #Link with Mysterious jpeglib. This can probably be built ourselves later.
+    target_link_libraries(${OUTBINNAME} jpeglib_client)
 endif()
 target_link_libraries(${OUTBINNAME} ${SRCDIR}/lib${PLATSUBDIR}/release/libprotobuf.a) #copied out from the thirdparty/protobuf2.5 folder
 if( LINUXALL AND NOT DEDICATED )

@@ -36,8 +36,8 @@ rocketui/cmake-build-*/*
 scaleformui/cmake-build-*/*
 
 #Ignore rebuilt static libs
-lib/public/linux64/*.a
-lib/common/linux64/*.a
+*.a
+*.a_VALVE
 
 #Ignore crypto++ built files
 external/crypto++-5.61/*.o

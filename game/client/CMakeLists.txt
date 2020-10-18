@@ -358,7 +358,7 @@ endif()
 
 target_link_libraries(${OUTBINNAME} meshutils_client)
 if( WINDOWS OR POSIX )
-    target_link_libraries(${OUTBINNAME} ${LIBCOMMON}/jpeglib_client.a) #Link with Mysterious jpeglib. This can probably be built ourselves later.
+    target_link_libraries(${OUTBINNAME} jpeglib_client)
     target_link_libraries(${OUTBINNAME} vpklib_client)
 endif()
 if( USE_ROCKETUI )

@@ -486,10 +486,8 @@ if( WINDOWS OR OSXALL OR (LINUXALL AND NOT DEDICATED) )
 endif()
 target_link_libraries(${OUTBINNAME} ${SRCDIR}/lib${PLATSUBDIR}/release/libprotobuf.a) #copied out from the thirdparty/protobuf2.5 folder
 if( LINUXALL AND NOT DEDICATED )
-    #Link to System-wide curl, openssl, and zlib
-    target_link_libraries(${OUTBINNAME} curl ssl z)
-
-    target_link_libraries(${OUTBINNAME} ${LIBCOMMON}/libcrypto_client.a) #another blob that needs inspecting.
+    #Link to System-wide curl, openssl, zlib, and crypto
+    target_link_libraries(${OUTBINNAME} curl ssl z crypto)
 endif()
 target_link_libraries(${OUTBINNAME} quickhull_client)
 if( SDL AND NOT LINUXALL )

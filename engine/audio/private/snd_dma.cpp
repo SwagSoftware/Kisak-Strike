@@ -82,10 +82,12 @@ extern IBik *bik;
 ConVar snd_sos_show_client_rcv("snd_sos_show_client_rcv", "0", FCVAR_CHEAT);
 ConVar snd_sos_allow_dynamic_chantype( "snd_sos_allow_dynamic_chantype", IsPlatformX360() ? "1" : "1" );
 
+#if defined(USE_VALVE_HRTF)
 //Controls whether we use HRTF (phonon) audio for sounds marked to use it.
 ConVar snd_use_hrtf("snd_use_hrtf", "1", FCVAR_ARCHIVE);
 ConVar snd_hrtf_lerp_min_distance("snd_hrtf_lerp_min_distance", "0.0", FCVAR_CHEAT);
 ConVar snd_hrtf_lerp_max_distance("snd_hrtf_lerp_max_distance", "0.0", FCVAR_CHEAT);
+#endif
 
 BEGIN_DEFINE_LOGGING_CHANNEL( LOG_SOUND_OPERATOR_SYSTEM, "SoundOperatorSystem", LCF_CONSOLE_ONLY, LS_MESSAGE );
 ADD_LOGGING_CHANNEL_TAG( "SoundOperatorSystem" );
@@ -137,8 +139,9 @@ ConVar snd_report_stop_sound( "snd_report_stop_sound", "0", FCVAR_CHEAT, "If set
 ConVar snd_report_loop_sound( "snd_report_loop_sound", "0", FCVAR_CHEAT, "If set to 1, report all sounds that just looped.\n" );
 ConVar snd_report_format_sound( "snd_report_format_sound", "0", FCVAR_CHEAT, "If set to 1, report all sound formats.\n" );
 ConVar snd_report_verbose_error( "snd_report_verbose_error", "0", FCVAR_CHEAT, "If set to 1, report more error found when playing sounds.\n" );
-
+#if defined(USE_VALVE_HRTF)
 static ConVar snd_hrtf_distance_behind("snd_hrtf_distance_behind", "100", FCVAR_ARCHIVE, "HRTF calculations will calculate the player as being this far behind the camera\n");
+#endif
 
 
 // store all played sounds for eliminating unplayed sounds for optimizations
@@ -924,7 +927,9 @@ void S_Startup( void )
 }
 
 static ConCommand play("play", S_Play, "Play a sound.", FCVAR_SERVER_CAN_EXECUTE );
+#if defined(USE_VALVE_HRTF)
 static ConCommand play_hrtf("play_hrtf", S_PlayHRTF, "Play a sound with HRTF spatialization.", FCVAR_SERVER_CAN_EXECUTE);
+#endif
 static ConCommand playflush( "playflush", S_Play, "Play a sound, reloading from disk in case of changes." );
 static ConCommand playvol( "playvol", S_PlayVol, "Play a sound at a specified volume." );
 static ConCommand speak( "speak", S_Say, "Play a constructed sentence." );
@@ -1121,7 +1126,9 @@ void S_Shutdown(void)
 
 		S_StopAllSounds( true );
 		S_ShutdownMixThread();
+#if defined(USE_VALVE_HRTF)
 		ShutdownPhononThread();
+#endif
 
 
 
@@ -5303,6 +5310,7 @@ void SND_Spatialize(channel_t *ch)
 {
 	VPROF( "SND_Spatialize" );
 
+#if defined(USE_VALVE_HRTF)
 	if (ch->wavtype == CHAR_HRTF)
 	{
 		Vector origin;
@@ -5378,6 +5386,7 @@ void SND_Spatialize(channel_t *ch)
 			ch->hrtf.lerp = 1.0f; //snd_hrtf_ratio.GetFloat() * (fDistance - fMinDistance) / (fMaxDistance - fMinDistance);
 		}
 	}
+#endif
 
 	// process via operators only
 	if( ch->m_pStackList && ch->m_pStackList->HasStack( CSosOperatorStack::SOS_UPDATE ) )
@@ -6199,11 +6208,13 @@ void S_SetChannelWavtype( channel_t *target_chan, const char *pSndName )
 	if ( TestSoundChar( pSndName, CHAR_DIRSTEREO ) )
 		target_chan->wavtype = CHAR_DIRSTEREO;
 
-	if (snd_use_hrtf.GetBool() && TestSoundChar(pSndName, CHAR_HRTF) && (!IsSoundSourceViewEntity(target_chan->soundsource) || target_chan->hrtf.debug_lock_position))
+#if defined(USE_VALVE_HRTF)
+    if (snd_use_hrtf.GetBool() && TestSoundChar(pSndName, CHAR_HRTF) && (!IsSoundSourceViewEntity(target_chan->soundsource) || target_chan->hrtf.debug_lock_position))
 	{
 		target_chan->wavtype = CHAR_HRTF;
 		target_chan->hrtf.lerp = 1.0; //snd_hrtf_ratio.GetFloat();
 	}
+#endif
 
 	if ( TestSoundChar( pSndName, CHAR_RADIO ) )
 		target_chan->wavtype = CHAR_RADIO;
@@ -8484,6 +8495,7 @@ void S_Update( const CAudioState *pAudioState )
 			bool bLooping = ch->sfx->pSource->IsLooped();
 			if (snd_show.GetInt())
 			{
+#if defined(USE_VALVE_HRTF)
 				if (ch->wavtype == CHAR_HRTF)
 				{
 					const float hdist = sqrt(ch->hrtf.vec.x*ch->hrtf.vec.x + ch->hrtf.vec.z*ch->hrtf.vec.z);
@@ -8508,7 +8520,9 @@ void S_Update( const CAudioState *pAudioState )
 						bLooping,
 						ch->sfx->getname(nameBuf, sizeof(nameBuf)));
 				}
-				else if ( sndsurround < 4 )
+				else
+#endif
+                if ( sndsurround < 4 )
 				{
 					Con_NXPrintf( &np, "%s %02i l(%.02f) r(%.02f) vol(%03d) ent(%03d) pos(%6d %6d %6d) timeleft(%f) looped(%d) %50s",
 						nSoundEntryName,
@@ -8572,6 +8586,7 @@ void S_Update( const CAudioState *pAudioState )
 
 				if ( bPrint )
 				{
+#if defined(USE_VALVE_HRTF)
 					if (ch->wavtype == CHAR_HRTF)
 					{
 						const float hdist = sqrt(ch->hrtf.vec.x*ch->hrtf.vec.x + ch->hrtf.vec.z*ch->hrtf.vec.z);
@@ -8594,6 +8609,7 @@ void S_Update( const CAudioState *pAudioState )
 							ch->sfx->getname( nameBuf, sizeof( nameBuf ) ) );
 					}
 					else
+#endif
 					if ( sndsurround < 4 )
 					{
 						Msg( "%s %02i l(%03d) r(%03d) vol(%03d) ent(%03d) pos(%6d %6d %6d) timeleft(%f) looped(%d) %50s\n",
@@ -9077,10 +9093,12 @@ void StartPhononThread();
 
 void S_Update_( float mixAheadTime )
 {
-	if (snd_use_hrtf.GetBool())
+#if defined(USE_VALVE_HRTF)
+    if (snd_use_hrtf.GetBool())
 	{
 		StartPhononThread();
 	}
+#endif
 
 	if ( !snd_mix_async.GetBool() )
 	{

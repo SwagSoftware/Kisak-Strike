@@ -3,6 +3,8 @@
 #//
 #//	Project Script
 #//-----------------------------------------------------------------------------
+# Possible Arguments used:
+# -DUSE_VALVE_HRTF
 cmake_minimum_required(VERSION 3.16)
 project(engine_client)
 set(SRCDIR "${CMAKE_SOURCE_DIR}")
@@ -495,7 +497,13 @@ if( SDL AND NOT LINUXALL )
 endif()
 
 if( LINUX64 AND NOT DEDICATED )
-    target_link_libraries(${OUTBINNAME} ${LIBCOMMON}/libphonon3d.so) #link to Blob for proprietary 3d audio.
+    if( USE_VALVE_HRTF )
+        target_link_libraries(${OUTBINNAME} ${LIBCOMMON}/libphonon3d.so) #link to Blob for proprietary 3d audio.
+        add_definitions(-DUSE_VALVE_HRTF)
+        message("Using SteamAudio HRTF blob.\n")
+    else()
+        message("Using Standard CS:GO Audio.\n")
+    endif()
 endif()
 
 if( (LINUXALL AND DEDICATED) OR OSXALL )

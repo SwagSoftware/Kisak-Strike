@@ -54,7 +54,9 @@ void FreeDuplicatedSamplePairs( portable_samplepair_t * pInputBuffer, int nSampl
 
 ConVar snd_mix_optimization( "snd_mix_optimization", "0", FCVAR_NONE, "Turns optimization on for mixing if set to 1 (default). 0 to turn the optimization off." );
 ConVar snd_mix_soundchar_enabled( "snd_mix_soundchar_enabled", "1", FCVAR_NONE, "Turns sound char on for mixing if set to 1 (default). 0 to turn the sound char off and use default behavior (spatial instead of doppler, directional, etc...)." );
+#if defined(USE_VALVE_HRTF)
 ConVar snd_hrtf_volume("snd_hrtf_volume", "0.8", FCVAR_CHEAT, "Controls volume of HRTF sounds");
+#endif
 
 #define SKIP_MIXING_IF_TOTAL_VOLUME_LESS_OR_EQUAL_THAN	0
 

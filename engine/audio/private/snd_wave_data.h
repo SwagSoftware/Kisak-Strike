@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -40,7 +40,9 @@ class CSfxTable;
 
 extern IWaveData *CreateWaveDataStream( CAudioSource &source, IWaveStreamSource *pStreamSource, const char *pFileName, int dataStart, int dataSize, CSfxTable *pSfx, int startOffset, int skipInitialSamples, SoundError &soundError );
 extern IWaveData *CreateWaveDataMemory( CAudioSource &source );
+#if defined(USE_VALVE_HRTF)
 extern IWaveData *CreateWaveDataHRTF(IWaveData* pData, hrtf_info_t* dir);
+#endif
 
 void PrefetchDataStream( const char *pFileName, int dataOffset, int dataSize );
 

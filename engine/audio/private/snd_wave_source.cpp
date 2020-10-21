@@ -1090,15 +1090,18 @@ CAudioSourceMemWave::~CAudioSourceMemWave()
 //-----------------------------------------------------------------------------
 CAudioMixer *CAudioSourceMemWave::CreateMixer( int initialStreamPosition, int skipInitialSamples, bool bUpdateDelayForChoreo, SoundError &soundError, hrtf_info_t* pHRTFVector )
 {
-	if (pHRTFVector && m_bits != 16)
+#if defined(USE_VALVE_HRTF)
+    if (pHRTFVector && m_bits != 16)
 	{
 		char filename[256];
 		this->m_pSfx->GetFileName(filename, sizeof(filename));
 		DevMsg("Sound %s configured to use HRTF but is not a 16-bit sound\n", filename);
 		pHRTFVector = nullptr;
 	}
-
 	CAudioMixer *pMixer = CreateWaveMixer( CreateWaveDataHRTF(CreateWaveDataMemory(*this), pHRTFVector), m_format, pHRTFVector ? 2 : m_channels, m_bits, initialStreamPosition, skipInitialSamples, bUpdateDelayForChoreo );
+#else
+    CAudioMixer *pMixer = CreateWaveMixer( CreateWaveDataMemory(*this), m_format, m_channels, m_bits, initialStreamPosition, skipInitialSamples, bUpdateDelayForChoreo );
+#endif
 	if ( pMixer )
 	{
 		ReferenceAdd( pMixer );
@@ -1749,16 +1752,19 @@ CAudioMixer *CAudioSourceStreamWave::CreateMixer( int initialStreamPosition, int
 		}
 	}
 
-	if (pHRTFVec && m_bits != 16)
+	// BUGBUG: Source constructs the IWaveData, mixer frees it, fix this?
+#if defined(USE_VALVE_HRTF)
+    if (pHRTFVec && m_bits != 16)
 	{
 		char filename[256];
 		this->m_pSfx->GetFileName(filename, sizeof(filename));
 		DevMsg("Sound %s configured to use HRTF but is not a 16-bit sound\n", filename);
 		pHRTFVec = nullptr;
 	}
-
-	// BUGBUG: Source constructs the IWaveData, mixer frees it, fix this?
 	IWaveData *pWaveData = CreateWaveDataHRTF(CreateWaveDataStream( *this, static_cast<IWaveStreamSource *>(this), pFileName, m_dataStart, m_dataSize, m_pSfx, initialStreamPosition, skipInitialSamples, soundError ), pHRTFVec);
+#else
+    IWaveData *pWaveData = CreateWaveDataStream( *this, static_cast<IWaveStreamSource *>(this), pFileName, m_dataStart, m_dataSize, m_pSfx, initialStreamPosition, skipInitialSamples, soundError );
+#endif
 	if ( pWaveData )
 	{
 		CAudioMixer *pMixer = CreateWaveMixer( pWaveData, m_format, pHRTFVec ? 2 : m_channels, m_bits, initialStreamPosition, skipInitialSamples, bUpdateDelayForChoreo );

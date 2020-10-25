@@ -50,7 +50,8 @@ Linux Binaries: Depot ID: 734 4197642562793798650
 Each one of these proprietary `.so` files is an enemy to our freedoms, over time we aim to remove these.
 
 ## Current Nonfree blobs
-* ./game/bin/linux64/libphonon3d.so #proprietary HRTF 3d audio system.
+* ~./game/bin/linux64/libphonon3d.so #proprietary HRTF 3d audio system.~
+   * Uses standard audio unless Cmake option: `-DUSE_VALVE_HRTF` is set, then it will look for libphonon3d.so.
 * ${LIBPUBLIC}/gcsdk_client.a
 * ${LIBPUBLIC}/libsteam_api.so
 * ${LIBPUBLIC}/steamdatagramlib_client.a

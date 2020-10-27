@@ -50,6 +50,7 @@ add_subdirectory(bitmap) #also does bitmap_byteswap
 add_subdirectory(bonesetup)
 add_subdirectory(choreoobjects)
 add_subdirectory(datacache)
+add_subdirectory(dedicated)
 add_subdirectory(dmserializers)
 add_subdirectory(dmxloader)
 add_subdirectory(engine)
@@ -77,26 +78,27 @@ add_subdirectory(game/client) #CSGO Client
 add_subdirectory(game/server) #CSGO Server
 add_subdirectory(matchmaking) #Does all 4 matchmaking projects
 
+add_subdirectory(launcher)
 add_subdirectory(launcher_main) #The actual executable that just dlopen's launcher
 
-add_subdirectory(scaleformui) #DUMMY cmake project so CLion can do analysis
-add_subdirectory(rocketui)
+if( USE_SCALEFORM )
+    add_subdirectory(scaleformui) #DUMMY cmake project so CLion can do analysis
+elseif( USE_ROCKETUI )
+    #Custom Kisak-Strike UI powered by RmlUI
+    add_subdirectory(thirdparty/RmlUi)
+    add_subdirectory(rocketui)
+endif()
 
 #Frankenstein physics lib sewn together from 3 different leaks by mad scientist lwss
 if( USE_KISAK_PHYSICS )
-add_definitions(-DUSE_KISAK_PHYSICS)
-message("Using Open-Source Kisakstrike Physics rebuild!\n")
-add_subdirectory(ivp/havana/havok/hk_base)
-add_subdirectory(ivp/havana/havok/hk_math)
-add_subdirectory(ivp/havana/havok/hk_physics/constraint)
-add_subdirectory(ivp/ivp_compact_builder)
-add_subdirectory(ivp/ivp_physics)
-add_subdirectory(vphysics)
+    add_definitions(-DUSE_KISAK_PHYSICS)
+    message("Using Open-Source Kisakstrike Physics rebuild!\n")
+    add_subdirectory(ivp/havana/havok/hk_base)
+    add_subdirectory(ivp/havana/havok/hk_math)
+    add_subdirectory(ivp/havana/havok/hk_physics/constraint)
+    add_subdirectory(ivp/ivp_compact_builder)
+    add_subdirectory(ivp/ivp_physics)
+    add_subdirectory(vphysics)
 else()
-message("Using Valve Standard VPhysics .so blob!\n")
+    message("Using Valve Standard VPhysics .so blob!\n")
 endif()
-
-#These 2 are the ones that load the physics lib and look for USE_KISAK_PHYSICS,
-#so they need to be down here.
-add_subdirectory(dedicated)
-add_subdirectory(launcher)

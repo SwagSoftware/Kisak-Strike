@@ -16,6 +16,10 @@ include(${CMAKE_MODULE_PATH}/source_dll_base.cmake)
 include_directories(${SRCDIR}/engine)
 add_definitions(-DDEDICATED -DLAUNCHERONLY)
 
+if( USE_KISAK_PHYSICS )
+    add_definitions(-DUSE_KISAK_PHYSICS)
+endif()
+
 #linker
 if( WINDOWS )
     #$AdditionalDependencies				"$BASE wsock32.lib odbc32.lib odbccp32.lib winmm.lib" [$WINDOWS]

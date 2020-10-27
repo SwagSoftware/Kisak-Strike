@@ -31,9 +31,12 @@ elseif( USE_ROCKETUI )
     add_definitions(-DINCLUDE_ROCKETUI)
 endif()
 
+if( USE_KISAK_PHYSICS )
+    add_definitions(-DUSE_KISAK_PHYSICS)
+endif()
+
 if( LINUXALL )
     target_link_libraries(${OUTBINNAME} SDL2)
-
 endif()
 
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/public/filesystem_init.cpp")

@@ -19,9 +19,8 @@ target_sources(${OUTBINNAME} PRIVATE rocketfilesystem.cpp)
 #OpenGL rendering imp
 target_sources(${OUTBINNAME} PRIVATE rocketrenderGL.cpp)
 
-#Don't actually build during `make all`
-#set_target_properties(${OUTBINNAME} PROPERTIES EXCLUDE_FROM_ALL TRUE)
+#target_link_libraries(${OUTBINNAME} ${SRCDIR}/thirdparty/RmlUi/build/libRmlCore.so)
+target_link_libraries(${OUTBINNAME} RmlCore RmlDebugger) #thirdparty/RmlUI
 
-target_link_libraries(${OUTBINNAME} ${SRCDIR}/thirdparty/RmlUi/build/libRmlCore.so)
-target_link_libraries(${OUTBINNAME} ${SRCDIR}/thirdparty/RmlUi/build/libRmlDebugger.so)
+#target_link_libraries(${OUTBINNAME} ${SRCDIR}/thirdparty/RmlUi/build/libRmlDebugger.so)
 target_link_libraries(${OUTBINNAME} GL tier2_client tier3_client libtogl_client)

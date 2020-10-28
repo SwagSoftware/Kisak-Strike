@@ -486,7 +486,7 @@ target_link_libraries(${OUTBINNAME} bzip2_client)
 if( WINDOWS OR OSXALL OR (LINUXALL AND NOT DEDICATED) )
     target_link_libraries(${OUTBINNAME} jpeglib_client)
 endif()
-target_link_libraries(${OUTBINNAME} ${SRCDIR}/lib${PLATSUBDIR}/release/libprotobuf.a) #copied out from the thirdparty/protobuf2.5 folder
+target_link_libraries(${OUTBINNAME} libprotobuf) #from /thirdparty
 if( LINUXALL AND NOT DEDICATED )
     #Link to System-wide curl, openssl, zlib, and crypto
     target_link_libraries(${OUTBINNAME} curl ssl z crypto)

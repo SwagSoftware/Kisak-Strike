@@ -515,5 +515,5 @@ target_link_libraries(${OUTBINNAME} particles_client tier3_client vgui_controls_
 target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/libsteam_api.so) # Link to proprietary steamapi
 target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/gcsdk_client.a) #evil game coordinator voodoo
 #target_link_libraries(${OUTBINNAME} protobuf)
-target_link_libraries(${OUTBINNAME} ${SRCDIR}/lib${PLATSUBDIR}/release/libprotobuf.a) #copied out from the thirdparty/protobuf2.5 folder
+target_link_libraries(${OUTBINNAME} libprotobuf) #from /thirdparty
 target_link_libraries(${OUTBINNAME} bitmap_client dmxloader_client tier2_client)

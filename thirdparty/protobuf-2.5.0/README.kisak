@@ -1,0 +1,3 @@
+====== Modifications made for Kisak-Strike ======
+-Backported cmake support from 3.0
+-cxx11 string abi downgrade

@@ -602,4 +602,4 @@ target_link_libraries(${OUTBINNAME} bonesetup_client choreoobjects_client mathli
 target_link_libraries(${OUTBINNAME} matsys_controls_client particles_client raytrace_client)
 target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/libsteam_api.so) # Link to proprietary steamapi
 target_link_libraries(${OUTBINNAME} tier3_client vgui_controls_client videocfg_client vtf_client resourcefile_client )
-target_link_libraries(${OUTBINNAME} ${SRCDIR}/lib${PLATSUBDIR}/release/libprotobuf.a) #copied out from the thirdparty/protobuf2.5 folder
+target_link_libraries(${OUTBINNAME} libprotobuf) #from /thirdparty

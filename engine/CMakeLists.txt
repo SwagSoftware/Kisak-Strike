@@ -507,7 +507,9 @@ if( LINUX64 AND NOT DEDICATED )
 endif()
 
 if( (LINUXALL AND DEDICATED) OR OSXALL )
-    target_link_libraries(${OUTBINNAME} ${SRCDIR}/lib${PLATSUBDIR}/release/libcryptopp.a)
+    #target_link_libraries(${OUTBINNAME} ${SRCDIR}/lib${PLATSUBDIR}/release/libcryptopp.a)
+    target_link_libraries(${OUTBINNAME} cryptopp-object) #target from /external/cryptopp cmake
 elseif( LINUXALL AND NOT DEDICATED )
-    target_link_libraries(${OUTBINNAME} ${SRCDIR}/lib${PLATSUBDIR}/release/libcryptopp_client.a) #built by us in the setup phase
+    #target_link_libraries(${OUTBINNAME} ${SRCDIR}/lib${PLATSUBDIR}/release/libcryptopp_client.a) #built by us in the setup phase
+    target_link_libraries(${OUTBINNAME} cryptopp-object) #target from /external/cryptopp cmake
 endif()

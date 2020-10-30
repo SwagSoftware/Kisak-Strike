@@ -24,6 +24,7 @@ cmake_minimum_required(VERSION 3.16)
 project(KisakStrike)
 
 add_subdirectory(appframework)
+add_subdirectory(external/crypto++-5.61)
 add_subdirectory(interfaces)
 add_subdirectory(fgdlib)
 add_subdirectory(tier0)

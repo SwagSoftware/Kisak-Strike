@@ -19,9 +19,8 @@ target_include_directories(${OUTBINNAME} PRIVATE ${SRCDIR}/thirdparty/protobuf-2
 target_include_directories(${OUTBINNAME} PRIVATE ${SRCDIR}/common/xlast_${GAMENAME})
 target_compile_definitions(${OUTBINNAME} PRIVATE -DNO_STRING_T -DVECTOR -DVERSION_SAFE_STEAM_API_INTERFACES -DPROTECTED_THINGS_ENABLE -DNO_STEAM_GAMECOORDINATOR)
 
-target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/libsteam_api.so) # link to proprietary steamapi
+
 #[!$X360 && !$PS3]
-target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/gcsdk_client.a) #link to evil game coordinator lib
 target_link_libraries(${OUTBINNAME} tier3_client libvstdlib_client)
 #############################
 

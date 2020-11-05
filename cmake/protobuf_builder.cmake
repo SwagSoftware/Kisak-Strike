@@ -1,8 +1,5 @@
 include("${CMAKE_MODULE_PATH}/common_functions.cmake")
 
-include(FindProtobuf)
-FIND_PACKAGE(Protobuf REQUIRED)
-
 MacroRequired(GENERATED_PROTO_DIR)
 MacroRequired(SRCDIR)
 

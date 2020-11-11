@@ -6,6 +6,11 @@
 
 #include "tier0/platform.h"
 
+// LWSS HACK - gcsdk_client.a was not built with -DDEDICATED!
+// we need to do this to link to this blob, otherwise the threading tools will be different.
+#if defined( DEDICATED )
+#undef DEDICATED
+#endif
 #if defined( PLATFORM_WINDOWS_PC )
 #define WIN32_LEAN_AND_MEAN
 #define _WIN32_WINNT 0x0403

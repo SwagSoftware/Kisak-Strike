@@ -4,6 +4,10 @@
 #//	Project Script
 #//-----------------------------------------------------------------------------
 cmake_minimum_required(VERSION 3.16)
+#dont build this on dedicated build
+if( DEDICATED )
+    return()
+endif()
 project(launcher_client)
 set(SRCDIR "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH ${SRCDIR}/cmake)
@@ -19,8 +23,10 @@ if( LINUXALL )
     #		$GCC_ExtraLinkerFlags		"-Wl,--enable-new-dtags -Wl,-z,origin -Wl,-rpath,'$$ORIGIN' -L/usr/lib32 -L/usr/lib" [$LINUXALL]
     #target_compile_options(${OUTBINNAME} PRIVATE "-Wl,--enable-new-dtags -Wl,-z,origin -Wl,-rpath,'$ORIGIN' -L/usr/lib32 -L/usr/lib")
     # This should be done before the target gets added.
-    set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-    set(CMAKE_INSTALL_RPATH "$ORIGIN")
+
+    #lwss- disabled this so that libs in ${PUBLIC} will link. doesn't really matter with an open-source proj
+    #set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+    #set(CMAKE_INSTALL_RPATH "$ORIGIN")
 endif()
 include(${CMAKE_MODULE_PATH}/source_dll_base.cmake)
 

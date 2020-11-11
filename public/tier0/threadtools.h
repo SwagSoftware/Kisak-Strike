@@ -9,6 +9,13 @@
 #ifndef THREADTOOLS_H
 #define THREADTOOLS_H
 
+// LWSS HACK - gcsdk_client.a was not built with -DDEDICATED!
+// we need to do this to link to this blob, otherwise the threading tools will be different.
+#if defined( DEDICATED )
+#undef DEDICATED
+#define KISAK_GCSDK_HACK 1
+#endif
+
 #include <limits.h>
 
 #include "tier0/platform.h"
@@ -2634,3 +2641,8 @@ BOOL ResetEvent( CThreadEvent *pEvent );
 DWORD WaitForMultipleObjects(DWORD nCount, CThreadEvent **lppHandles, BOOL bWaitAll, DWORD dwMilliseconds );
 #endif // _PS3
 #endif // THREADTOOLS_H
+
+//lwss: add DEDICATED back after removing it - see top of file
+#if defined( KISAK_GCSDK_HACK )
+#define DEDICATED 1
+#endif

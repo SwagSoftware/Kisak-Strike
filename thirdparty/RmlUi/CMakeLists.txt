@@ -10,6 +10,12 @@ if(UNIX AND NOT APPLE)
 	add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 endif()
 #
+
+#dont need to build this when building dedicated server on kisakstrike
+if( DEDICATED )
+	return()
+endif()
+
 if(APPLE)
 	# This has to be before most other options so CMake properly handles the 
 	# compiler variables, it MUST bebefore the project() definition

@@ -5521,12 +5521,13 @@ void Host_Init( bool bDedicated )
 #endif
 
 	//////// DISABLE FOR SHIP! //////////
-	if ( !IsCert() || CommandLine()->FindParm( "-dbginput" ) )
-	{
-		g_pDebugInputThread = new CDebugInputThread();
-		g_pDebugInputThread->SetName( "Debug Input" );
-		g_pDebugInputThread->Start( 0, TP_PRIORITY_HIGH );
-	}
+	//lwss- comment this out
+	//if ( !IsCert() || CommandLine()->FindParm( "-dbginput" ) )
+	//{
+	//	g_pDebugInputThread = new CDebugInputThread();
+	//	g_pDebugInputThread->SetName( "Debug Input" );
+	//	g_pDebugInputThread->Start( 0, TP_PRIORITY_HIGH );
+	//}
 
 #ifndef _CERT
 	if ( CommandLine()->FindParm( "-tslist" ) )
@@ -6616,11 +6617,13 @@ void Host_Shutdown(void)
 //-----------------------------------------------------------------------------
 bool Host_AllowQueuedMaterialSystem( bool bAllow )
 {
-#if !defined DEDICATED
+#if !defined( DEDICATED )
 	g_bAllowThreadedSound = bAllow;
 	// NOTE: Moved this to materialsystem for integrating with other mqm changes
 	return g_pMaterialSystem->AllowThreading( bAllow, g_nMaterialSystemThread );
 #endif
+	//lwss fix- THIS DID NOT RETURN A VALUE ON DEDICATED BUILDS, MESSING UP THE STACK AND CAUSING ME MUCH GRIEF!
+	return false;
 }
 
 void Host_EnsureHostNameSet()

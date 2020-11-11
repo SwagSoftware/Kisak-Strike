@@ -1,4 +1,4 @@
-//========= Copyright © , Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ , Valve Corporation, All rights reserved. ============//
 
 #ifndef DBGINPUT_HDR
 #define DBGINPUT_HDR

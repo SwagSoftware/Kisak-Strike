@@ -220,10 +220,12 @@ ConVar			sv_tags( "sv_tags", "", FCVAR_NOTIFY | FCVAR_RELEASE, "Server tags. Use
 ConVar			sv_visiblemaxplayers( "sv_visiblemaxplayers", "-1",  FCVAR_RELEASE, "Overrides the max players reported to prospective clients" );
 ConVar			sv_alternateticks( "sv_alternateticks", ( IsX360() ) ? "1" : "0", FCVAR_RELEASE, "If set, server only simulates entities on even numbered ticks.\n" );
 ConVar			sv_allow_wait_command( "sv_allow_wait_command", "1", FCVAR_REPLICATED | FCVAR_RELEASE, "Allow or disallow the wait command on clients connected to this server." );
-#if !defined( CSTRIKE15 )
+//lwss- Allow non-lobby connections for kisak-strike ( you can still force steam lobbies with this convar )
+//#if !defined( CSTRIKE15 )
 // We are switching CStrike to always have lobbies associated with servers for community matchmaking
-ConVar			sv_allow_lobby_connect_only( "sv_allow_lobby_connect_only", "1",  FCVAR_RELEASE, "If set, players may only join this server from matchmaking lobby, may not connect directly." );
-#endif
+ConVar			sv_allow_lobby_connect_only( "sv_allow_lobby_connect_only", "0",  FCVAR_RELEASE, "If set, players may only join this server from matchmaking lobby, may not connect directly." );
+//#endif
+//lwss end
 static ConVar   sv_reservation_timeout( "sv_reservation_timeout", "45", FCVAR_RELEASE, "Time in seconds before lobby reservation expires.", true, 5.0f, true, 180.0f );
 static ConVar   sv_reservation_grace( "sv_reservation_grace", "5", 0, "Time in seconds given for a lobby reservation.", true, 3.0f, true, 30.0f );
 
@@ -4433,11 +4435,12 @@ bool CBaseServer::IsExclusiveToLobbyConnections() const
 	if ( !IsDedicated() )
 		return false;
 
-#if !defined( CSTRIKE15 )
+//lwss - allow non-lobby connections for kisak-strike
+//#if !defined( CSTRIKE15 )
 	// We are switching CStrike to always have lobbies associated with servers for community matchmaking
 	if ( !sv_allow_lobby_connect_only.GetBool() )
 		return false;
-#endif
+//#endif
 
 	if ( sv_lan.GetBool() )
 		return false;

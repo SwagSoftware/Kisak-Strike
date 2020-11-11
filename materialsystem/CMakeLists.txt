@@ -19,6 +19,10 @@ set(SHADERLIBDIR "shaderlib")
 set(STDSHADERSDIR "stdshaders")
 
 add_definitions(-DDEFINE_MATERIALSYSTEM_INTERFACE -DMATERIALSYSTEM_EXPORTS -DPROTECTED_THINGS_ENABLE)
+
+if( DEDICATED )
+    add_definitions(-DDEDICATED)
+endif()
 if( USE_SCALEFORM )
     add_definitions(-DINCLUDE_SCALEFORM)
 elseif( USE_ROCKETUI )

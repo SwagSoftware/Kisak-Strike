@@ -43,7 +43,7 @@ target_sources(${OUTBINNAME} PRIVATE "sys_common.cpp")
 target_sources(${OUTBINNAME} PRIVATE "sys_ded.cpp")
 target_sources(${OUTBINNAME} PRIVATE "sys_subproc.cpp")
 if( WINDOWS )
-    target_sources(${OUTBINNAME} PRIVATE "sys_windows.cpp" [$WINDOWS])
+    target_sources(${OUTBINNAME} PRIVATE "sys_windows.cpp")
 endif()
 
 ## Console ##
@@ -78,22 +78,6 @@ if( POSIX )
     target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/filesystem/linux_support.cpp")
 endif()
 
-#SKIPPING - NEED THESE FIRST
-#$Lib	appframework
-#$Lib	dmxloader
-#$ImplibExternal	steam_api							[ ( $WIN32 || $POSIX || $PS3 ) && !$NO_STEAM ]
-#$ImplibExternal	steam_api64							[ $WIN64 && !$NO_STEAM ]
-#$Lib	mathlib
-#$Lib 	tier2
-#$Lib	tier3
-#$Lib 	vpklib
-#$Lib	vgui_controls [$WINDOWS||$OSXALL]
-
-if( (NOT DEFINED NO_STEAM) OR (${NO_STEAM})  )
-    #grug
-else()
-    message(FATAL_ERROR "CMake steam_api integration is disabled.")
-endif()
 
 target_link_libraries(${OUTBINNAME} appframework_client dmxloader_client mathlib_client tier2_client tier3_client libvstdlib_client vpklib_client)
 

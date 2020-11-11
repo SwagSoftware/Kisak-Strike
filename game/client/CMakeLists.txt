@@ -13,6 +13,11 @@ set(GAMENAME "csgo")
 set(CSGO "1")
 #set(DONT_DOWNGRADE_ABI "1")
 
+#dont need to build this when building dedicated server
+if( DEDICATED )
+    return()
+endif()
+
 add_definitions(-DCSTRIKE_CLIENT_DLL -DCSTRIKE_DLL -DGAMEUI_EMBEDDED -DGAMEUI_EXPORTS -DVERSION_SAFE_STEAM_API_INTERFACES -DUSE_ECONOMY_FEATURES)
 if( USE_SCALEFORM )
     add_definitions(-DINCLUDE_SCALEFORM)

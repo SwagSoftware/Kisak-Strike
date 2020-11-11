@@ -7,6 +7,11 @@ set(OUTBINDIR ${SRCDIR}/../game/bin)
 set(OUTBINNAME "rocketui_client")
 #set(DONT_DOWNGRADE_ABI "1")
 
+#dont need to build this when building dedicated server
+if( DEDICATED )
+    return()
+endif()
+
 include_directories(${SRCDIR}/thirdparty/RmlUi/Include)
 
 include(${CMAKE_MODULE_PATH}/detect_platform.cmake)

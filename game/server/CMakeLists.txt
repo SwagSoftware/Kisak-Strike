@@ -14,6 +14,8 @@ set(GAMENAME "csgo")
 set(CSGO "1")
 set(SRVSRCDIR ${CMAKE_CURRENT_SOURCE_DIR})
 
+set(NOSTINKYLINKIES "1")
+
 add_definitions(-DBOTS -DCSTRIKE_DLL -DUSE_ECONOMY_FEATURES)
 
 include( ./server_base.cmake )

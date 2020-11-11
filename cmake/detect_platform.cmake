@@ -11,6 +11,7 @@ elseif(UNIX AND NOT APPLE) #LINUX
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
         add_definitions(-DLINUX64)
         set(LINUX64 "1")
+    elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
         add_definitions(-DLINUX32)
         set(LINUX32 "1")
     else()

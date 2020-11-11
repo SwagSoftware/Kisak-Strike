@@ -33,7 +33,8 @@ if (CMAKE_BUILD_TYPE STREQUAL "DEBUG")
     if( OSXALL )
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gdwarf-2 -g2 -Og -march=native")
     elseif( LINUXALL )
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gdwarf-4 -g2 -Og -march=native -Wno-invalid-offsetof -Wno-ignored-attributes -Wno-enum-compare")
+        #-Werror=return-type - Set these warnings to ERRORS because they can ruin your stack/day
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gdwarf-4 -g2 -Og -march=native -Wno-invalid-offsetof -Wno-ignored-attributes -Wno-enum-compare -Werror=return-type")
     endif()
 #$Configuration "Release"
 else()
@@ -44,9 +45,11 @@ else()
     elseif( LINUXALL )
         if( NO_GCC_OPTIMIZE )
             message("^^ Not Setting -O for Target")
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gdwarf-4 -g2 -march=native -Wno-invalid-offsetof -Wno-ignored-attributes -Wno-enum-compare")
+            #-Werror=return-type - Set these warnings to ERRORS because they can ruin your stack/day
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gdwarf-4 -g2 -march=native -Wno-invalid-offsetof -Wno-ignored-attributes -Wno-enum-compare -Werror=return-type")
         else()
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gdwarf-4 -g2 -O2 -march=native -Wno-invalid-offsetof -Wno-ignored-attributes -Wno-enum-compare")
+            #-Werror=return-type - Set these warnings to ERRORS because they can ruin your stack/day
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gdwarf-4 -g2 -O2 -march=native -Wno-invalid-offsetof -Wno-ignored-attributes -Wno-enum-compare -Werror=return-type")
         endif()
     endif()
 endif()

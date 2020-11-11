@@ -11,14 +11,11 @@
 # Bzip2*                 inputsystem*           particles*             soundemittersystem*    vgui_surfacelib*
 # choreoobjects*         interfaces*            quickhull*             soundsystem_lowlevel*  videocfg*
 #                        launcher*              Raytrace*              stdshader_dx9*         vpklib*
-#                        launcher_main*                                studiorender*          vscript
+#                        launcher_main*                                studiorender*          vscript*
 #                        localize*                                                            vstdlib*
 # Client_CSGO*           matchmakingbase*       resourcefile*          tier0*                 vtf*
 # datacache*             matchmakingbase_ds*    responserules_runtime* tier1*
 # Dedicated*             Matchmaking_CSGO*      SceneFileCache*        tier2*
-
-#NOT DONE
-#engine_ds (seems identical to engine, missing in retail linux64)
 
 cmake_minimum_required(VERSION 3.16)
 project(KisakStrike)
@@ -77,6 +74,7 @@ add_subdirectory(soundemittersystem)
 add_subdirectory(studiorender)
 add_subdirectory(togl)
 add_subdirectory(vguimatsurface)
+add_subdirectory(vscript)
 
 add_subdirectory(game/client) #CSGO Client
 add_subdirectory(game/server) #CSGO Server

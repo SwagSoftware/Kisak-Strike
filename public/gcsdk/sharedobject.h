@@ -1,4 +1,4 @@
-//====== Copyright ©, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Base class for objects that are kept in synch between client and server
 //
@@ -10,7 +10,16 @@
 #pragma once
 #endif
 
-#include "utlsortvector.h"
+// ENABLE_SO_OVERWRITE_PARANOIA can be set to either 0 or 1. If enabled, it will add
+// extra fields to every CSharedObject instance to try and detect overwrites at the
+// cost of additional runtime memory.
+#define ENABLE_SO_OVERWRITE_PARANOIA				0
+
+// ENABLE_SO_CONSTRUCT_DESTRUCT_PARANOIA can be set to either 0 or 1. If enabled, it
+// will add extra fields to every CSharedObject instance to try and detect issues with
+// constructions/destruction (ie., double-deletes, etc.), including reference counting.
+#define ENABLE_SO_CONSTRUCT_DESTRUCT_PARANOIA		(defined( STAGING_ONLY ))
+
 #include "tier0/memdbgon.h"
 
 namespace GCSDK
@@ -32,7 +41,51 @@ class CSharedObject
 	friend class CGCSharedObjectCache;
 	friend class CSharedObjectCache;
 public:
+
+#ifdef GC
+	virtual ~CSharedObject()
+	{
+#if ENABLE_SO_OVERWRITE_PARANOIA
+		m_pThis = NULL;
+#endif // ENABLE_SO_OVERWRITE_PARANOIA
+
+#if ENABLE_SO_CONSTRUCT_DESTRUCT_PARANOIA
+		AssertMsg2( m_nRefCount == 0, "Deleting shared object type %d with refcount %d", m_nSOTypeID, m_nRefCount );
+		
+		m_nSOTypeID = -1;
+		m_nRefCount = -1;
+#endif // ENABLE_SO_CONSTRUCT_DESTRUCT_PARANOIA
+	}
+
+#if ENABLE_SO_OVERWRITE_PARANOIA
+	CSharedObject *m_pThis;
+#endif // ENABLE_SO_OVERWRITE_PARANOIA
+
+#if ENABLE_SO_CONSTRUCT_DESTRUCT_PARANOIA
+	int m_nRefCount;
+	mutable int m_nSOTypeID;
+#endif // ENABLE_SO_CONSTRUCT_DESTRUCT_PARANOIA
+
+	void Check() const
+	{
+#if ENABLE_SO_OVERWRITE_PARANOIA
+		Assert( m_pThis == this );
+#endif // ENABLE_SO_OVERWRITE_PARANOIA
+
+#if ENABLE_SO_CONSTRUCT_DESTRUCT_PARANOIA
+		Assert( m_nRefCount >= 0 );
+
+		if ( m_nSOTypeID == kSharedObject_UnassignedType )
+		{
+			m_nSOTypeID = GetTypeID();
+		}
+
+		Assert( m_nSOTypeID >= 0 );
+#endif // ENABLE_SO_CONSTRUCT_DESTRUCT_PARANOIA
+	}
+#else
 	virtual ~CSharedObject() {}
+#endif
 
 	virtual int GetTypeID() const = 0;
 	virtual bool BParseFromMessage( const CUtlBuffer & buffer ) = 0;
@@ -41,9 +94,8 @@ public:
 	virtual bool BIsKeyLess( const CSharedObject & soRHS ) const = 0;
 	virtual void Copy( const CSharedObject & soRHS ) = 0;
 	virtual void Dump() const = 0;
-
-	virtual bool BAddToMessage( std::string *pBuffer ) const = 0;
-	virtual bool BAddDestroyToMessage( std::string *pBuffer ) const = 0;
+	virtual bool BShouldDeleteByCache() const { return true; }
+	virtual CUtlString GetDebugString() const { return PchClassName( GetTypeID() ); };
 
 	bool BIsKeyEqual( const CSharedObject & soRHS ) const;
 
@@ -66,11 +118,21 @@ public:
 	virtual bool BYieldingAddWriteToTransaction( CSQLAccess & sqlAccess, const CUtlVector< int > &fields ) { return false; }
 	virtual bool BYieldingAddRemoveToTransaction( CSQLAccess & sqlAccess ) { return false; }
 
+	virtual bool BAddToMessage( CUtlBuffer & bufOutput ) const = 0;
+	virtual bool BAddToMessage( std::string *pBuffer ) const = 0;
+	virtual bool BAddDestroyToMessage( CUtlBuffer & bufDestroy ) const = 0;
+	virtual bool BAddDestroyToMessage( std::string *pBuffer ) const = 0;
+
 	virtual bool BParseFromMemcached( CUtlBuffer & buffer ) { return false; }
 	virtual bool BAddToMemcached( CUtlBuffer & bufOutput ) const { return false; }
 
-	bool BSendCreateToSteamIDs( const CUtlVector<CSteamID> & vecRecipients, const SOID_t ownerID, uint64 ulVersion ) const;
-	bool BSendDestroyToSteamIDs( const CUtlVector<CSteamID> & vecRecipients, const SOID_t ownerID, uint64 ulVersion ) const;
+	bool BSendCreateToSteamID( const CSteamID & steamID, const CSteamID & ownerID, uint64 ulVersion ) const;
+	bool BSendDestroyToSteamID( const CSteamID & steamID, const CSteamID & ownerID, uint64 ulVersion ) const;
+
+#ifdef DBGFLAG_VALIDATE
+	virtual void Validate( CValidator &validator, const char *pchName );
+	static void ValidateStatics( CValidator & validator );
+#endif
 
 protected:
 /*
@@ -82,36 +144,130 @@ protected:
 */
 #endif // GC
 
+#ifdef GC
+	CSharedObject()
+	{
+#if ENABLE_SO_OVERWRITE_PARANOIA
+		m_pThis = this;
+#endif // ENABLE_SO_OVERWRITE_PARANOIA
+
+#if ENABLE_SO_CONSTRUCT_DESTRUCT_PARANOIA
+		m_nRefCount = 0;
+		m_nSOTypeID = kSharedObject_UnassignedType;
+#endif // ENABLE_SO_CONSTRUCT_DESTRUCT_PARANOIA
+	}
+#endif	
+
 private:
+#if ENABLE_SO_CONSTRUCT_DESTRUCT_PARANOIA
+	enum { kSharedObject_UnassignedType = -999 };
+#endif // ENABLE_SO_CONSTRUCT_DESTRUCT_PARANOIA
+
 	struct SharedObjectInfo_t
 	{
-		int					m_nID;
-		uint32				m_unFlags;
-		SOCreationFunc_t	m_pFactoryFunction;
+		SOCreationFunc_t m_pFactoryFunction;
+		uint32 m_unFlags;
 		const char *m_pchClassName;
-		const char *m_pchBuildCacheSubNodeName;
-		const char *m_pchUpdateNodeName;
-		const char *m_pchCreateNodeName;
+		CUtlString m_sBuildCacheSubNodeName;
+		CUtlString m_sUpdateNodeName;
+		CUtlString m_sCreateNodeName;
 	};
-
-	//compare class that supports sorting shared objects themselves, as well as searching based upon an integer key value
-	class CCompareSharedObject
-	{
-	public:
-		bool Less( const SharedObjectInfo_t& lhs, const SharedObjectInfo_t& rhs, void* ) const		{ return lhs.m_nID < rhs.m_nID; }
-		bool Less( int lhs, const SharedObjectInfo_t& rhs, void* ) const							{ return lhs < rhs.m_nID; }
-		bool Less( const SharedObjectInfo_t& lhs, int rhs, void* ) const							{ return lhs.m_nID < rhs; }
-	};
-
-	typedef CUtlSortVector< SharedObjectInfo_t, CCompareSharedObject >	TVecFactories;
-	static TVecFactories sm_vecFactories;
-	static const SharedObjectInfo_t* FindSharedObjectInfo( int nTypeID );
+	static CUtlMap<int, SharedObjectInfo_t> sm_mapFactories;
 
 public:
-	static TVecFactories & GetFactories() { return sm_vecFactories; }
+	static const CUtlMap<int, SharedObjectInfo_t> & GetFactories() { return sm_mapFactories; }
 };
 
 typedef CUtlVectorFixedGrowable<CSharedObject *, 1> CSharedObjectVec;
+
+#ifdef GC
+
+//this class manages the stats for the shared objects, such as how many exist, how many have been sent, how many have been created, how many destroyed
+class CSharedObjectStats
+{
+public:
+
+	CSharedObjectStats();
+
+	//called to register a shared object class given a type ID and name. This will return false if
+	//a type of this ID is already registered
+	void	RegisterSharedObjectType( int nTypeID, const char* pszTypeName );
+
+	//called to track when a shared object is created/destroyed to update the running total
+	void	TrackSharedObjectLifetime( int nTypeID, int32 nCount );
+
+	//called when a shared object is created to track its creation
+	void	TrackSharedObjectSendCreate( int nTypeID, uint32 nCount );
+	//called when a shared object is destroyed to track counts
+	void	TrackSharedObjectSendDestroy( int nTypeID, uint32 nCount );
+
+	//tracks a new subscription
+	void	TrackSubscription( int nTypeID, uint32 nFlags, uint32 nNumSubscriptions );
+
+	//called when a shared object is sent
+	void	TrackSharedObjectSend( int nTypeID, uint32 nNumClients, uint32 nMsgSize );
+
+	//reset the stats for all the caches
+	void	ResetStats();
+
+	//called to start/stop collecting stats
+	void	StartCollectingStats();
+	void	StopCollectingStats();
+	bool	IsCollectingStats() const					{ return m_bCollectingStats; }
+
+	//called to report the currently collected stats
+	void	ReportCollectedStats() const;
+
+private:
+
+	struct SOStats_t
+	{
+		SOStats_t();
+		void		ResetStats();
+		
+		//the text name of this cache
+		CUtlString	m_sName;
+		//the number of outstanding SO cache objects of this type. This is not cleared
+		uint32		m_nNumActive;
+		//the type ID of this stat
+		int			m_nTypeID;
+
+		//the total number that have been created/destroyed. Active is difference between these
+		uint32		m_nNumCreated;
+		uint32		m_nNumDestroyed;
+		//how many bytes we have sent (raw, and multiplexed to multiple subscribers)
+		uint64		m_nRawBytesSent;
+		uint64		m_nMultiplexedBytesSent;
+		//the number of sends since our last clear
+		uint32		m_nNumSends;
+		//how many subscriptions we have gotten by various subscription types
+		uint32		m_nNumSubOwner;
+		uint32		m_nNumSubOtherUsers;
+		uint32		m_nNumSubGameServer;
+	};
+	
+	//sort function that controls the order that the SO stats are presented in the report
+	static bool SortSOStatsSent( const SOStats_t* pLhs, const SOStats_t* pRhs );
+	static bool SortSOStatsSubscribe( const SOStats_t* pLhs, const SOStats_t* pRhs );
+
+	//to compact the memory space for wide ranging type IDs, the list of stats has two components, an array that can be looked up
+	//via the type ID which maps to a stat index (or invalid index if no mapping is registered)
+	static const uint16			knInvalidIndex = ( uint16 )-1;
+	CUtlVector< uint16 >		m_vTypeToIndex;
+	CUtlVector< SOStats_t >		m_Stats;
+	
+	//are we currently collecting stats or not?
+	bool			m_bCollectingStats;
+	//the time that we've been collecting
+	CJobTime		m_CollectTime;
+	uint64			m_nMicroSElapsed;
+};
+
+//global stat tracker
+extern CSharedObjectStats g_SharedObjectStats;
+
+#endif
+
 
 //----------------------------------------------------------------------------
 // Purpose: Templatized function to use as a factory method for 
@@ -124,7 +280,7 @@ CSharedObject *CreateSharedObjectSubclass()
 }
 
 //internal utility to expand the provided shared object class name into all the names needed for the node
-#define REG_SHARED_OBJECT_NAMES_INTERNAL( name )		#name, "BuildCacheSubscribed(" #name ")", "Create(" #name ")", "Update(" #name ")" 
+#define REG_SHARED_OBJECT_NAMES_INTERNAL( name )		#name, "BuildCacheSubscribed(" #name ")", "Create(" #name ")", "Update(" #name ")"
 
 #ifdef GC
 #define REG_SHARED_OBJECT_SUBCLASS( derivedClass, flags ) GCSDK::CSharedObject::RegisterFactory( derivedClass::k_nTypeID, GCSDK::CreateSharedObjectSubclass<derivedClass>, (flags), REG_SHARED_OBJECT_NAMES_INTERNAL( derivedClass ) )

@@ -1,3 +1,4 @@
+//========= Copyright Valve Corporation, All rights reserved. ============//
 #ifndef GCWGJOB_H
 #define GCWGJOB_H
 #ifdef _WIN32

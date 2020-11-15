@@ -1,4 +1,4 @@
-//====== Copyright ©, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Additional shared object cache functionality for the GC
 //
@@ -9,7 +9,7 @@
 #ifdef _WIN32
 #pragma once
 #endif
-
+#include "soid.h"
 #include "sharedobjectcache.h"
 
 class CMsgSOCacheSubscribed;
@@ -17,8 +17,6 @@ class CMsgSOCacheSubscribed_SubscribedType;
 
 namespace GCSDK
 {
-
-class CGCClient;
 
 /// Enumerate different events that might trigger a callback to an ISharedObjectListener
 enum ESOCacheEvent
@@ -67,14 +65,28 @@ public:
 	/// - eSOCacheEvent_Resubscribed
 	/// - eSOCacheEvent_Incremental
 	/// - eSOCacheEvent_ListenerAdded
-	virtual void SOCreated( SOID_t owner, const CSharedObject *pObject, ESOCacheEvent eEvent ) = 0;
+	virtual void SOCreated( const CSteamID & steamIDOwner, const CSharedObject *pObject, ESOCacheEvent eEvent ) = 0;
+
+	/// Called when we are about to update objects in our cache but haven't done any of the work yet.
+	///
+	/// eEvent will be one of:
+	/// - eSOCacheEvent_Resubscribed
+	/// - eSOCacheEvent_Incremental
+	virtual void PreSOUpdate( const CSteamID & steamIDOwner, ESOCacheEvent eEvent ) = 0;
 
 	/// Called when an object is updated in a cache we are currently subscribed to.
 	///
 	/// eEvent will be one of:
 	/// - eSOCacheEvent_Resubscribed
 	/// - eSOCacheEvent_Incremental
-	virtual void SOUpdated( SOID_t owner, const CSharedObject *pObject, ESOCacheEvent eEvent ) = 0;
+	virtual void SOUpdated( const CSteamID & steamIDOwner, const CSharedObject *pObject, ESOCacheEvent eEvent ) = 0;
+
+	/// Called when we're finished updating objects in our cache for this batch.
+	///
+	/// eEvent will be one of:
+	/// - eSOCacheEvent_Resubscribed
+	/// - eSOCacheEvent_Incremental
+	virtual void PostSOUpdate( const CSteamID & steamIDOwner, ESOCacheEvent eEvent ) = 0;
 
 	/// Called when an object is about to be deleted in a cache we are currently subscribed to.
 	/// The object will have already been removed from the cache, but is still valid.
@@ -82,7 +94,7 @@ public:
 	/// eEvent will be one of:
 	/// - eSOCacheEvent_Incremental
 	/// - eSOCacheEvent_Resubscribed
-	virtual void SODestroyed( SOID_t owner, const CSharedObject *pObject, ESOCacheEvent eEvent ) = 0;
+	virtual void SODestroyed( const CSteamID & steamIDOwner, const CSharedObject *pObject, ESOCacheEvent eEvent ) = 0;
 
 	/// Called to notify a listener that he is subscribed to the cache.
 	///
@@ -97,7 +109,7 @@ public:
 	/// an SOCacheSubscribed message while already subscribed.  This can happen if the
 	/// GC loses and restores connection, or otherwise decides that a full update is
 	/// necessary.
-	virtual void SOCacheSubscribed( SOID_t owner, ESOCacheEvent eEvent ) = 0;
+	virtual void SOCacheSubscribed( const CSteamID & steamIDOwner, ESOCacheEvent eEvent ) = 0;
 
 	/// Called to notify a listener that he is no longer subscribed to the cache.
 	/// if he is being removed as a listener, then he will no longer receive
@@ -107,7 +119,35 @@ public:
 	/// eEvent will be one of:
 	/// - eSOCacheEvent_Unsubscribed
 	/// - eSOCacheEvent_ListenerRemoved
-	virtual void SOCacheUnsubscribed( SOID_t owner, ESOCacheEvent eEvent ) = 0;
+	virtual void SOCacheUnsubscribed( const CSteamID & steamIDOwner, ESOCacheEvent eEvent ) = 0;
+};
+
+
+//----------------------------------------------------------------------------
+// Purpose: The part of a shared object cache that handles all objects of a
+//			single type.
+//----------------------------------------------------------------------------
+class CGCClientSharedObjectContext
+{
+public:
+	CGCClientSharedObjectContext( const CSteamID & steamIDOwner );
+
+	bool BAddListener( ISharedObjectListener *pListener );
+	bool BRemoveListener( ISharedObjectListener *pListener );
+
+	void SOCreated( const CSharedObject *pObject, ESOCacheEvent eEvent ) const;
+	void PreSOUpdate( GCSDK::ESOCacheEvent eEvent ) const;
+	void SOUpdated( const CSharedObject *pObject, ESOCacheEvent eEvent ) const;
+	void PostSOUpdate( GCSDK::ESOCacheEvent eEvent ) const;
+	void SODestroyed( const CSharedObject *pObject, ESOCacheEvent eEvent ) const;
+	void SOCacheSubscribed( const CSteamID & steamIDOwner, ESOCacheEvent eEvent ) const;
+	void SOCacheUnsubscribed( const CSteamID & steamIDOwner, ESOCacheEvent eEvent ) const;
+
+	const CSteamID & GetOwner() const { return m_steamIDOwner; }
+	const CUtlVector< ISharedObjectListener * > & GetListeners() const { return m_vecListeners; }
+private:
+	CSteamID m_steamIDOwner;
+	CUtlVector<ISharedObjectListener *> m_vecListeners;
 };
 
 
@@ -118,16 +158,19 @@ public:
 class CGCClientSharedObjectTypeCache : public CSharedObjectTypeCache
 {
 public:
-	CGCClientSharedObjectTypeCache( int nTypeID );
+	CGCClientSharedObjectTypeCache( int nTypeID, const CGCClientSharedObjectContext & context );
 	virtual ~CGCClientSharedObjectTypeCache();
 
 	bool BParseCacheSubscribedMsg( const CMsgSOCacheSubscribed_SubscribedType & msg, CUtlVector<CSharedObject*> &vecCreatedObjects, CUtlVector<CSharedObject*> &vecUpdatedObjects, CUtlVector<CSharedObject*> &vecObjectsToDestroy );
 
 	CSharedObject *BCreateFromMsg( const void *pvData, uint32 unSize, bool *bUpdatedExisting );
-	bool BDestroyFromMsg( SOID_t owner, CGCClient &client, const void *pvData, uint32 unSize );
-	bool BCreateOrUpdateFromMsg( SOID_t owner, CGCClient &client, const void *pvData, uint32 unSize );
+	bool BDestroyFromMsg( const void *pvData, uint32 unSize );
+	bool BUpdateFromMsg( const void *pvData, uint32 unSize );
 
 	void RemoveAllObjects( CUtlVector<CSharedObject*> &vecObjects );
+
+private:
+	const CGCClientSharedObjectContext & m_context;
 };
 
 
@@ -139,8 +182,10 @@ public:
 //----------------------------------------------------------------------------
 class CGCClientSharedObjectCache : public CSharedObjectCache
 {
+	friend class CGCSOUpdateMultipleJob;
+
 public:
-	explicit CGCClientSharedObjectCache( SOID_t ID );
+	CGCClientSharedObjectCache( const CSteamID & steamIDOwner = CSteamID() );
 	virtual ~CGCClientSharedObjectCache();
 
 	/// Have we received at least one update from the GC?
@@ -148,32 +193,47 @@ public:
 
 	/// Are we currently subscribed to updates from the GC?
 	bool BIsSubscribed() const { return m_bSubscribed; }
-	void SetSubscribed( bool bSubscribed ) { m_bSubscribed = bSubscribed; }
 
 	/// Who owns this cache?
-	virtual SOID_t GetOwner() const OVERRIDE { return m_IDOwner; }
+	virtual const CSteamID & GetOwner() const { return m_context.GetOwner(); }
 
-	const CGCClientSharedObjectTypeCache *FindTypeCache( int nClassID ) const { return static_cast<const CGCClientSharedObjectTypeCache *>(FindBaseTypeCache( nClassID )); }
-	CGCClientSharedObjectTypeCache *FindTypeCache( int nClassID ) { return static_cast<CGCClientSharedObjectTypeCache *>(FindBaseTypeCache( nClassID )); }
-	CGCClientSharedObjectTypeCache *CreateTypeCache( int nClassID ) { return static_cast<CGCClientSharedObjectTypeCache *>(CreateBaseTypeCache( nClassID )); }
+	/// Adds a listener interface to the object.  A call to re-add
+	/// a listener that's already listening is harmlessly ignored.
+	///
+	/// If the cache is currently subscribed, then the listener will
+	/// immediately receive a SOCacheSubscribed call.
+	void AddListener( ISharedObjectListener *pListener );
 
-	bool BParseCacheSubscribedMsg( CGCClient &owner, const CMsgSOCacheSubscribed & msg );
-	void BuildCacheSubscribedMsg( CMsgSOCacheSubscribed &msg ) const;
+	/// Removes a listener interface on the object.  Returns true
+	/// if we were listening and removed OK, false if we were not
+	/// previously listening and the call was ignored
+	///
+	/// If the cache is currently subscribed and we were listening,
+	/// then the listener will immediately receive a SOCacheUnsubscribed
+	/// call.
+	bool RemoveListener( ISharedObjectListener *pListener );
 
-	bool BCreateFromMsg( CGCClient &owner, int nTypeID, const void *pvData, uint32 unSize );
-	bool BDestroyFromMsg( CGCClient &owner, int nTypeID, const void *pvData, uint32 unSize );
-	bool BUpdateFromMsg( CGCClient &owner, int nTypeID, const void *pvData, uint32 unSize );
+	CGCClientSharedObjectTypeCache *FindTypeCache( int nClassID ) { return (CGCClientSharedObjectTypeCache *)FindBaseTypeCache( nClassID ); }
+	CGCClientSharedObjectTypeCache *CreateTypeCache( int nClassID ) { return (CGCClientSharedObjectTypeCache *)CreateBaseTypeCache( nClassID ); }
+
+	bool BParseCacheSubscribedMsg( const CMsgSOCacheSubscribed & msg );
+	void NotifyUnsubscribe();
+	void NotifyResubscribedUpToDate();
+
+	bool BCreateFromMsg( int nTypeID, const void *pvData, uint32 unSize );
+	bool BDestroyFromMsg( int nTypeID, const void *pvData, uint32 unSize );
+	bool BUpdateFromMsg( int nTypeID, const void *pvData, uint32 unSize );
 
 #ifdef DBGFLAG_VALIDATE
 	virtual void Validate( CValidator &validator, const char *pchName );
 #endif
-	void NotifyCreated( ISharedObjectListener &context );
 
+protected:
 private:
-	virtual CSharedObjectTypeCache *AllocateTypeCache( int nClassID ) const OVERRIDE { return new CGCClientSharedObjectTypeCache( nClassID ); }
+	virtual CSharedObjectTypeCache *AllocateTypeCache( int nClassID ) const OVERRIDE { return new CGCClientSharedObjectTypeCache( nClassID, m_context ); }
 	CGCClientSharedObjectTypeCache *GetTypeCacheByIndex( int nIndex ) { return (CGCClientSharedObjectTypeCache *)CSharedObjectCache::GetTypeCacheByIndex( nIndex ); }
 
-	SOID_t m_IDOwner;
+	CGCClientSharedObjectContext m_context;
 	bool m_bInitialized;
 	bool m_bSubscribed;
 };

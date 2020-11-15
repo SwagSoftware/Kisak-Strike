@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2004, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -15,8 +15,15 @@
 
 namespace GCSDK
 {
+typedef CFmtStrN< 4096 >		TSQLCmdStr;
+
 // Returns a long (1024 char) string of "?,?,?,?,?"... for use in IN clauses or INSERT statements
 const char *GetInsertArgString();
+// Returns the number of characters that should be used for the specified number of parameters
+uint32 GetInsertArgStringChars( uint32 nNumParams );
+// Returns the maximum number of parameters that are supported by the GetInsertArgString string
+uint32 GetInsertArgStringMaxParams();
+
 
 void ConvertFieldToText( EGCSQLType eFieldType, uint8 *pubRecord, int cubRecord, char *rgchField, int cchField, bool bQuoteString = true );
 void ConvertFieldArrayToInText( const CColumnInfo &columnInfo, byte *pubData, int cubData, char *rgchResult, bool bForPreparedStatement );
@@ -26,13 +33,18 @@ void AppendConstraints( const CRecordInfo *pRecordInfo, const CColumnInfo *pColu
 void AppendTableConstraints( CRecordInfo *pRecordInfo, CFmtStrMax & sCmd );
 void AppendConstraint( const char *pchTableName, const char *pchColumnName, int nColFlagConstraint, bool bForAdd, bool bClustered,
 					   CFmtStrMax & sCmd, int nFillFactor );
+void BuildTablePKConstraintText( TSQLCmdStr *psStatement, CRecordInfo *pRecordInfo );
 //void BuildSelectStatementText( CUtlVector<CQuery> *pVecQuery, bool bForPreparedStatement, char *pchStatement, int cchStatement );
-void BuildInsertStatementText( CFmtStr1024 *psStatement, const CRecordInfo *pRecordInfo );
-void BuildInsertAndReadStatementText( CFmtStr1024 *psStatement, CUtlVector<int> *pvecOutputFields, const CRecordInfo *pRecordInfo ) ;
-void BuildSelectStatementText( CFmtStr1024 *psStatement, const CColumnSet & selectSet, const char *pchTopClause = NULL );		  
-void BuildUpdateStatementText( CFmtStr1024 *psStatement, const CColumnSet & columnSet );
-void BuildDeleteStatementText( CFmtStr1024 *psStatement, const CRecordInfo* pRecordInfo );
-void BuildWhereClauseText( CFmtStr1024 *psClause, const CColumnSet & columnSet );
+
+void BuildInsertStatementText( TSQLCmdStr *psStatement, const CRecordInfo *pRecordInfo );
+void BuildInsertAndReadStatementText( TSQLCmdStr *psStatement, CUtlVector<int> *pvecOutputFields, const CRecordInfo *pRecordInfo ) ;
+void BuildMergeStatementTextOnPKWhenMatchedUpdateWhenNotMatchedInsert( TSQLCmdStr *psStatement, const CRecordInfo *pRecordInfo );
+void BuildMergeStatementTextOnPKWhenNotMatchedInsert( TSQLCmdStr *psStatement, const CRecordInfo *pRecordInfo );
+void BuildSelectStatementText( TSQLCmdStr *psStatement, const CColumnSet & selectSet, const char *pchTopClause = NULL );		  
+void BuildUpdateStatementText( TSQLCmdStr *psStatement, const CColumnSet & columnSet );
+void BuildDeleteStatementText( TSQLCmdStr *psStatement, const CRecordInfo* pRecordInfo );
+void AppendWhereClauseText( TSQLCmdStr *psClause, const CColumnSet & columnSet );
+void BuildOutputClauseText( TSQLCmdStr *psClause, const CColumnSet & columnSet );
 
 template< typename T >
 bool CopyResultToSchVector( IGCSQLResultSet *pResultSet, const CColumnSet & readSet, CUtlVector< T > *pvecRecords )

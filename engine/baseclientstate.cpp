@@ -1709,18 +1709,19 @@ bool CBaseClientState::ProcessConnectionlessPacket( netpacket_t *packet )
 			}
 
 			// The host can disable access to secure servers if you load unsigned code (mods, plugins, hacks)
-			if ( dc.m_bGSSecure && !Host_IsSecureServerAllowed() )
-			{
-				m_netadrReserveServer.RemoveAll();
-				m_nServerReservationCookie = 0;				
-				m_pServerReservationCallback = NULL;
-#if !defined(DEDICATED)
-				g_pMatchFramework->CloseSession();
-				g_pMatchFramework->GetEventsSubscription()->BroadcastEvent( new KeyValues( "OnClientInsecureBlocked", "reason", "connect" ) );
-#endif
-				Disconnect();
-				return false;
-			}	
+//lwss- Disabled this.
+//			if ( dc.m_bGSSecure && !Host_IsSecureServerAllowed() )
+//			{
+//				m_netadrReserveServer.RemoveAll();
+//				m_nServerReservationCookie = 0;
+//				m_pServerReservationCallback = NULL;
+//#if !defined(DEDICATED)
+//				g_pMatchFramework->CloseSession();
+//				g_pMatchFramework->GetEventsSubscription()->BroadcastEvent( new KeyValues( "OnClientInsecureBlocked", "reason", "connect" ) );
+//#endif
+//				Disconnect();
+//				return false;
+//			}
 
 			char context[ 256 ] = { 0 };
 			msg.ReadString( context, sizeof( context ) );

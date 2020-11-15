@@ -1,4 +1,4 @@
-//====== Copyright (c), Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -25,6 +25,8 @@ public:
 	// all GCClient jobs must implement one of these
 	virtual bool BYieldingRunGCJob( IMsgNetPacket *pNetPacket )	{ return false; }
 	virtual bool BYieldingRunGCJob()							{ return false; }
+
+	virtual EServerType GetServerType() { return k_EServerTypeGCClient; }
 
 protected:
 	CGCClient *m_pGCClient;
@@ -75,8 +77,7 @@ protected:
 		if( !BYieldingWaitForMsg( &pNetPacket ) )
 			return BYLDREPLY_TIMEOUT;
 
-		if( !pMsgIn->InitFromPacket( pNetPacket ) )
-			return BYLDREPLY_MSG_TYPE_MISMATCH;
+		pMsgIn->InitFromPacket( pNetPacket );
 
 		if ( pMsgIn->GetEMsg() != eMsg )
 			return BYLDREPLY_MSG_TYPE_MISMATCH;
@@ -86,15 +87,9 @@ protected:
 
 	bool BYldSendMessageAndGetReply( CProtoBufMsgBase &msgOut, uint nTimeoutSec, CProtoBufMsgBase *pMsgIn, MsgType_t eMsg )
 	{
-		BYldSendMessageAndGetReply_t result = BYldSendMessageAndGetReplyEx( msgOut, nTimeoutSec, pMsgIn, eMsg );
-		if ( result == BYLDREPLY_SUCCESS )
-			return true;
-
-		// Notify the client if the reply times out.
-		if ( result == BYLDREPLY_TIMEOUT )
-			m_pGCClient->MessageReplyTimedOut( eMsg, nTimeoutSec );
-
-		return false;
+		if( BYldSendMessageAndGetReplyEx( msgOut, nTimeoutSec, pMsgIn, eMsg ) != BYLDREPLY_SUCCESS )
+			return false;
+		return true;
 	}
 
 	bool BYldSendMessageAndGetReply( CProtoBufMsgBase &msgOut, uint nTimeoutSec, IMsgNetPacket **ppNetPacket )

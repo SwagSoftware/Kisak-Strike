@@ -10,7 +10,7 @@
 #pragma once
 #endif
 
-#include "tier0/memdbgon.h"
+#include "bufferpool.h"
 
 namespace GCSDK
 {
@@ -57,13 +57,13 @@ public:
 	void SetLastModified( RTime32 rtLastModified ) { m_rtLastModified = rtLastModified; }
 
 	// Get the status code for the response
-	EHTTPStatusCode GetStatusCode() { return m_eStatusCode; }
+	EHTTPStatusCode GetStatusCode() const { return m_eStatusCode; }
 
 	// Get how many seconds until this response expires
-	uint32 GetExpirationSeconds() { return m_unExpirationSeconds; }
+	uint32 GetExpirationSeconds() const { return m_unExpirationSeconds; }
 
 	// Get when the response was last modified
-	RTime32 GetLastModified() { return m_rtLastModified; }
+	RTime32 GetLastModified() const { return m_rtLastModified; }
 
 	// extended arrays include their element name as an object in JSON and VDF output formats
 	void SetExtendedArrays( bool bExtendedArrays ) { m_bExtendedArrays = bExtendedArrays; }
@@ -77,7 +77,18 @@ public:
 
 	// Create the root value element in the response
 	CWebAPIValues *CreateRootValue( const char *pchName );
+	const CWebAPIValues *GetRootValue() const { return m_pValues; }
 	CWebAPIValues *GetRootValue() { return m_pValues; }
+
+	// Anonymous root nodes affect only JSON output and, when enabled, result in 
+	// the omission of the extra set of { } braces and the name of the root node.
+	//
+	// So this JSON:
+	// { "root" : { "key1" : "value1", "key2" : "value2" } }
+	// becomes:
+	// { "key1" : "value1", "key2" : "value2" }
+	void SetJSONAnonymousRootNode( bool bAnonymousRootNode )	{ m_bJSONAnonymousRootNode = bAnonymousRootNode; }
+	bool HasJSONAnonymousRootNode() const						{ return m_bJSONAnonymousRootNode; }
 
 private:
 
@@ -98,14 +109,29 @@ private:
 	uint32 m_unExpirationSeconds;
 	RTime32 m_rtLastModified;
 	bool m_bExtendedArrays;
+	bool m_bJSONAnonymousRootNode;
 };
 
 class CWebAPIValues 
 {
-public:
+	// !FIXME! DOTAMERGE
+	//DECLARE_CLASS_MEMPOOL_MT( CWebAPIValues );
+
+private:
+	void InitInternal( CWebAPIValues *pParent, int nNamePos, EWebAPIValueType eValueType, const char *pchArrayElementNames );
+	CWebAPIValues( CWebAPIValues *pParent, int nNamePos, EWebAPIValueType eValueType, const char *pchArrayElementNames = NULL );
 	CWebAPIValues( CWebAPIValues *pParent, const char *pchName, EWebAPIValueType eValueType, const char *pchArrayElementNames = NULL );
 
+public:
+	explicit CWebAPIValues( const char *pchName );
+	CWebAPIValues( const char *pchName, const char *pchArrayElementNames );
+
 	~CWebAPIValues();
+
+#ifdef GC
+	// Gets the buffer pool used to reduce allocs in CWebAPIValues 
+	static CBufferPoolMT &GetBufferPool();
+#endif
 
 	//
 	// Child node handling
@@ -114,6 +140,9 @@ public:
 	// Create a child object of this node, all children of the resultant
 	// object must be named.
 	CWebAPIValues *CreateChildObject( const char *pchName );
+
+	// Return an existing child object - otherwise create one and return that.
+	CWebAPIValues *FindOrCreateChildObject( const char *pchName );
 
 	// Add a child object to the array, this should only be called on objects that are of the array type
 	CWebAPIValues *AddChildObjectToArray();
@@ -170,7 +199,7 @@ public:
 	void SetDoubleValue( double flValue );
 
 	// Set binary blob value
-	void SetBinaryValue( uint8 *pValue, uint32 unBytes );
+	void SetBinaryValue( const uint8 *pValue, uint32 unBytes );
 
 	// Set boolean value
 	void SetBoolValue( bool bValue );
@@ -183,10 +212,10 @@ public:
 	//
 
 	// Get the name of the current node
-	const char *GetName() const { return m_pchName; }
+	const char *GetName() const { return m_nNamePos >= 0 ? ( (const char *)m_pStringBuffer->Base() + m_nNamePos ) : NULL; }
 
 	// get the name of the elements of this numeric array (if this is an array)
-	const char *GetElementName() const { return m_pchArrayChildElementName; }
+	const char *GetElementName() const { return m_nArrayChildElementNamePos >= 0 ? ( (const char *)m_pStringBuffer->Base() + m_nArrayChildElementNamePos ) : NULL; }
 
 	// Get the type currently held by the node
 	EWebAPIValueType GetType() const;
@@ -247,7 +276,7 @@ public:
 	void SetChildDoubleValue( const char *pchChildName, double flValue );
 
 	// Set binary blob value
-	void SetChildBinaryValue( const char *pchChildName, uint8 *pValue, uint32 unBytes );
+	void SetChildBinaryValue( const char *pchChildName, const uint8 *pValue, uint32 unBytes );
 
 	// Set boolean value
 	void SetChildBoolValue( const char *pchChildName, bool bValue );
@@ -291,13 +320,13 @@ public:
 	//
 
 	// Emits JSON formatted representation of response
-	static bool BEmitJSONRecursive( CWebAPIValues *pCurrent, CUtlBuffer &outputBuffer, int nTabLevel, size_t unMaxResultSize, bool bIncludeArrayElementName = true );
+	static bool BEmitJSONRecursive( const CWebAPIValues *pCurrent, CUtlBuffer &outputBuffer, int nTabLevel, size_t unMaxResultSize, bool bIncludeArrayElementName = true );
 
 	// Emits KeyValues .vdf style formatted representation of response
-	static bool BEmitVDFRecursive( CWebAPIValues *pCurrent, CUtlBuffer &outputBuffer, int nTabLevel, uint32 nArrayElement, size_t unMaxResultSize, bool bIncludeArrayElementName = true );
+	static bool BEmitVDFRecursive( const CWebAPIValues *pCurrent, CUtlBuffer &outputBuffer, int nTabLevel, uint32 nArrayElement, size_t unMaxResultSize, bool bIncludeArrayElementName = true );
 
 	// Emits XML formatted representation of response
-	static bool BEmitXMLRecursive( CWebAPIValues *pCurrent, CUtlBuffer &outputBuffer,int nTabLevel, size_t unMaxResultSize );
+	static bool BEmitXMLRecursive( const CWebAPIValues *pCurrent, CUtlBuffer &outputBuffer,int nTabLevel, size_t unMaxResultSize );
 
 	//
 	// Parsing methods
@@ -313,10 +342,6 @@ public:
 
 	// copies the children and type from the specified node into this node
 	void CopyFrom( const CWebAPIValues *pSource );
-
-#ifdef DBGFLAG_VALIDATE
-	void Validate( CValidator &validator, const char *pchName, bool bTopLevelNode = true, bool bValidatePeers = true );
-#endif // DBGFLAG_VALIDATE
 
 private:
 
@@ -334,14 +359,14 @@ private:
 	CWebAPIValues *CreateChildInternal( const char *pchName, EWebAPIValueType eValueType, const char *pchArrayElementNames = NULL );
 
 	// Name of this node
-	char *m_pchName;
+	int32 m_nNamePos;
 
 	// Data value contained in this node
 	EWebAPIValueType m_eValueType;
 
 	struct WebAPIBinaryValue_t
 	{
-		uint8 *m_pData;
+		int32  m_nDataPos;
 		uint32 m_unBytes;
 	};
 
@@ -352,9 +377,9 @@ private:
 		uint32 m_unValue;
 		uint64 m_ulValue;
 		double m_flValue;
-		char *m_pchValue;
+		int32 m_nStrValuePos;
 		bool m_bValue;
-		char *m_pchArrayChildElementName;
+		int32 m_nArrayChildElementNamePos;
 		WebAPIBinaryValue_t m_BinaryValue;
 	};
 	
@@ -362,11 +387,19 @@ private:
 	CWebAPIValues * m_pLastChild;
 	CWebAPIValues * m_pNextPeer;
 	CWebAPIValues * m_pParent;
+
+	CUtlBuffer *m_pStringBuffer;
 };
 
 #define FOR_EACH_WEBAPI_CHILD( pParentParam, pChildParam ) \
 	for( CWebAPIValues *pChildParam = pParentParam->GetFirstChild(); pChildParam != NULL; pChildParam = pChildParam->GetNextChild() )
 
+}
+
+#include "tier0/memdbgon.h"
+
+namespace GCSDK
+{
 
 //-----------------------------------------------------------------------------
 // Purpose: KeyValues wrapper that automatically deletes itself on close
@@ -382,13 +415,13 @@ public:
 	// create a webapivalues object of the object type
 	CWebAPIValuesAD( const char *pchName )
 	{
-		m_pwav = new CWebAPIValues( NULL,  pchName, k_EWebAPIValueType_Object );
+		m_pwav = new CWebAPIValues( pchName );
 	}
 
 	// create a webapivalues object of the array type
 	CWebAPIValuesAD( const char *pchName, const char *pchArrayElementName )
 	{
-		m_pwav = new CWebAPIValues( NULL,  pchName, k_EWebAPIValueType_NumericArray, pchArrayElementName );
+		m_pwav = new CWebAPIValues( pchName, pchArrayElementName );
 	}
 
 	CWebAPIValuesAD( const CWebAPIValuesAD &rhs )
@@ -408,8 +441,8 @@ public:
 		delete m_pwav;
 	}
 
-	CWebAPIValues *operator->()	{ if ( !m_pwav ) m_pwav = new CWebAPIValues( NULL, "root", k_EWebAPIValueType_Object ); return m_pwav; }
-	operator CWebAPIValues *()	{ if ( !m_pwav ) m_pwav = new CWebAPIValues( NULL, "root", k_EWebAPIValueType_Object ); return m_pwav; }
+	CWebAPIValues *operator->()	{ if ( !m_pwav ) m_pwav = new CWebAPIValues( "root" ); return m_pwav; }
+	operator CWebAPIValues *()	{ if ( !m_pwav ) m_pwav = new CWebAPIValues( "root" ); return m_pwav; }
 	operator const CWebAPIValues *() const { return m_pwav;  }
 
 	CWebAPIValuesAD & operator= ( const CWebAPIValuesAD &rhs )
@@ -440,9 +473,9 @@ public:
 		if ( pwav )
 		{
 			if( pwav->IsArray() )
-				m_pwav = new CWebAPIValues( NULL, pwav->GetName(), k_EWebAPIValueType_NumericArray, pwav->GetElementName() );
+				m_pwav = new CWebAPIValues( pwav->GetName(), pwav->GetElementName() );
 			else
-				m_pwav = new CWebAPIValues( NULL, pwav->GetName(), k_EWebAPIValueType_Object );
+				m_pwav = new CWebAPIValues( pwav->GetName() );
 			m_pwav->CopyFrom( pwav );
 		}
 		else
@@ -450,22 +483,32 @@ public:
 
 	}
 
-#ifdef DBGFLAG_VALIDATE
-	void Validate( CValidator &validator, const char *pchName, bool bTopLevelNode = true, bool bValidatePeers = true )
-	{
-		ValidatePtr( m_pwav );
-	}
-#endif // DBGFLAG_VALIDATE
-
 private:
 	CWebAPIValues *operator=(CWebAPIValues *);	// use Take() or Copy()
 	CWebAPIValues *m_pwav;
 };
 
 // use to decode binary values
-uint32 Base64Decode( const uint8 *pubData, uint32 cubData, uint8 *pubDest, uint32 cubDest );
-bool Base64Encode( uint8 *pubData, uint32 cubData, uint8 *pubDest, uint32 cubDest );
+bool Base64Decode( const char *pchData, uint32 cchDataMax, uint8 *pubDecodedData, uint32 *pcubDecodedData, bool bIgnoreInvalidCharacters );
+bool Base64Encode( const uint8 *pubData, uint32 cubData, char *pchEncodedData, uint32 *pcchEncodedData, const char *pszLineBreak = NULL );
+uint32 Base64EncodeMaxOutput( const uint32 cubData, const char *pszLineBreak = NULL );
 
+inline bool Base64EncodeIntoUTLMemory( const uint8 *pubData, uint32 cubData, CUtlMemory<char>& out_pBuffer )
+{
+	// Stomp buffer and pre-allocate space.
+	out_pBuffer.EnsureCapacity( Base64EncodeMaxOutput( cubData ) );
+
+	// Perform encode, swallowing the used space output.
+	uint32 unBufferCapacity = out_pBuffer.Count();
+	return Base64Encode( pubData, cubData, out_pBuffer.Base(), &unBufferCapacity );
+}
+	
+}
+
+namespace ProtoBufHelper
+{
+	bool RecursiveAddProtoBufToWebAPIValues( GCSDK::CWebAPIValues *pWebAPIRoot, const ::google::protobuf::Message & msg );
+	bool ParseWebAPIValues( ::google::protobuf::Message & msg, const GCSDK::CWebAPIValues *pWebAPIRoot, bool bEnforceRequired = false );
 }
 
 #include "tier0/memdbgoff.h"

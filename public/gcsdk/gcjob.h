@@ -1,4 +1,4 @@
-//====== Copyright (c), Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -15,6 +15,33 @@
 namespace GCSDK
 {
 
+//a free standing utility function that takes in a newly allocated job, and tells the job to start executing. An example of this would be pStore = StartNewJobDelayed( new CFooJob( Params ) );
+template < typename T >
+inline typename T* StartNewJobDelayed( T* pNewJob )
+{
+	if ( pNewJob )
+		pNewJob->StartJobDelayed( NULL );
+	return pNewJob;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Control access to web api accounts so that they can be rate limited/blocked/exempt, etc
+//-----------------------------------------------------------------------------
+
+enum EWebAPIAccountLevel
+{
+	eWebAPIAccountLevel_RateLimited = 0,		//default, rate limit
+	eWebAPIAccountLevel_Blocked = 1,			//block all requests
+	eWebAPIAccountLevel_Unlimited = 2,			//do not rate limit
+	eWebAPIAccountLevel_Elevated = 3,			//like rate limiting, but at a higher threshold
+};
+
+//resets all accounts to the default permission
+void WebAPIAccount_ResetAllPermissions();
+//called to associate a permission level with an account
+void WebAPIAccount_SetPermission( AccountID_t nID, EWebAPIAccountLevel eLevel );
+//external calling interface in case we want to use this from a non-WebAPI job
+bool WebAPIAccount_BTrackUserAndValidate( AccountID_t nID, uint32 unIP );
 
 //-----------------------------------------------------------------------------
 // Purpose: handles a network message job from the client
@@ -22,7 +49,8 @@ namespace GCSDK
 class CGCJob : public CJob
 {
 public:
-	CGCJob( CGCBase *pGC ) : CJob( pGC->GetJobMgr() ), m_pGC( pGC ), m_cHeartbeatsBeforeTimeout( k_cJobHeartbeatsBeforeTimeoutDefault ) {}
+	// Constructor: when overriding job name a static string pointer must be used
+	CGCJob( CGCBase *pGC, const char *pchJobName = NULL ) : CJob( pGC->GetJobMgr(), pchJobName ), m_pGC( pGC ), m_cHeartbeatsBeforeTimeout( k_cJobHeartbeatsBeforeTimeoutDefault ) {}
 
 	// all GC jobs must implement one of these
 	virtual bool BYieldingRunGCJob( IMsgNetPacket *pNetPacket )	{ return false; }
@@ -32,11 +60,11 @@ public:
 
 	bool BYldSendMessageAndGetReply( CSteamID &steamIDTarget, CGCMsgBase &msgOut, uint nTimeoutSec, CGCMsgBase *pMsgIn, MsgType_t eMsg );
 	bool BYldSendMessageAndGetReply( CSteamID &steamIDTarget, CGCMsgBase &msgOut, uint nTimeoutSec, IMsgNetPacket **ppNetPacket );
-	bool BYldSendMessageAndGetReply( CSteamID &steamIDTarget, IProtoBufMsg &msgOut, uint nTimeoutSec, IProtoBufMsg *pMsgIn, MsgType_t eMsg );
-	bool BYldSendMessageAndGetReply( CSteamID &steamIDTarget, IProtoBufMsg &msgOut, uint nTimeoutSec, IMsgNetPacket **ppNetPacket );
+	bool BYldSendMessageAndGetReply( CSteamID &steamIDTarget, CProtoBufMsgBase &msgOut, uint nTimeoutSec, CProtoBufMsgBase *pMsgIn, MsgType_t eMsg );
+	bool BYldSendMessageAndGetReply( CSteamID &steamIDTarget, CProtoBufMsgBase &msgOut, uint nTimeoutSec, IMsgNetPacket **ppNetPacket );
 
 	virtual uint32 CHeartbeatsBeforeTimeout() { return m_cHeartbeatsBeforeTimeout; }
-	void SetJobTimeout( uint nTimeoutSec ) {  m_cHeartbeatsBeforeTimeout = 1 + ((nTimeoutSec * k_nMillion) / k_cMicroSecJobHeartbeat); }
+	void SetJobTimeout( uint nTimeoutSec ) { m_cHeartbeatsBeforeTimeout = 1 + ( ( nTimeoutSec * k_nMillion - 1 ) / k_cMicroSecJobHeartbeat ); }
 
 protected:
 	CGCBase *m_pGC;
@@ -53,6 +81,40 @@ private:
 	}
 
 	uint32 m_cHeartbeatsBeforeTimeout;
+};
+
+
+//This template class is designed to be derived from various job types and provides an adapter for the run from message hook, and handles
+//converting it over to an appropriate protobuf message for the caller as well as validating that it parsed properly. It will bail on processing
+//the message if the protobuf does not parse.
+template < typename TGCJobClass, typename TGCType, typename TProtoMsgClass >
+class TProtoMsgJob :
+	public TGCJobClass
+{
+public:
+	typedef CProtoBufMsg< TProtoMsgClass >	TProtoMsg;
+
+	TProtoMsgJob( TGCType* pGC ) : TGCJobClass( pGC )		{}
+
+	virtual bool BYieldingRunJobFromMsg( IMsgNetPacket *pNetPacket ) OVERRIDE
+	{
+		TProtoMsg msg( pNetPacket );
+		if ( !msg.Body().IsInitialized() )
+			return false;
+
+		return BYieldingRunJobFromProtoMsg( msg );
+	}
+
+	virtual bool BYieldingRunJobFromProtoMsg( const TProtoMsg& ProtoMsg ) = 0;
+};
+
+//a partial specialization of the proto message job to make it easier to use with GCJob
+template < typename TProtoMsgClass >
+class CGCProtoJob : public TProtoMsgJob < CGCJob, CGCBase, TProtoMsgClass >
+{
+public:
+	CGCProtoJob( CGCBase* pGC ) : TProtoMsgJob( pGC )	{}
+	//clients need to implement BYieldingRunJobFromProtoMsg
 };
 
 //-----------------------------------------------------------------------------
@@ -113,9 +175,8 @@ public:
 
 protected:
 	static void AddLocalizedString( CWebAPIValues *pOutDefn, const char *pchFieldName, const char *pchKeyName, ELanguage eLang, bool bReturnTokenIfNotFound = true );
+	static void ThreadedEmitFormattedOutputWrapper( CWebAPIResponse *pResponse, EWebAPIOutputFormat eFormat, CUtlBuffer *poutputBuffer, size_t unMaxResultSize, bool *pbResult );
 
-	CHTTPRequest *m_pRequest;
-	CHTTPResponse *m_pResponse;
 	CWebAPIKey m_webAPIKey;
 	EWebAPIOutputFormat m_eDefaultOutputFormat; 
 };

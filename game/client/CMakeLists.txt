@@ -41,6 +41,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/cstrike15/Scaleform)
 #cstrike15 protos
 TargetBuildAndAddProto( ${OUTBINNAME} ${SRCDIR}/game/shared/cstrike15/cstrike15_gcmessages.proto "${GENERATED_PROTO_DIR}")
 TargetBuildAndAddProto( ${OUTBINNAME} ${SRCDIR}/game/shared/cstrike15/cstrike15_usermessages.proto "${GENERATED_PROTO_DIR}")
+TargetBuildAndAddProto( ${OUTBINNAME} ${SRCDIR}/gcsdk/gcsdk_gcmessages.proto "${GENERATED_PROTO_DIR}")
+TargetBuildAndAddProto( ${OUTBINNAME} ${SRCDIR}/gcsdk/gcsystemmsgs.proto "${GENERATED_PROTO_DIR}")
 
 #force include
 if( WINDOWS OR POSIX )
@@ -372,7 +374,7 @@ if( USE_ROCKETUI )
 endif()
 target_link_libraries(${OUTBINNAME} matsys_controls_client)
 target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/libsteam_api.so) #proprietary steam api
-target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/gcsdk_client.a) #evil game coordinator voodoo
+target_link_libraries(${OUTBINNAME} kisak_gcsdk_client)
 target_link_libraries(${OUTBINNAME} tier2_client tier3_client vgui_controls_client vtf_client bzip2_client libvstdlib_client dmxloader_client bitmap_client mathlib_client tier2_client )
 #target_link_libraries(${OUTBINNAME} protobuf )
 

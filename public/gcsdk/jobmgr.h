@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2004, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -13,8 +13,6 @@
 
 #include "tier0/fasttimer.h"
 #include "tier1/utlpriorityqueue.h"
-#include "tier1/utlhashmaplarge.h"
-#include "tier1/utlpair.h"
 #include "job.h"
 #include "workthreadpool.h"
 class GCConVar;
@@ -37,6 +35,7 @@ struct JobStats_t
 	uint m_cJobsFailed;
 	uint64 m_cJobsTimedOut;		// # of jobs timed out ever
 	double m_flSumJobTimeMicrosec;
+	double m_flSumSqJobTimeMicrosec;
 	uint64 m_unMaxJobTimeMicrosec;
 
 	uint m_cTimeslices;
@@ -75,6 +74,13 @@ struct JobStatsBucket_t
 	uint64 m_cPauseReasonYield;
 	uint64 m_cPauseReasonSQL;
 	uint64 m_cPauseReasonWorkItem;
+
+#ifdef DBGFLAG_VALIDATE
+	void Validate( CValidator &validator, const char *pchName )
+	{
+		VALIDATE_SCOPE();
+	}
+#endif
 };
 
 enum EJobProfileAction 
@@ -93,25 +99,10 @@ enum EJobProfileSortOrder
 	k_EJobProfileSortOrder_TotalRuntime = 2,
 };
 
-//the various msg contexts that exist for the GC
-enum EGCMsgContext
-{
-	k_eGCMsgContext_None			= 0,				// This message cannot be called by anyone. This is intended only to be used by messages that are temporarily disabled but left in the codebase for some reason
-	k_eGCMsgContext_Client			= (1<<0),			// This message is expected to arrive from a player/client
-	k_eGCMsgContext_UnsecuredServer	= (1<<1),			// This message should come from a dedicated server, but one that is not securely managed and should not be trusted
-	k_eGCMsgContext_TrustedServer	= (1<<2),			// This message should come from a dedicated server, but one that is securely managed
-	k_eGCMsgContext_System			= (1<<3),			// This message should come from the GCH system
-	k_eGCMsgContext_OtherGC			= (1<<4),			// This message should arrive from another sub GC or the master GC
-
-	k_eGCMsgContext_AllServers		= k_eGCMsgContext_UnsecuredServer | k_eGCMsgContext_TrustedServer,		// a message from any server
-	k_eGCMsgContext_All				= k_eGCMsgContext_Client | k_eGCMsgContext_TrustedServer | k_eGCMsgContext_UnsecuredServer | k_eGCMsgContext_System | k_eGCMsgContext_OtherGC
-};
-
-
 struct JobProfileStats_t
 {
 	int m_iJobProfileSort;
-	CUtlHashMapLarge< uint32, JobStatsBucket_t > *pmapStatsBucket;
+	CUtlMap< uint32, JobStatsBucket_t, int > *pmapStatsBucket;
 };
 
 //-----------------------------------------------------------------------------
@@ -137,10 +128,8 @@ public:
 	// Run any yielding jobs, even low priority ones
 	bool BFrameFuncRunYieldingJobs( CLimitTimer &limitTimer );
 
-	// Route this message to an existing Job, or create a new one if that JobID does not exist. This takes the context that the message
-	// is being created within so that it can validate that the message is being called from the right context. If the context doesn't overlap,
-	// it will fail to create the job
-	bool BRouteMsgToJob( void *pParent, IMsgNetPacket *pNetPacket, const JobMsgInfo_t &jobMsgInfo, EGCMsgContext nCreateContext = k_eGCMsgContext_All );
+	// Route this message to an existing Job, or create a new one if that JobID does not exist
+	bool BRouteMsgToJob( void *pParent, IMsgNetPacket *pNetPacket, const JobMsgInfo_t &jobMsgInfo );
 
 	// Adds a new Job to the mgr and generates a JobID for it.
 	void InsertJob( CJob &job );
@@ -152,38 +141,11 @@ public:
 	void AddDelayedJobToYieldList( CJob &job );
 
 #ifdef GC
-
-	//given a message, this will determine if there is any custom routing associated with the message. It will return a function pointer
-	//if custom routing is found, or NULL otherwise
-	JobRoutingFunc_t GetRoutingForMsg( IMsgNetPacket *pNetPacket );
-	JobRoutingFunc_t GetRoutingForMsg( MsgType_t eMsg );
-
 	// resumes the specified job if it is, in fact, waiting for a SQL query to return
 	bool BResumeSQLJob( JobID_t jobID );
 
 	// yields waiting for a query response
 	bool BYieldingRunQuery( CJob &job, CGCSQLQueryGroup *pQueryGroup, ESchemaCatalog eSchemaCatalog );
-
-	//stats collected for SQL queries that run long
-	struct LongSQLStats_t
-	{
-		//the string for this query
-		CUtlString	m_sQuery;
-		//total amount of time spent in over limit queries
-		uint32		m_nTotalTimeMS;
-		uint32		m_nNumQueries;
-		//the parameters for the longest running query
-		uint32		m_nMaxQueryMS;
-		CUtlString	m_sMaxQueryParams;
-		//a collection of N parameters that also exceeded the time limit
-		static const uint32 knMaxParams = 8;
-		CUtlVectorFixed< CUtlString, knMaxParams >	m_Params;
-	};
-
-	//access to the mapfor all the long running queries
-	typedef CUtlHashMapLarge< const char*, LongSQLStats_t*, CaseSensitiveStrEquals, MurmurHash3ConstCharPtr > TLongSQLMap;
-	TLongSQLMap&	GetLongSQLMap()			{ return m_LongSqlMap; }
-
 
 	// SQL profiling
 	enum ESQLProfileSort
@@ -197,7 +159,6 @@ public:
 	void StartSQLProfiling();
 	void StopSQLProfiling();
 	void DumpSQLProfile( ESQLProfileSort eSort );
-	uint32 GetNumSQLQueriesInFlight() const				{ return m_mapSQLQueriesInFlight.Count(); }
 #endif
 
 	// returns true if we're running any jobs of the specified name
@@ -206,12 +167,6 @@ public:
 
 	// passes a network msg directly to the specified job
 	void PassMsgToJob( CJob &job, IMsgNetPacket *pNetPacket, const JobMsgInfo_t &jobMsgInfo );
-
-	// Enter an advisory do-not-yield scope with line-and-file string for debugging
-	void PushDoNotYield( CJob &job, const char *pchFileAndLine );
-
-	// Exit the innermost do-not-yield scope which matches this job
-	void PopDoNotYield( CJob &job );
 
 	// yields until a network message is received
 	bool BYieldingWaitForMsg( CJob &job );
@@ -245,10 +200,15 @@ public:
 	int CountYieldingJobs() const { return m_ListJobsYieldingRegPri.Count(); } // counts jobs currently in a yielding state
 	bool HasOutstandingThreadPoolWorkItems();
 	
-	void SetIsShuttingDown( bool bIsShuttingDown ) { m_bIsShuttingDown = bIsShuttingDown; }
+	void SetIsShuttingDown();
 	bool GetIsShuttingDown() const { return m_bIsShuttingDown; }
 
 	void *GetMainMemoryDebugInfo() { return g_memMainDebugInfo.Base(); }
+
+#ifdef DBGFLAG_VALIDATE
+	void Validate( CValidator &validator, const char *pchName );		// Validate our internal structures
+	static void ValidateStatics( CValidator &validator, const char *pchName );
+#endif /* DBGFLAG_VALIDATE */
 
 	// wakes up a job that was waiting on a lock
 	void WakeupLockedJob( CJob &job );
@@ -271,19 +231,15 @@ public:
 	// cause a debug break in the given job
 	static void DebugJob( int iJob );
 
-	//sets a whitelist of messages that should be exempt from context filtering. This is meant only to be a utility during development to address 
-	//messages that were misclassified until a fix can be deployed
-	void SetMsgContextWhitelist( const CUtlVector< MsgType_t >& msgList )		{ m_MsgContextWhitelist = msgList; }
+	// disable/enable yielding for debugging
+	void SetPauseAllowed( bool bNewPauseAllowed ) { m_bDebugDisallowPause = !bNewPauseAllowed; }
 
 private:
-
-	//given a message, this will find the appropriate job type structure for handling this message
-	const JobType_t* GetJobInfoForMsg( IMsgNetPacket *pNetPacket ) const;
 
 	bool BRouteWorkItemCompletedInternal( JobID_t jobID, bool bWorkItemCanceled, bool bShouldExist, bool bResumeImmediately );
 
 	// Create a new job for this message
-	bool BLaunchJobFromNetworkMsg( void *pParent, const JobMsgInfo_t &jobMsgInfo, IMsgNetPacket *pNetPacket, EGCMsgContext nCreateContext );
+	bool BLaunchJobFromNetworkMsg( void *pParent, const JobMsgInfo_t &jobMsgInfo, IMsgNetPacket *pNetPacket );
 
 	// Internal add to yield list (looks at priority)
 	void AddToYieldList( CJob &job );
@@ -292,7 +248,7 @@ private:
 	bool BGetIJob( JobID_t jobID, EJobPauseReason eJobPauseReason, bool bShouldExist, int *pIJob );
 
 	// Map containing all of our jobs
-	CUtlHashMapLarge<JobID_t, CJob *> m_MapJob;
+	CUtlMap<JobID_t, CJob *, int> m_MapJob;
 
 	// jobs simply waiting until the next Run()
 	struct JobYielding_t
@@ -325,8 +281,8 @@ private:
 		uint32 m_cHeartbeatsBeforeTimeout;
 	};
 	CUtlLinkedList<JobTimeout_t, int> m_ListJobTimeouts;
-	CUtlHashMapLarge< JobID_t, int > m_MapJobTimeoutsIndexByJobID;
-	void PauseJob( CJob &job, EJobPauseReason eJobPauseReason, const char *pszPauseResourceName = NULL );
+	CUtlMap<JobID_t, int, int> m_MapJobTimeoutsIndexByJobID;
+	void PauseJob( CJob &job, EJobPauseReason eJobPauseReason );
 	void CheckForJobTimeouts( CLimitTimer &limitTimer );
 	void TimeoutJob( CJob &job );
 	bool m_bJobTimedOut;
@@ -349,37 +305,25 @@ private:
 	bool m_bProfiling;
 	bool m_bIsShuttingDown;
 	int m_cErrorsToReport;
-	CUtlHashMapLarge< uint32, JobStatsBucket_t > m_mapStatsBucket;
-	CUtlHashMapLarge< MsgType_t, int > m_mapOrphanMessages;
+	CUtlMap< uint32, JobStatsBucket_t, int > m_mapStatsBucket;
+	CUtlMap<MsgType_t, int, int> m_mapOrphanMessages;
 	CUtlMemory<unsigned char> g_memMainDebugInfo;
-
-	//a white list of messages to ignore context issues with
-	CUtlVector< MsgType_t >		m_MsgContextWhitelist;
 
 #ifdef GC
 	// sql profiling
 	bool m_bSQLProfiling;
 	CFastTimer	m_sqlTimer;
-
-	// long SQL utilities
-	TLongSQLMap m_LongSqlMap;
 	
 	struct PendingSQLJob_t
 	{
-		uint64 m_nStartMicrosec;
-		CGCSQLQueryGroup *m_pQueryGroup;
+		int64 m_nStartMicrosec;
 		int32 m_iBucket;
 	};
 
-	//utility function that given a pending SQL query will handle displaying it out to the console along with all of its parameters. Useful
-	//for debugging and monitoring
-	void DisplayPendingSQLJob( const PendingSQLJob_t& sqlJob );
-
 	struct SQLProfileBucket_t
 	{
-		uint64 m_nTotalMicrosec;
+		int64 m_nTotalMicrosec;
 		uint32 m_unCount;
-		uint32 m_unMaxMS;
 	};
 
 	CUtlHashMapLarge<GID_t, PendingSQLJob_t> m_mapSQLQueriesInFlight;
@@ -398,10 +342,7 @@ private:
 	static CUtlLinkedList<CJob *, int> sm_listAllJobs;
 #endif
 
-	// A stack of do not yield guards so we can print the right warning if they're nested
-	// (Note that we also track jobid since it is not an error to start another job which
-	// executes and immediately yields back to the parent, even if the parent can't yield)
-	CUtlVector< CUtlPair< JobID_t, const char * > > m_stackDoNotYieldGuards;
+	bool m_bDebugDisallowPause;
 };
 
 
@@ -426,9 +367,9 @@ inline void Job_SetJobType( CJob &job, const JobType_t *pJobType )
 //-----------------------------------------------------------------------------
 // Purpose: job registration macro
 //-----------------------------------------------------------------------------
-#define GC_REG_JOB_FULL( parentclass, jobclass, jobname, msg, contexts, routingfn, consolevar ) \
+#define GC_REG_JOB( parentclass, jobclass, jobname, msg, servertype ) \
 	GCSDK::CJob *CreateJob_##jobclass( parentclass *pParent, void * pvStartParam ); \
-	static const GCSDK::JobType_t g_JobType_##jobclass = { jobname, (GCSDK::MsgType_t)msg, contexts, (GCSDK::JobCreationFunc_t)CreateJob_##jobclass, routingfn, consolevar }; \
+	static const GCSDK::JobType_t g_JobType_##jobclass = { jobname, (GCSDK::MsgType_t)msg, servertype, (GCSDK::JobCreationFunc_t)CreateJob_##jobclass }; \
 	GCSDK::CJob *CreateJob_##jobclass( parentclass *pParent, void * pvStartParam ) \
 	{ \
 		GCSDK::CJob *job = GCSDK::CJob::AllocateJob<jobclass>( pParent ); \
@@ -451,8 +392,35 @@ inline void Job_SetJobType( CJob &job, const JobType_t *pJobType )
 		} \
 	} g_RegJob_##jobclass;
 
-#define GC_REG_JOB( parentclass, jobclass, jobname, msg ) \
-	GC_REG_JOB_FULL( parentclass, jobclass, jobname, msg, GCSDK::k_eGCMsgContext_All, NULL, NULL )
+
+//-----------------------------------------------------------------------------
+// Purpose: job registration macro for job triggered by web api request
+//-----------------------------------------------------------------------------
+#define REG_WEBAPI_JOB( parentclass, jobclass, jobname, servertype ) \
+	CJob *CreateJob_##jobclass( parentclass *pParent, void * pvStartParam ); \
+	static const JobType_t g_JobType_##jobclass = { jobname, k_EGCMsgInvalid, servertype, (JobCreationFunc_t)CreateJob_##jobclass }; \
+	CJob *CreateJob_##jobclass( parentclass *pParent, void * pvStartParam ) \
+{ \
+	CJob *job = CJob::AllocateJob<jobclass>( pParent ); \
+	if ( job ) \
+	{ \
+		Job_SetJobType( *job, &g_JobType_##jobclass ); \
+		if ( pvStartParam ) job->SetStartParam( pvStartParam ); \
+	} \
+	else \
+	{ \
+		AssertMsg( job, "CJob::AllocateJob<" #jobclass "> returned NULL!" ); \
+	} \
+	return job; \
+} \
+	static class CRegJob_##jobclass \
+{ \
+public: CRegJob_##jobclass() \
+{ \
+	Job_RegisterJobType( &g_JobType_##jobclass ); \
+} \
+} g_RegJob_##jobclass;
+
 
 
 } // namespace GCSDK

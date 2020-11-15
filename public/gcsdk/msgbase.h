@@ -801,7 +801,7 @@ void CMsgBase_t<MSG_HEADER_TYPE>::PacketDump()
 
 	EmitInfo( SPEW_NETWORK, SPEW_NEVER, LOG_ALWAYS, "Packet dump: raw size %u, header size %u, body size %u, var size %u\n", m_cubPkt, m_cubMsgHdr, m_cubStruct, CubVarData() );
 
-	EmitInfo( SPEW_NETWORK, SPEW_NEVER, LOG_ALWAYS, "Header dump: %s\n", Hdr().GetHeaderDescription() );
+	EmitInfo( SPEW_NETWORK, SPEW_NEVER, LOG_ALWAYS, "Header dump: %s\n", Hdr().GetHeaderDescription().String() );
 
 	EmitInfo( SPEW_NETWORK, SPEW_NEVER, LOG_ALWAYS, "Struct dump: %u bytes\n", m_cubStruct );
 	char szLine[100] = "";

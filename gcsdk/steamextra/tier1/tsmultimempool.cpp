@@ -1,12 +1,15 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
 // $NoKeywords: $
 //
 //=============================================================================//
+#include "tsmultimempool.h"
 
+#ifdef _WIN32
 #include <stdafx.h>
+#endif
 #include "tier0/t0constants.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -348,4 +351,36 @@ void *CThreadSafeMultiMemoryPool::ReAlloc( void *pvMem, uint32 cubAlloc )
 		return pvNewMem;
 	}
 }
+
+
+#ifdef DBGFLAG_VALIDATE
+//-----------------------------------------------------------------------------
+// Purpose: Ensure that all of our internal structures are consistent, and
+//			account for all memory that we've allocated.
+// Input:	validator -		Our global validator object
+//			pchName -		Our name (typically a member var in our container)
+//-----------------------------------------------------------------------------
+void CThreadSafeMultiMemoryPool::Validate( CValidator &validator, const char *pchName )
+{
+	validator.Push( "CThreadSafeMultiMemoryPool", this, pchName );
+
+	ValidateObj( m_VecMemPool );
+	for( int iMemPool = 0; iMemPool < m_VecMemPool.Count(); iMemPool++ )
+	{
+		validator.ClaimMemory_Aligned( m_VecMemPool[iMemPool].m_pMemPool );
+		m_VecMemPool[iMemPool].m_pMemPool->Validate( validator, "m_VecMemPool[iMemPool].m_pMemPool" );
+	}
+
+	AUTO_LOCK( m_mutexRawAllocations );
+	ValidateObj( m_MapRawAllocation );
+	FOR_EACH_MAP_FAST( m_MapRawAllocation, iRawAllocation )
+	{
+		validator.ClaimMemory( m_MapRawAllocation[iRawAllocation].m_pvMem );
+	}
+
+	ValidateObj( m_VecMemPoolLookup );
+
+	validator.Pop();
+}
+#endif // DBGFLAG_VALIDATE
 

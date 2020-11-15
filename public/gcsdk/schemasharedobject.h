@@ -1,4 +1,4 @@
-//====== Copyright ©, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Shared object based on a CBaseRecord subclass
 //
@@ -55,13 +55,15 @@ public:
 
 	// schema shared objects are GC-only and are never sent to clients.
 	virtual bool BIsNetworked() const { return false; }
-	virtual bool BAddCreateToMessage( CUtlBuffer & bufCreate ) const { return false; }
-	virtual bool BAddFullCreateToMessage( CUtlBuffer & bufCreate ) const { return false; }
-	virtual bool BAddUpdateToMessage( CUtlBuffer & bufUpdate, const CUtlVector< int > &fields ) const { return false; }
+	virtual bool BParseFromMessage( const CUtlBuffer & buffer ) { return false; }
+	virtual bool BParseFromMessage( const std::string &buffer ) { return false; }
+	virtual bool BAddToMessage( CUtlBuffer & bufOutput ) const { return false; }
+	virtual bool BAddToMessage( std::string *pBuffer ) const { return false; }
 	virtual bool BAddDestroyToMessage( CUtlBuffer & bufDestroy ) const { return false; }
-	virtual bool BParseCreateFromMessage( const CUtlBuffer & bufCreate ) { return false; }
-	virtual bool BUpdateFromNetwork( const CSharedObject & objUpdate, const CUtlBuffer & bufUpdate ) { return false; }
-	virtual bool BIsKeyLess( const CSharedObject & soRHS ) const ;
+	virtual bool BAddDestroyToMessage( std::string *pBuffer ) const { return false; }
+	virtual bool BUpdateFromNetwork( const CSharedObject & objUpdate ) { return false; }
+
+	virtual bool BIsKeyLess( const CSharedObject & soRHS ) const;
 	virtual void Copy( const CSharedObject & soRHS );
 	virtual void Dump() const;
 //	virtual bool BIsNetworkDirty() const { return false; }
@@ -76,13 +78,7 @@ public:
 protected:
 	virtual CRecordBase *GetPObject() = 0;
 	const CRecordBase *GetPObject() const { return const_cast<CSchemaSharedObjectBase *>(this)->GetPObject(); }
-	bool BParseFieldsFromMessage( CGCMsgBase *pMsg, const CColumnSet & csFields );
 	CColumnSet GetDatabaseDirtyColumnSet( const CUtlVector< int > &fields ) const;
-
-//	virtual bool BIsFieldDatabaseDirty( int nField ) const = 0;
-//	virtual CColumnSet GetDirtyColumnSet( ) const = 0;
-
-private:
 };
 
 
@@ -102,7 +98,8 @@ public:
 	~CSchemaSharedObject()
 	{
 #ifdef DEBUG
-		// Ensure this SO is not in any cache, or we have an error.
+		// Ensure this SO is not in any cache, or we have an error. Note we must provide the type
+		//since we are in a destructor and it is unsafe to call virtual functions
 		Assert( !GGCBase()->IsSOCached( this, nTypeID ) );
 #endif
 	}

@@ -1,4 +1,4 @@
-//====== Copyright ©, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Network dirty field marker for shared objects
 //
@@ -50,7 +50,8 @@ public:
 
 	int InvalidIndex() const;
 	int NumDirtyObjects() const;
-	int FindIndexByObj( CSharedObject *pObj );
+	int FindIndexByObj( const CSharedObject *pObj ) const;
+	bool HasElement( const CSharedObject *pObj ) const;
 	bool GetDirtyFieldSetByIndex( int index, CSharedObject **ppObj, CUtlVector<int> &fieldSet ) const;
 	bool GetDirtyFieldSetByObj( CSharedObject *pObj, CUtlVector<int> &fieldSet );
 	bool FindAndRemove( CSharedObject *pObj );

@@ -1453,6 +1453,51 @@ void CUIGameData::OnEvent( KeyValues *pEvent )
 	else if ( !Q_strcmp( "OnEngineLevelLoadingSession", szEvent ) )
 	{
 		/* Removed for partner depot */
+        //lwss- this section is responsible for sending a connect request to the GC
+
+		// only handle the "CreateSession" reason
+        if( strcmp( pEvent->GetString("reason"), "CreateSession" ) )
+            return;
+
+        uint64 *uiReservationCookiePtr = (uint64*)pEvent->GetPtr("ptr");
+        if( uiReservationCookiePtr )
+        {
+            INetSupport *pINetSupport = ( INetSupport * )g_pMatchFramework->GetMatchExtensions()->GetRegisteredExtensionInterface( INETSUPPORT_VERSION_STRING );
+            if( pINetSupport )
+            {
+                CGameUIConVarRef cl_session("cl_session");
+                pINetSupport->UpdateClientReservation( *uiReservationCookiePtr, 0 );
+                // unfinished....
+            }
+        }
+        else
+        {
+            netadr_t netadr;
+            netadr.SetIP( 0 );
+            netadr.SetPort( 0 );
+            netadr.SetType( NA_IP );
+            netadr.SetFromString( pEvent->GetString("adr" ) );
+            GCSDK::CProtoBufMsg<CMsgGCCStrike15_v2_ClientRequestJoinServerData> joinServerData( k_EMsgGCCStrike15_v2_ClientRequestJoinServerData );
+            INetSupport *pINetSupport = ( INetSupport * )g_pMatchFramework->GetMatchExtensions()->GetRegisteredExtensionInterface( INETSUPPORT_VERSION_STRING );
+            if( pINetSupport )
+            {
+                int buildNum = pINetSupport->GetEngineBuildNumber();
+                if( buildNum )
+                {
+                    joinServerData.Body().set_version( buildNum );
+                }
+
+                joinServerData.Body().set_account_id( steamapicontext->SteamUser()->GetSteamID().GetAccountID() );
+                joinServerData.Body().set_serverid( pEvent->GetUint64("gsid") );
+                joinServerData.Body().set_server_ip( netadr.GetIPHostByteOrder() );
+                joinServerData.Body().set_server_port( netadr.GetPort() );
+
+                //TODO: NOT DONE - We need the GCClientSystem() now :)
+                //GCClientSystem()->BSendMessage( joinServerData );
+            }
+        }
+
+
 	}
 #endif
 }

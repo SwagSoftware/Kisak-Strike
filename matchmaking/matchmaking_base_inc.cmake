@@ -99,4 +99,4 @@ endif()
 #}
 
 #[!$X360 && !$PS3]
-target_link_libraries(${OUTLIBNAME} ${LIBPUBLIC}/gcsdk_client.a) #link to evil game coordinator lib
+target_link_libraries(${OUTLIBNAME} kisak_gcsdk_client)

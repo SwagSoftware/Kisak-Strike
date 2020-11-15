@@ -1,4 +1,4 @@
-//========= Copyright ©, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -13,7 +13,7 @@
 
 #include "gamecoordinator/igcsqlquery.h"
 #include "refcount.h"
-#include "tier0/memdbgon.h"
+#include "bufferpool.h"
 
 namespace GCSDK
 {
@@ -21,16 +21,19 @@ namespace GCSDK
 struct GCSQLBindParam_t
 {
 	EGCSQLType	m_eType;
-	uint8	*m_pubData;
+	size_t		m_nOffset;
 	size_t		m_cubData;
 };
 
 
 class CGCSQLQuery 
 {
+	DECLARE_CLASS_MEMPOOL( CGCSQLQuery );
 public:
 	CGCSQLQuery();
 	virtual ~CGCSQLQuery();
+
+	static CBufferPool &GetBufferPool();
 
 	void SetCommand( const char *pchCommand ) { m_sCommand = pchCommand; }
 
@@ -79,6 +82,12 @@ public:
 		AddBindParamRaw( k_EGCSQLType_double, (byte *)&dValue, sizeof ( dValue ) );
 	}
 
+	// Image needs a special type since the default var data is blob
+	void AddBindParamImage( const uint8 *ubValue, const int cubValue )
+	{
+		AddBindParamRaw( k_EGCSQLType_Image, (byte *)ubValue, cubValue );
+	}
+
 	void ClearParams();
 
 	// this is used internally to bind a field with its type. You probably want 
@@ -93,17 +102,20 @@ public:
 	// gets the parameter data
 	virtual uint32 CnParams() { return m_vecParams.Count(); }
 	virtual EGCSQLType EParamType( uint32 uIndex ) { return m_vecParams[uIndex].m_eType; }
-	virtual byte *PubParam( uint32 uIndex ) { return m_vecParams[uIndex].m_pubData; }
-	virtual uint32 CubParam( uint32 uIndex ) { return m_vecParams[uIndex].m_cubData; }
+	virtual byte *PubParam( uint32 uIndex ) { return (byte *)m_pBufParams->Base() + m_vecParams[uIndex].m_nOffset; }
+	virtual uint32 CubParam( uint32 uIndex ) { return ( uint32 )m_vecParams[uIndex].m_cubData; }
 
 private:
-
-	CUtlString						m_sCommand;
-	CUtlVector< GCSQLBindParam_t >	m_vecParams;
+	CUtlString	m_sCommand;
+	CUtlBuffer	*m_pBufParams;
+	CUtlVectorFixedGrowable< GCSQLBindParam_t, 10 >	m_vecParams;
 };
 
 class CGCSQLQueryGroup : public IGCSQLQuery, public CRefCount
 {
+	DECLARE_CLASS_MEMPOOL( CGCSQLQuery );
+
+private:
 	// create query groups on the heap with alloc
 	CGCSQLQueryGroup();
 

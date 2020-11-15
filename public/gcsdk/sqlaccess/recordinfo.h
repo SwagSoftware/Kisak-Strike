@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2004, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -99,7 +99,10 @@ public:
 	const FieldSet_t& GetPKFields() { Assert( BHasPrimaryKey()); return GetIndexFields( )[ m_iPKIndex ]; }
 	const CUtlVector<FieldSet_t>& GetIndexFields() const { return m_VecIndexes; }
 	int GetIndexFieldCount() const { return m_VecIndexes.Count(); }
+	int FindIndex( CRecordInfo *pRec, const FieldSet_t& fieldSet );
+	int FindIndexByName( const char *pszName ) const;
 	int GetPKIndex() const { return m_iPKIndex; }
+	void SetPKIndex( int i ) { m_iPKIndex = i; }
 	int AddIndex( const FieldSet_t& fieldSet );
 	void GetIndexFieldList( CFmtStr1024 *pstr, int nIndents ) const;
 	int GetTableID() const { return m_nTableID; }

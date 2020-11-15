@@ -12,6 +12,10 @@ set(OUTBINDIR "${SRCDIR}/../game/${GAMENAME}/bin")
 
 include(${CMAKE_MODULE_PATH}/source_dll_base.cmake)
 
+if( LINUXALL )
+    target_compile_options(${OUTBINNAME} PRIVATE -fpic -fno-semantic-interposition)
+endif()
+
 #####matchmaking_inc.vpc#####
 target_include_directories(${OUTBINNAME} PRIVATE ${SRCDIR}/gcsdk/steamextra)
 target_include_directories(${OUTBINNAME} PRIVATE ${SRCDIR}/common)

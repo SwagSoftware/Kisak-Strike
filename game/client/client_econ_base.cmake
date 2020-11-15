@@ -26,6 +26,10 @@ include_directories(${SRCDIR}/gcsdk/steamextra)
     target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/econ/localization_provider.cpp")
 #}
 
+#lwss added- custom GC stuff
+target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/shared/gc_clientsystem.cpp")
+target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/game/client/cstrike15/cs_gc_client.cpp")
+
 
 #// For item image stamping
 target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/common/imageutils.cpp")

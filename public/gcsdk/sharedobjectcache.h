@@ -1,4 +1,4 @@
-//====== Copyright ©, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Base class for objects that are kept in synch between client and server
 //
@@ -10,7 +10,6 @@
 #pragma once
 #endif
 
-#include "soid.h"
 #include "sharedobject.h"
 
 namespace GCSDK
@@ -34,21 +33,23 @@ public:
 	virtual bool AddObject( CSharedObject *pObject );
 	virtual bool AddObjectClean( CSharedObject *pObject );
 	virtual CSharedObject *RemoveObject( const CSharedObject & soIndex );
-	virtual void RemoveAllObjectsWithoutDeleting();
+	CSharedObject *RemoveObjectByIndex( uint32 nObj );
+	void DestroyAllObjects();
+	void RemoveAllObjectsWithoutDeleting();
 
 	virtual void EnsureCapacity( uint32 nItems );
 
 	CSharedObject *FindSharedObject( const CSharedObject & soIndex );
-	const CSharedObject *FindSharedObject( const CSharedObject & soIndex ) const;
 
 	virtual void Dump() const;
 
-protected:
-	CSharedObject *RemoveObjectByIndex( uint32 nObj );
-	bool HasElement( CSharedObject *pSO ) const { return m_vecObjects.HasElement( pSO ); }
+#ifdef DBGFLAG_VALIDATE
+	virtual void Validate( CValidator &validator, const char *pchName );
+#endif
 
 private:
 	int FindSharedObjectIndex( const CSharedObject & soIndex ) const;
+	void AddObjectInternal( CSharedObject *pObject );
 
 	CSharedObjectVec m_vecObjects;
 	int m_nTypeID;
@@ -67,42 +68,64 @@ public:
 	CSharedObjectCache();
 	virtual ~CSharedObjectCache();
 
-	virtual SOID_t GetOwner() const = 0;
+	virtual const CSteamID & GetOwner() const = 0;
 
-	virtual bool AddObject( CSharedObject *pSharedObject );
-	virtual bool AddObjectClean( CSharedObject *pSharedObject );
-	virtual CSharedObject *RemoveObject( const CSharedObject & soIndex );
-	virtual bool RemoveAllObjectsWithoutDeleting();
+	bool AddObject( CSharedObject *pSharedObject );
+	bool BDestroyObject( const CSharedObject & soIndex, bool bRemoveFromDatabase );
+	CSharedObject *RemoveObject( const CSharedObject & soIndex );
+	void RemoveAllObjectsWithoutDeleting();
 
 	//called to find the type cache for the specified class ID. This will return NULL if one does not exist
-	const CSharedObjectTypeCache *FindBaseTypeCache( int nClassID ) const;
-	//called to find the type cache for the specified class ID. This will return NULL if one does not exist
-	CSharedObjectTypeCache *FindBaseTypeCache( int nClassID );
+	CSharedObjectTypeCache *FindBaseTypeCache( int nClassID ) const;
 	//called to create the specified class ID. If one exists, this is the same as find, otherwise one will be constructed
 	CSharedObjectTypeCache *CreateBaseTypeCache( int nClassID );
 
-
 	CSharedObject *FindSharedObject( const CSharedObject & soIndex );
-	const CSharedObject *FindSharedObject( const CSharedObject & soIndex ) const;
+
+	template < class T >
+	T *FindTypedSharedObject( const CSharedObject &soIndex )
+	{
+		return assert_cast<T *>( FindSharedObject( soIndex ) );
+	}
+
+	// returns various singleton objects
+	template< typename SOClass_t >
+	SOClass_t *GetSingleton() const
+	{
+		CSharedObjectTypeCache *pTypeCache = FindBaseTypeCache( SOClass_t::k_nTypeID );
+		if ( pTypeCache )
+		{
+			AssertMsg2( pTypeCache->GetCount() == 0 || pTypeCache->GetCount() == 1, "GetSingleton() called on type %u that has invalid number of items %u.", SOClass_t::k_nTypeID, pTypeCache->GetCount() );
+
+			if ( pTypeCache->GetCount() == 1 )
+			{
+				return (SOClass_t *)pTypeCache->GetObject( 0 );
+			}
+		}
+		return NULL;
+	}
 
 	void SetVersion( uint64 ulVersion ) { m_ulVersion = ulVersion; }
 	uint64 GetVersion() const { return m_ulVersion; }
 	virtual void MarkDirty() {}
 
 	virtual void Dump() const;
+#ifdef DBGFLAG_VALIDATE
+	virtual void Validate( CValidator &validator, const char *pchName );
+#endif
 
 protected:
 	virtual CSharedObjectTypeCache *AllocateTypeCache( int nClassID ) const = 0;
-	CSharedObjectTypeCache *GetTypeCacheByIndex( int nIndex ) { return m_CacheObjects.IsValidIndex( nIndex ) ? m_CacheObjects.Element( nIndex ) : NULL; }
-	int GetTypeCacheCount() const { return m_CacheObjects.Count(); }
+	CSharedObjectTypeCache *GetTypeCacheByIndex( int nIndex ) { return m_mapObjects.IsValidIndex( nIndex ) ? m_mapObjects.Element( nIndex ) : NULL; }
+	int GetTypeCacheCount() const { return m_mapObjects.MaxElement(); }
 
-	int FirstTypeCacheIndex() const					{ return m_CacheObjects.Count() > 0 ? 0 : m_CacheObjects.InvalidIndex(); }
-	int NextTypeCacheIndex( int iCurrent ) const	{ return ( iCurrent + 1 < m_CacheObjects.Count() ) ? iCurrent + 1 : m_CacheObjects.InvalidIndex(); }
-	int InvalidTypeCacheIndex() const				{ return m_CacheObjects.InvalidIndex(); }
+	int FirstTypeCacheIndex() { return m_mapObjects.FirstInorder(); }
+	int NextTypeCacheIndex( int iCurrent ) { return m_mapObjects.NextInorder( iCurrent ); }
+	int InvalidTypeCacheIndex() { return m_mapObjects.InvalidIndex(); }
 
 	uint64 m_ulVersion;
 private:
-	CUtlVector< CSharedObjectTypeCache * > m_CacheObjects;
+	CUtlMap<int, CSharedObjectTypeCache *> m_mapObjects;
 };
 
 
@@ -111,4 +134,3 @@ private:
 
 
 #endif //SHAREDOBJECTCACHE_H
-

@@ -37,6 +37,8 @@ macro( TargetBuildAndAddProto TARGET_NAME PROTO_FILE PROTO_OUTPUT_FOLDER )
             VERBATIM
     )
 
+    #add the output folder in the include path.
+    target_include_directories(${TARGET_NAME} PRIVATE ${PROTO_OUTPUT_FOLDER})
     target_sources(${TARGET_NAME} PRIVATE ${PROTO_OUTPUT_FOLDER}/${PROTO_FILENAME}.pb.cc)
 endmacro()
 

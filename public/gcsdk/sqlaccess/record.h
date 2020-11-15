@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -83,6 +83,17 @@ public:
 };
 
 
+//-----------------------------------------------------------------------------
+// CImageField
+// Defines a class to encompass a long variable-length binary field - opaque
+//-----------------------------------------------------------------------------
+class CImageField : public CVarField
+{
+public:
+	friend class CRecordVar;
+};
+
+
 #pragma pack( pop )
 
 // fix the size of this just to be safe
@@ -129,6 +140,7 @@ public:
 	// data accessors
 	const char * GetStringField( int iField, uint32 *pcubField );
 	int GetInt( int iField );
+	uint16 GetUint16( int iField );
 	uint32 GetUint32( int iField );
 	uint64 GetUint64( int iField );
 
@@ -136,7 +148,7 @@ public:
 	// (not implemented by this class)
 	virtual const char *ReadVarCharField( const CVarCharField &field ) const;
 	virtual const uint8 *ReadVarDataField( const CVarField &field, uint32 *pcubField ) const;
-	virtual bool SetVarCharField( CVarCharField &field, const char *pchString );
+	virtual bool SetVarCharField( CVarCharField &field, const char *pchString, bool bTruncate, int32 iField );
 	virtual void SetVarDataField( CVarField &field, const void *pvData, uint32 cubData );
 
 	virtual const CSchema *GetPSchema() const
@@ -214,7 +226,7 @@ public:
 	// variable-length data accessors
 	virtual const char *ReadVarCharField( const CVarCharField &field ) const;
 	virtual const uint8 *ReadVarDataField( const CVarField &field, uint32 *pcubField ) const;
-	virtual bool SetVarCharField( CVarCharField &field, const char *pchString );
+	virtual bool SetVarCharField( CVarCharField &field, const char *pchString, bool bTruncate, int32 iField );
 	virtual void SetVarDataField( CVarField &field, const void *pvData, uint32 cubData );
 
 	// allocated fixed means we've got our own memory for the fixed record
@@ -314,7 +326,10 @@ protected:
 	(record).ReadVarCharField( (record).field )
 
 #define WRITE_VAR_CHAR_FIELD( record, field, text )\
-	(record).SetVarCharField( (record).field, text )
+	(record).SetVarCharField( (record).m_##field, text, false, (record).k_iField_##field )
+
+#define WRITE_VAR_CHAR_FIELD_TRUNC( record, field, text )\
+	(record).SetVarCharField( (record).m_##field, text, true, (record).k_iField_##field )
 
 #pragma pack( pop )
 

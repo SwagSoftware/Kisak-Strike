@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2004, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -214,6 +214,7 @@ public:
 	int GetCSchema() const { return m_VecSchema.Count(); }
 	CSchema &GetSchema( int iSchema ) { return m_VecSchema[iSchema]; }
 	uint32 GetCheckSum() const { return m_unCheckSum; }
+	const char *GetDefaultSchemaNameForCatalog( ESchemaCatalog eCatalog );
 
 	uint8 *GetPubScratchBuffer( );
 	uint32 GetCubScratchBuffer() const { return m_cubScratchBuffer; }
@@ -256,7 +257,7 @@ public:
 	void SetITable( CSchema* pSchema, int iTable );
 	void FinishInit();						// Recalculates some internal fields
 private:
-
+	CUtlConstString m_strDefaultSchemaName;
 
 	CUtlVector< CSchema > m_VecSchema;		// Schema for tables in all catalogs
 	CUtlVector< CTriggerInfo > m_VecTriggers;		// list of triggers in all catalogs

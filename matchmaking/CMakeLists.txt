@@ -26,7 +26,7 @@ include( ./matchmaking_cstrike15_inc.cmake )
 target_compile_definitions(${OUTBINNAME} PRIVATE -DMATCHMAKING_DLL)
 target_link_libraries(${OUTBINNAME} matchmakingbase)
 target_link_libraries(${OUTBINNAME} tier2_client mathlib_client)
-target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/gcsdk_client.a) #link to evil game coordinator lib
+target_link_libraries(${OUTBINNAME} kisak_gcsdk_client)
 target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/libsteam_api.so) # link to proprietary steamapi
 
 #CSGO Matchmaking DS
@@ -36,6 +36,6 @@ include( ./matchmaking_cstrike15_inc.cmake )
 target_compile_definitions(${OUTBINNAME} PRIVATE -DMATCHMAKING_DS_DLL -DSWDS)
 target_link_libraries(${OUTBINNAME} matchmakingbase_ds)
 target_link_libraries(${OUTBINNAME} tier2_client mathlib_client)
-target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/gcsdk_client.a) #link to evil game coordinator lib
+target_link_libraries(${OUTBINNAME} kisak_gcsdk_client)
 target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/libsteam_api.so) # link to proprietary steamapi
 

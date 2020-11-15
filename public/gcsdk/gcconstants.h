@@ -1,4 +1,4 @@
-//========= Copyright ©, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: declares a variety of constants
 //
@@ -13,6 +13,7 @@
 
 #include "steam/steamtypes.h"
 #include "tier0/t0constants.h"
+#include "gamecoordinator/igcsqlquery.h"
 
 namespace GCSDK
 {
@@ -51,6 +52,36 @@ const int k_nUserSessionRunInterval = 5 * k_nMillion;
 const int k_nGSSessionRunInterval = 5 * k_nMillion;
 const int k_nAccountDetailsRunInterval = 30 * k_nMillion;
 const int k_nLocksRunInterval = 120 * k_nMillion;
+
+//-----------------------------------------------------------------------------
+// Server types
+//-----------------------------------------------------------------------------
+// EServerType
+// Specifies the type of a specific server
+// MUST BE KEPT IN SYNC with g_rgchServerTypeName !!!
+    enum EServerType
+    {
+        k_EServerTypeInvalid = -1,
+
+        k_EServerTypeShell = 0,
+        k_EServerTypeGC = 1,
+        k_EServerTypeGCClient = 2,
+
+        // Must be last!!!
+        k_EServerTypeMax = 2,
+    };
+    const EServerType k_EServerTypeFirst = k_EServerTypeShell;
+
+
+//-----------------------------------------------------------------------------
+// Alert constants
+//-----------------------------------------------------------------------------
+    enum EAlertType
+    {
+        k_EAlertTypeAssert,
+        k_EAlertTypeInfo,
+        k_EAlertTypeReport,
+    };
 
 //-----------------------------------------------------------------------------
 // Spew / EmitEvent constants

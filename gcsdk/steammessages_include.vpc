@@ -1,13 +1,24 @@
-$MacroRequired	PROTOBUF_BUILDER_INCLUDED
+$MacroRequired GENERATED_PROTO_DIR
 
 $Project
 {
 	$Folder "Protobuf Files"
 	{
-		$File "$SRCDIR/gcsdk/steammessages.proto"
+		$File "$SRCDIR\gcsdk\steammessages.proto"
 		$Folder "Generated Files"
 		{
-			$DynamicFile "$GENERATED_PROTO_DIR/steammessages.pb.h"
+			$DynamicFile "$GENERATED_PROTO_DIR\steammessages.pb.h"
+			$DynamicFile "$GENERATED_PROTO_DIR\steammessages.pb.cc" [!$OSXALL]
+			{
+				$Configuration
+				{
+					$Compiler 
+					{
+						$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+					}
+				}
+			}
 		}
 	}
+
 }

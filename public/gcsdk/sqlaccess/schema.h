@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2004, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -559,6 +559,11 @@ public:
 	void Validate( CValidator &validator, const char *pchName );		// Validate our internal structures
 	void ValidateRecord( uint8 *pubRecord );					// Validate a record that uses our schema
 
+	// cached queries
+	const char *GetInsertStatementText() const;
+	const char *GetMergeStatementTextOnPKWhenMatchedUpdateWhenNotMatchedInsert();
+	const char *GetMergeStatementTextOnPKWhenNotMatchedInsert();
+
 private:
 	int m_iTable;									// The index of our table
 	int m_iPKIndex;									// index into of m_VecIndexes of our PK index; k_iFieldNil if no PK
@@ -585,6 +590,11 @@ private:
 	CUtlVector<DeleteField_t> m_VecDeleteField;
 	CUtlVector<RenameField_t> m_VecRenameField;
 	CUtlVector<AlterField_t> m_VecAlterField;
+
+	// Cached queries
+	mutable CUtlString m_sInsertStatementText;				// Cached insert statement for the table
+	CUtlString m_sMergeStatementTextOnPKWhenMatchedUpdateWhenNotMatchedInsert;	// Cached insert or update via MERGE statement for the table
+	CUtlString m_sMergeStatementTextOnPKWhenNotMatchedInsert;	// Cached insert via MERGE statement for the table
 };
 
 } // namespace GCSDK

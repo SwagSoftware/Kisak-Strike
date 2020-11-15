@@ -1,4 +1,4 @@
-//========= Copyright ©, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Makes enum-to-string and string-to-enum easier to declare
 //
@@ -26,7 +26,10 @@ namespace GCSDK
 // ends defining a enum value string map. generates PchNameFromEnumName()
 #define ENUMSTRINGS_END( etype ) }; const char* PchNameFrom##etype( etype nValue ) \
 { for( uint i=0; i<Q_ARRAYSIZE(s_##etype); i++ ) { if ( s_##etype[i].nValue == nValue ) return s_##etype[i].pszString; } \
-	AssertMsg2( false, "Missing String for %s (%d)", #etype, nValue ); return "Unknown"; }
+	AssertMsg2( false, "Missing String for %s (%d)", #etype, nValue ); return "Unknown"; } \
+const char* PchNameFrom##etype##Unsafe( etype nValue ) \
+{ for( uint i=0; i<Q_ARRAYSIZE(s_##etype); i++ ) { if ( s_##etype[i].nValue == nValue ) return s_##etype[i].pszString; } \
+	return NULL; }
 
 // ends defining a enum value string map. generates PchNameFromEnum() and EnumFromNam(). Invalid element must be first in array
 #define ENUMSTRINGS_REVERSE( etype, default ) }; const char* PchNameFrom##etype(etype nValue ) \

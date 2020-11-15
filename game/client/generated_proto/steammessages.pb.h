@@ -127,6 +127,10 @@ class CMsgGCHUpdateSession;
 class CMsgGCHUpdateSession_ExtraField;
 class CMsgNotificationOfSuspiciousActivity;
 class CMsgNotificationOfSuspiciousActivity_MultipleGameInstances;
+class CMsgDPPartnerMicroTxns;
+class CMsgDPPartnerMicroTxns_PartnerMicroTxn;
+class CMsgDPPartnerMicroTxns_PartnerInfo;
+class CMsgDPPartnerMicroTxnsResponse;
 
 enum CMsgGCRoutingInfo_RoutingMethod {
   CMsgGCRoutingInfo_RoutingMethod_RANDOM = 0,
@@ -170,6 +174,32 @@ inline bool CMsgGCMsgSetOptions_Option_Parse(
     const ::std::string& name, CMsgGCMsgSetOptions_Option* value) {
   return ::google::protobuf::internal::ParseNamedEnum<CMsgGCMsgSetOptions_Option>(
     CMsgGCMsgSetOptions_Option_descriptor(), name, value);
+}
+enum CMsgDPPartnerMicroTxnsResponse_EErrorCode {
+  CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgValid = 0,
+  CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgInvalidAppID = 1,
+  CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgInvalidPartnerInfo = 2,
+  CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgNoTransactions = 3,
+  CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgSQLFailure = 4,
+  CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgPartnerInfoDiscrepancy = 5,
+  CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgTransactionInsertFailed = 7,
+  CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgAlreadyRunning = 8,
+  CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgInvalidTransactionData = 9
+};
+bool CMsgDPPartnerMicroTxnsResponse_EErrorCode_IsValid(int value);
+const CMsgDPPartnerMicroTxnsResponse_EErrorCode CMsgDPPartnerMicroTxnsResponse_EErrorCode_EErrorCode_MIN = CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgValid;
+const CMsgDPPartnerMicroTxnsResponse_EErrorCode CMsgDPPartnerMicroTxnsResponse_EErrorCode_EErrorCode_MAX = CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgInvalidTransactionData;
+const int CMsgDPPartnerMicroTxnsResponse_EErrorCode_EErrorCode_ARRAYSIZE = CMsgDPPartnerMicroTxnsResponse_EErrorCode_EErrorCode_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* CMsgDPPartnerMicroTxnsResponse_EErrorCode_descriptor();
+inline const ::std::string& CMsgDPPartnerMicroTxnsResponse_EErrorCode_Name(CMsgDPPartnerMicroTxnsResponse_EErrorCode value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    CMsgDPPartnerMicroTxnsResponse_EErrorCode_descriptor(), value);
+}
+inline bool CMsgDPPartnerMicroTxnsResponse_EErrorCode_Parse(
+    const ::std::string& name, CMsgDPPartnerMicroTxnsResponse_EErrorCode* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<CMsgDPPartnerMicroTxnsResponse_EErrorCode>(
+    CMsgDPPartnerMicroTxnsResponse_EErrorCode_descriptor(), name, value);
 }
 enum GCProtoBufMsgSrc {
   GCProtoBufMsgSrc_Unspecified = 0,
@@ -315,7 +345,14 @@ class CMsgProtoBufHeader : public ::google::protobuf::Message {
   inline ::std::string* release_error_message();
   inline void set_allocated_error_message(::std::string* error_message);
 
-  // optional .GCProtoBufMsgSrc gc_msg_src = 200;
+  // optional uint32 ip = 15;
+  inline bool has_ip() const;
+  inline void clear_ip();
+  static const int kIpFieldNumber = 15;
+  inline ::google::protobuf::uint32 ip() const;
+  inline void set_ip(::google::protobuf::uint32 value);
+
+  // optional .GCProtoBufMsgSrc gc_msg_src = 200 [default = GCProtoBufMsgSrc_Unspecified];
   inline bool has_gc_msg_src() const;
   inline void clear_gc_msg_src();
   static const int kGcMsgSrcFieldNumber = 200;
@@ -347,6 +384,8 @@ class CMsgProtoBufHeader : public ::google::protobuf::Message {
   inline void clear_has_eresult();
   inline void set_has_error_message();
   inline void clear_has_error_message();
+  inline void set_has_ip();
+  inline void clear_has_ip();
   inline void set_has_gc_msg_src();
   inline void clear_has_gc_msg_src();
   inline void set_has_gc_dir_index_source();
@@ -362,11 +401,12 @@ class CMsgProtoBufHeader : public ::google::protobuf::Message {
   ::std::string* target_job_name_;
   ::std::string* error_message_;
   ::google::protobuf::int32 eresult_;
+  ::google::protobuf::uint32 ip_;
   int gc_msg_src_;
   ::google::protobuf::uint32 gc_dir_index_source_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(11 + 31) / 32];
 
   friend void  protobuf_AddDesc_steammessages_2eproto();
   friend void protobuf_AssignDesc_steammessages_2eproto();
@@ -5710,6 +5750,32 @@ class CGCSystemMsg_GetAccountDetails_Response : public ::google::protobuf::Messa
   inline bool is_phone_identifying() const;
   inline void set_is_phone_identifying(bool value);
 
+  // optional uint32 rt_identity_linked = 35;
+  inline bool has_rt_identity_linked() const;
+  inline void clear_rt_identity_linked();
+  static const int kRtIdentityLinkedFieldNumber = 35;
+  inline ::google::protobuf::uint32 rt_identity_linked() const;
+  inline void set_rt_identity_linked(::google::protobuf::uint32 value);
+
+  // optional uint32 rt_birth_date = 36;
+  inline bool has_rt_birth_date() const;
+  inline void clear_rt_birth_date();
+  static const int kRtBirthDateFieldNumber = 36;
+  inline ::google::protobuf::uint32 rt_birth_date() const;
+  inline void set_rt_birth_date(::google::protobuf::uint32 value);
+
+  // optional string txn_country_code = 37;
+  inline bool has_txn_country_code() const;
+  inline void clear_txn_country_code();
+  static const int kTxnCountryCodeFieldNumber = 37;
+  inline const ::std::string& txn_country_code() const;
+  inline void set_txn_country_code(const ::std::string& value);
+  inline void set_txn_country_code(const char* value);
+  inline void set_txn_country_code(const char* value, size_t size);
+  inline ::std::string* mutable_txn_country_code();
+  inline ::std::string* release_txn_country_code();
+  inline void set_allocated_txn_country_code(::std::string* txn_country_code);
+
   // @@protoc_insertion_point(class_scope:CGCSystemMsg_GetAccountDetails_Response)
  private:
   inline void set_has_eresult_deprecated();
@@ -5774,6 +5840,12 @@ class CGCSystemMsg_GetAccountDetails_Response : public ::google::protobuf::Messa
   inline void clear_has_phone_id();
   inline void set_has_is_phone_identifying();
   inline void clear_has_is_phone_identifying();
+  inline void set_has_rt_identity_linked();
+  inline void clear_has_rt_identity_linked();
+  inline void set_has_rt_birth_date();
+  inline void clear_has_rt_birth_date();
+  inline void set_has_txn_country_code();
+  inline void clear_has_txn_country_code();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -5808,9 +5880,12 @@ class CGCSystemMsg_GetAccountDetails_Response : public ::google::protobuf::Messa
   ::google::protobuf::uint32 two_factor_enabled_time_;
   ::google::protobuf::uint64 phone_id_;
   ::google::protobuf::uint32 phone_verification_time_;
+  ::google::protobuf::uint32 rt_identity_linked_;
+  ::std::string* txn_country_code_;
+  ::google::protobuf::uint32 rt_birth_date_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(31 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(34 + 31) / 32];
 
   friend void  protobuf_AddDesc_steammessages_2eproto();
   friend void protobuf_AssignDesc_steammessages_2eproto();
@@ -7156,20 +7231,50 @@ class CMsgGCGetPartnerAccountLink_Response : public ::google::protobuf::Message 
   inline ::google::protobuf::uint32 nexonid() const;
   inline void set_nexonid(::google::protobuf::uint32 value);
 
+  // optional int32 ageclass = 3;
+  inline bool has_ageclass() const;
+  inline void clear_ageclass();
+  static const int kAgeclassFieldNumber = 3;
+  inline ::google::protobuf::int32 ageclass() const;
+  inline void set_ageclass(::google::protobuf::int32 value);
+
+  // optional bool id_verified = 4 [default = true];
+  inline bool has_id_verified() const;
+  inline void clear_id_verified();
+  static const int kIdVerifiedFieldNumber = 4;
+  inline bool id_verified() const;
+  inline void set_id_verified(bool value);
+
+  // optional bool is_adult = 5;
+  inline bool has_is_adult() const;
+  inline void clear_is_adult();
+  static const int kIsAdultFieldNumber = 5;
+  inline bool is_adult() const;
+  inline void set_is_adult(bool value);
+
   // @@protoc_insertion_point(class_scope:CMsgGCGetPartnerAccountLink_Response)
  private:
   inline void set_has_pwid();
   inline void clear_has_pwid();
   inline void set_has_nexonid();
   inline void clear_has_nexonid();
+  inline void set_has_ageclass();
+  inline void clear_has_ageclass();
+  inline void set_has_id_verified();
+  inline void clear_has_id_verified();
+  inline void set_has_is_adult();
+  inline void clear_has_is_adult();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 pwid_;
   ::google::protobuf::uint32 nexonid_;
+  ::google::protobuf::int32 ageclass_;
+  bool id_verified_;
+  bool is_adult_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_steammessages_2eproto();
   friend void protobuf_AssignDesc_steammessages_2eproto();
@@ -8610,6 +8715,633 @@ class CMsgNotificationOfSuspiciousActivity : public ::google::protobuf::Message 
   void InitAsDefaultInstance();
   static CMsgNotificationOfSuspiciousActivity* default_instance_;
 };
+// -------------------------------------------------------------------
+
+class CMsgDPPartnerMicroTxns_PartnerMicroTxn : public ::google::protobuf::Message {
+ public:
+  CMsgDPPartnerMicroTxns_PartnerMicroTxn();
+  virtual ~CMsgDPPartnerMicroTxns_PartnerMicroTxn();
+
+  CMsgDPPartnerMicroTxns_PartnerMicroTxn(const CMsgDPPartnerMicroTxns_PartnerMicroTxn& from);
+
+  inline CMsgDPPartnerMicroTxns_PartnerMicroTxn& operator=(const CMsgDPPartnerMicroTxns_PartnerMicroTxn& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const CMsgDPPartnerMicroTxns_PartnerMicroTxn& default_instance();
+
+  void Swap(CMsgDPPartnerMicroTxns_PartnerMicroTxn* other);
+
+  // implements Message ----------------------------------------------
+
+  CMsgDPPartnerMicroTxns_PartnerMicroTxn* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const CMsgDPPartnerMicroTxns_PartnerMicroTxn& from);
+  void MergeFrom(const CMsgDPPartnerMicroTxns_PartnerMicroTxn& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint32 init_time = 1;
+  inline bool has_init_time() const;
+  inline void clear_init_time();
+  static const int kInitTimeFieldNumber = 1;
+  inline ::google::protobuf::uint32 init_time() const;
+  inline void set_init_time(::google::protobuf::uint32 value);
+
+  // optional uint32 last_update_time = 2;
+  inline bool has_last_update_time() const;
+  inline void clear_last_update_time();
+  static const int kLastUpdateTimeFieldNumber = 2;
+  inline ::google::protobuf::uint32 last_update_time() const;
+  inline void set_last_update_time(::google::protobuf::uint32 value);
+
+  // optional uint64 txn_id = 3;
+  inline bool has_txn_id() const;
+  inline void clear_txn_id();
+  static const int kTxnIdFieldNumber = 3;
+  inline ::google::protobuf::uint64 txn_id() const;
+  inline void set_txn_id(::google::protobuf::uint64 value);
+
+  // optional uint32 account_id = 4;
+  inline bool has_account_id() const;
+  inline void clear_account_id();
+  static const int kAccountIdFieldNumber = 4;
+  inline ::google::protobuf::uint32 account_id() const;
+  inline void set_account_id(::google::protobuf::uint32 value);
+
+  // optional uint32 line_item = 5;
+  inline bool has_line_item() const;
+  inline void clear_line_item();
+  static const int kLineItemFieldNumber = 5;
+  inline ::google::protobuf::uint32 line_item() const;
+  inline void set_line_item(::google::protobuf::uint32 value);
+
+  // optional uint64 item_id = 6;
+  inline bool has_item_id() const;
+  inline void clear_item_id();
+  static const int kItemIdFieldNumber = 6;
+  inline ::google::protobuf::uint64 item_id() const;
+  inline void set_item_id(::google::protobuf::uint64 value);
+
+  // optional uint32 def_index = 7;
+  inline bool has_def_index() const;
+  inline void clear_def_index();
+  static const int kDefIndexFieldNumber = 7;
+  inline ::google::protobuf::uint32 def_index() const;
+  inline void set_def_index(::google::protobuf::uint32 value);
+
+  // optional uint64 price = 8;
+  inline bool has_price() const;
+  inline void clear_price();
+  static const int kPriceFieldNumber = 8;
+  inline ::google::protobuf::uint64 price() const;
+  inline void set_price(::google::protobuf::uint64 value);
+
+  // optional uint64 tax = 9;
+  inline bool has_tax() const;
+  inline void clear_tax();
+  static const int kTaxFieldNumber = 9;
+  inline ::google::protobuf::uint64 tax() const;
+  inline void set_tax(::google::protobuf::uint64 value);
+
+  // optional uint64 price_usd = 10;
+  inline bool has_price_usd() const;
+  inline void clear_price_usd();
+  static const int kPriceUsdFieldNumber = 10;
+  inline ::google::protobuf::uint64 price_usd() const;
+  inline void set_price_usd(::google::protobuf::uint64 value);
+
+  // optional uint64 tax_usd = 11;
+  inline bool has_tax_usd() const;
+  inline void clear_tax_usd();
+  static const int kTaxUsdFieldNumber = 11;
+  inline ::google::protobuf::uint64 tax_usd() const;
+  inline void set_tax_usd(::google::protobuf::uint64 value);
+
+  // optional uint32 purchase_type = 12;
+  inline bool has_purchase_type() const;
+  inline void clear_purchase_type();
+  static const int kPurchaseTypeFieldNumber = 12;
+  inline ::google::protobuf::uint32 purchase_type() const;
+  inline void set_purchase_type(::google::protobuf::uint32 value);
+
+  // optional uint32 steam_txn_type = 13;
+  inline bool has_steam_txn_type() const;
+  inline void clear_steam_txn_type();
+  static const int kSteamTxnTypeFieldNumber = 13;
+  inline ::google::protobuf::uint32 steam_txn_type() const;
+  inline void set_steam_txn_type(::google::protobuf::uint32 value);
+
+  // optional string country_code = 14;
+  inline bool has_country_code() const;
+  inline void clear_country_code();
+  static const int kCountryCodeFieldNumber = 14;
+  inline const ::std::string& country_code() const;
+  inline void set_country_code(const ::std::string& value);
+  inline void set_country_code(const char* value);
+  inline void set_country_code(const char* value, size_t size);
+  inline ::std::string* mutable_country_code();
+  inline ::std::string* release_country_code();
+  inline void set_allocated_country_code(::std::string* country_code);
+
+  // optional string region_code = 15;
+  inline bool has_region_code() const;
+  inline void clear_region_code();
+  static const int kRegionCodeFieldNumber = 15;
+  inline const ::std::string& region_code() const;
+  inline void set_region_code(const ::std::string& value);
+  inline void set_region_code(const char* value);
+  inline void set_region_code(const char* value, size_t size);
+  inline ::std::string* mutable_region_code();
+  inline ::std::string* release_region_code();
+  inline void set_allocated_region_code(::std::string* region_code);
+
+  // optional int32 quantity = 16;
+  inline bool has_quantity() const;
+  inline void clear_quantity();
+  static const int kQuantityFieldNumber = 16;
+  inline ::google::protobuf::int32 quantity() const;
+  inline void set_quantity(::google::protobuf::int32 value);
+
+  // optional uint64 ref_trans_id = 17;
+  inline bool has_ref_trans_id() const;
+  inline void clear_ref_trans_id();
+  static const int kRefTransIdFieldNumber = 17;
+  inline ::google::protobuf::uint64 ref_trans_id() const;
+  inline void set_ref_trans_id(::google::protobuf::uint64 value);
+
+  // @@protoc_insertion_point(class_scope:CMsgDPPartnerMicroTxns.PartnerMicroTxn)
+ private:
+  inline void set_has_init_time();
+  inline void clear_has_init_time();
+  inline void set_has_last_update_time();
+  inline void clear_has_last_update_time();
+  inline void set_has_txn_id();
+  inline void clear_has_txn_id();
+  inline void set_has_account_id();
+  inline void clear_has_account_id();
+  inline void set_has_line_item();
+  inline void clear_has_line_item();
+  inline void set_has_item_id();
+  inline void clear_has_item_id();
+  inline void set_has_def_index();
+  inline void clear_has_def_index();
+  inline void set_has_price();
+  inline void clear_has_price();
+  inline void set_has_tax();
+  inline void clear_has_tax();
+  inline void set_has_price_usd();
+  inline void clear_has_price_usd();
+  inline void set_has_tax_usd();
+  inline void clear_has_tax_usd();
+  inline void set_has_purchase_type();
+  inline void clear_has_purchase_type();
+  inline void set_has_steam_txn_type();
+  inline void clear_has_steam_txn_type();
+  inline void set_has_country_code();
+  inline void clear_has_country_code();
+  inline void set_has_region_code();
+  inline void clear_has_region_code();
+  inline void set_has_quantity();
+  inline void clear_has_quantity();
+  inline void set_has_ref_trans_id();
+  inline void clear_has_ref_trans_id();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 init_time_;
+  ::google::protobuf::uint32 last_update_time_;
+  ::google::protobuf::uint64 txn_id_;
+  ::google::protobuf::uint32 account_id_;
+  ::google::protobuf::uint32 line_item_;
+  ::google::protobuf::uint64 item_id_;
+  ::google::protobuf::uint64 price_;
+  ::google::protobuf::uint64 tax_;
+  ::google::protobuf::uint32 def_index_;
+  ::google::protobuf::uint32 purchase_type_;
+  ::google::protobuf::uint64 price_usd_;
+  ::google::protobuf::uint64 tax_usd_;
+  ::std::string* country_code_;
+  ::google::protobuf::uint32 steam_txn_type_;
+  ::google::protobuf::int32 quantity_;
+  ::std::string* region_code_;
+  ::google::protobuf::uint64 ref_trans_id_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(17 + 31) / 32];
+
+  friend void  protobuf_AddDesc_steammessages_2eproto();
+  friend void protobuf_AssignDesc_steammessages_2eproto();
+  friend void protobuf_ShutdownFile_steammessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static CMsgDPPartnerMicroTxns_PartnerMicroTxn* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class CMsgDPPartnerMicroTxns_PartnerInfo : public ::google::protobuf::Message {
+ public:
+  CMsgDPPartnerMicroTxns_PartnerInfo();
+  virtual ~CMsgDPPartnerMicroTxns_PartnerInfo();
+
+  CMsgDPPartnerMicroTxns_PartnerInfo(const CMsgDPPartnerMicroTxns_PartnerInfo& from);
+
+  inline CMsgDPPartnerMicroTxns_PartnerInfo& operator=(const CMsgDPPartnerMicroTxns_PartnerInfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const CMsgDPPartnerMicroTxns_PartnerInfo& default_instance();
+
+  void Swap(CMsgDPPartnerMicroTxns_PartnerInfo* other);
+
+  // implements Message ----------------------------------------------
+
+  CMsgDPPartnerMicroTxns_PartnerInfo* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const CMsgDPPartnerMicroTxns_PartnerInfo& from);
+  void MergeFrom(const CMsgDPPartnerMicroTxns_PartnerInfo& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint32 partner_id = 1;
+  inline bool has_partner_id() const;
+  inline void clear_partner_id();
+  static const int kPartnerIdFieldNumber = 1;
+  inline ::google::protobuf::uint32 partner_id() const;
+  inline void set_partner_id(::google::protobuf::uint32 value);
+
+  // optional string partner_name = 2;
+  inline bool has_partner_name() const;
+  inline void clear_partner_name();
+  static const int kPartnerNameFieldNumber = 2;
+  inline const ::std::string& partner_name() const;
+  inline void set_partner_name(const ::std::string& value);
+  inline void set_partner_name(const char* value);
+  inline void set_partner_name(const char* value, size_t size);
+  inline ::std::string* mutable_partner_name();
+  inline ::std::string* release_partner_name();
+  inline void set_allocated_partner_name(::std::string* partner_name);
+
+  // optional string currency_code = 3;
+  inline bool has_currency_code() const;
+  inline void clear_currency_code();
+  static const int kCurrencyCodeFieldNumber = 3;
+  inline const ::std::string& currency_code() const;
+  inline void set_currency_code(const ::std::string& value);
+  inline void set_currency_code(const char* value);
+  inline void set_currency_code(const char* value, size_t size);
+  inline ::std::string* mutable_currency_code();
+  inline ::std::string* release_currency_code();
+  inline void set_allocated_currency_code(::std::string* currency_code);
+
+  // optional string currency_name = 4;
+  inline bool has_currency_name() const;
+  inline void clear_currency_name();
+  static const int kCurrencyNameFieldNumber = 4;
+  inline const ::std::string& currency_name() const;
+  inline void set_currency_name(const ::std::string& value);
+  inline void set_currency_name(const char* value);
+  inline void set_currency_name(const char* value, size_t size);
+  inline ::std::string* mutable_currency_name();
+  inline ::std::string* release_currency_name();
+  inline void set_allocated_currency_name(::std::string* currency_name);
+
+  // @@protoc_insertion_point(class_scope:CMsgDPPartnerMicroTxns.PartnerInfo)
+ private:
+  inline void set_has_partner_id();
+  inline void clear_has_partner_id();
+  inline void set_has_partner_name();
+  inline void clear_has_partner_name();
+  inline void set_has_currency_code();
+  inline void clear_has_currency_code();
+  inline void set_has_currency_name();
+  inline void clear_has_currency_name();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* partner_name_;
+  ::std::string* currency_code_;
+  ::std::string* currency_name_;
+  ::google::protobuf::uint32 partner_id_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_steammessages_2eproto();
+  friend void protobuf_AssignDesc_steammessages_2eproto();
+  friend void protobuf_ShutdownFile_steammessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static CMsgDPPartnerMicroTxns_PartnerInfo* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class CMsgDPPartnerMicroTxns : public ::google::protobuf::Message {
+ public:
+  CMsgDPPartnerMicroTxns();
+  virtual ~CMsgDPPartnerMicroTxns();
+
+  CMsgDPPartnerMicroTxns(const CMsgDPPartnerMicroTxns& from);
+
+  inline CMsgDPPartnerMicroTxns& operator=(const CMsgDPPartnerMicroTxns& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const CMsgDPPartnerMicroTxns& default_instance();
+
+  void Swap(CMsgDPPartnerMicroTxns* other);
+
+  // implements Message ----------------------------------------------
+
+  CMsgDPPartnerMicroTxns* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const CMsgDPPartnerMicroTxns& from);
+  void MergeFrom(const CMsgDPPartnerMicroTxns& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef CMsgDPPartnerMicroTxns_PartnerMicroTxn PartnerMicroTxn;
+  typedef CMsgDPPartnerMicroTxns_PartnerInfo PartnerInfo;
+
+  // accessors -------------------------------------------------------
+
+  // optional uint32 appid = 1;
+  inline bool has_appid() const;
+  inline void clear_appid();
+  static const int kAppidFieldNumber = 1;
+  inline ::google::protobuf::uint32 appid() const;
+  inline void set_appid(::google::protobuf::uint32 value);
+
+  // optional string gc_name = 2;
+  inline bool has_gc_name() const;
+  inline void clear_gc_name();
+  static const int kGcNameFieldNumber = 2;
+  inline const ::std::string& gc_name() const;
+  inline void set_gc_name(const ::std::string& value);
+  inline void set_gc_name(const char* value);
+  inline void set_gc_name(const char* value, size_t size);
+  inline ::std::string* mutable_gc_name();
+  inline ::std::string* release_gc_name();
+  inline void set_allocated_gc_name(::std::string* gc_name);
+
+  // optional .CMsgDPPartnerMicroTxns.PartnerInfo partner = 3;
+  inline bool has_partner() const;
+  inline void clear_partner();
+  static const int kPartnerFieldNumber = 3;
+  inline const ::CMsgDPPartnerMicroTxns_PartnerInfo& partner() const;
+  inline ::CMsgDPPartnerMicroTxns_PartnerInfo* mutable_partner();
+  inline ::CMsgDPPartnerMicroTxns_PartnerInfo* release_partner();
+  inline void set_allocated_partner(::CMsgDPPartnerMicroTxns_PartnerInfo* partner);
+
+  // repeated .CMsgDPPartnerMicroTxns.PartnerMicroTxn transactions = 4;
+  inline int transactions_size() const;
+  inline void clear_transactions();
+  static const int kTransactionsFieldNumber = 4;
+  inline const ::CMsgDPPartnerMicroTxns_PartnerMicroTxn& transactions(int index) const;
+  inline ::CMsgDPPartnerMicroTxns_PartnerMicroTxn* mutable_transactions(int index);
+  inline ::CMsgDPPartnerMicroTxns_PartnerMicroTxn* add_transactions();
+  inline const ::google::protobuf::RepeatedPtrField< ::CMsgDPPartnerMicroTxns_PartnerMicroTxn >&
+      transactions() const;
+  inline ::google::protobuf::RepeatedPtrField< ::CMsgDPPartnerMicroTxns_PartnerMicroTxn >*
+      mutable_transactions();
+
+  // @@protoc_insertion_point(class_scope:CMsgDPPartnerMicroTxns)
+ private:
+  inline void set_has_appid();
+  inline void clear_has_appid();
+  inline void set_has_gc_name();
+  inline void clear_has_gc_name();
+  inline void set_has_partner();
+  inline void clear_has_partner();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* gc_name_;
+  ::CMsgDPPartnerMicroTxns_PartnerInfo* partner_;
+  ::google::protobuf::RepeatedPtrField< ::CMsgDPPartnerMicroTxns_PartnerMicroTxn > transactions_;
+  ::google::protobuf::uint32 appid_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_steammessages_2eproto();
+  friend void protobuf_AssignDesc_steammessages_2eproto();
+  friend void protobuf_ShutdownFile_steammessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static CMsgDPPartnerMicroTxns* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class CMsgDPPartnerMicroTxnsResponse : public ::google::protobuf::Message {
+ public:
+  CMsgDPPartnerMicroTxnsResponse();
+  virtual ~CMsgDPPartnerMicroTxnsResponse();
+
+  CMsgDPPartnerMicroTxnsResponse(const CMsgDPPartnerMicroTxnsResponse& from);
+
+  inline CMsgDPPartnerMicroTxnsResponse& operator=(const CMsgDPPartnerMicroTxnsResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const CMsgDPPartnerMicroTxnsResponse& default_instance();
+
+  void Swap(CMsgDPPartnerMicroTxnsResponse* other);
+
+  // implements Message ----------------------------------------------
+
+  CMsgDPPartnerMicroTxnsResponse* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const CMsgDPPartnerMicroTxnsResponse& from);
+  void MergeFrom(const CMsgDPPartnerMicroTxnsResponse& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef CMsgDPPartnerMicroTxnsResponse_EErrorCode EErrorCode;
+  static const EErrorCode k_MsgValid = CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgValid;
+  static const EErrorCode k_MsgInvalidAppID = CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgInvalidAppID;
+  static const EErrorCode k_MsgInvalidPartnerInfo = CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgInvalidPartnerInfo;
+  static const EErrorCode k_MsgNoTransactions = CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgNoTransactions;
+  static const EErrorCode k_MsgSQLFailure = CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgSQLFailure;
+  static const EErrorCode k_MsgPartnerInfoDiscrepancy = CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgPartnerInfoDiscrepancy;
+  static const EErrorCode k_MsgTransactionInsertFailed = CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgTransactionInsertFailed;
+  static const EErrorCode k_MsgAlreadyRunning = CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgAlreadyRunning;
+  static const EErrorCode k_MsgInvalidTransactionData = CMsgDPPartnerMicroTxnsResponse_EErrorCode_k_MsgInvalidTransactionData;
+  static inline bool EErrorCode_IsValid(int value) {
+    return CMsgDPPartnerMicroTxnsResponse_EErrorCode_IsValid(value);
+  }
+  static const EErrorCode EErrorCode_MIN =
+    CMsgDPPartnerMicroTxnsResponse_EErrorCode_EErrorCode_MIN;
+  static const EErrorCode EErrorCode_MAX =
+    CMsgDPPartnerMicroTxnsResponse_EErrorCode_EErrorCode_MAX;
+  static const int EErrorCode_ARRAYSIZE =
+    CMsgDPPartnerMicroTxnsResponse_EErrorCode_EErrorCode_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  EErrorCode_descriptor() {
+    return CMsgDPPartnerMicroTxnsResponse_EErrorCode_descriptor();
+  }
+  static inline const ::std::string& EErrorCode_Name(EErrorCode value) {
+    return CMsgDPPartnerMicroTxnsResponse_EErrorCode_Name(value);
+  }
+  static inline bool EErrorCode_Parse(const ::std::string& name,
+      EErrorCode* value) {
+    return CMsgDPPartnerMicroTxnsResponse_EErrorCode_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional uint32 eresult = 1 [default = 2];
+  inline bool has_eresult() const;
+  inline void clear_eresult();
+  static const int kEresultFieldNumber = 1;
+  inline ::google::protobuf::uint32 eresult() const;
+  inline void set_eresult(::google::protobuf::uint32 value);
+
+  // optional .CMsgDPPartnerMicroTxnsResponse.EErrorCode eerrorcode = 2 [default = k_MsgValid];
+  inline bool has_eerrorcode() const;
+  inline void clear_eerrorcode();
+  static const int kEerrorcodeFieldNumber = 2;
+  inline ::CMsgDPPartnerMicroTxnsResponse_EErrorCode eerrorcode() const;
+  inline void set_eerrorcode(::CMsgDPPartnerMicroTxnsResponse_EErrorCode value);
+
+  // @@protoc_insertion_point(class_scope:CMsgDPPartnerMicroTxnsResponse)
+ private:
+  inline void set_has_eresult();
+  inline void clear_has_eresult();
+  inline void set_has_eerrorcode();
+  inline void clear_has_eerrorcode();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 eresult_;
+  int eerrorcode_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_steammessages_2eproto();
+  friend void protobuf_AssignDesc_steammessages_2eproto();
+  friend void protobuf_ShutdownFile_steammessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static CMsgDPPartnerMicroTxnsResponse* default_instance_;
+};
 // ===================================================================
 
 static const int kKeyFieldFieldNumber = 60000;
@@ -8901,15 +9633,37 @@ inline void CMsgProtoBufHeader::set_allocated_error_message(::std::string* error
   }
 }
 
-// optional .GCProtoBufMsgSrc gc_msg_src = 200;
-inline bool CMsgProtoBufHeader::has_gc_msg_src() const {
+// optional uint32 ip = 15;
+inline bool CMsgProtoBufHeader::has_ip() const {
   return (_has_bits_[0] & 0x00000100u) != 0;
 }
-inline void CMsgProtoBufHeader::set_has_gc_msg_src() {
+inline void CMsgProtoBufHeader::set_has_ip() {
   _has_bits_[0] |= 0x00000100u;
 }
-inline void CMsgProtoBufHeader::clear_has_gc_msg_src() {
+inline void CMsgProtoBufHeader::clear_has_ip() {
   _has_bits_[0] &= ~0x00000100u;
+}
+inline void CMsgProtoBufHeader::clear_ip() {
+  ip_ = 0u;
+  clear_has_ip();
+}
+inline ::google::protobuf::uint32 CMsgProtoBufHeader::ip() const {
+  return ip_;
+}
+inline void CMsgProtoBufHeader::set_ip(::google::protobuf::uint32 value) {
+  set_has_ip();
+  ip_ = value;
+}
+
+// optional .GCProtoBufMsgSrc gc_msg_src = 200 [default = GCProtoBufMsgSrc_Unspecified];
+inline bool CMsgProtoBufHeader::has_gc_msg_src() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void CMsgProtoBufHeader::set_has_gc_msg_src() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void CMsgProtoBufHeader::clear_has_gc_msg_src() {
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void CMsgProtoBufHeader::clear_gc_msg_src() {
   gc_msg_src_ = 0;
@@ -8926,13 +9680,13 @@ inline void CMsgProtoBufHeader::set_gc_msg_src(::GCProtoBufMsgSrc value) {
 
 // optional uint32 gc_dir_index_source = 201;
 inline bool CMsgProtoBufHeader::has_gc_dir_index_source() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00000400u) != 0;
 }
 inline void CMsgProtoBufHeader::set_has_gc_dir_index_source() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00000400u;
 }
 inline void CMsgProtoBufHeader::clear_has_gc_dir_index_source() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00000400u;
 }
 inline void CMsgProtoBufHeader::clear_gc_dir_index_source() {
   gc_dir_index_source_ = 0u;
@@ -14843,6 +15597,120 @@ inline void CGCSystemMsg_GetAccountDetails_Response::set_is_phone_identifying(bo
   is_phone_identifying_ = value;
 }
 
+// optional uint32 rt_identity_linked = 35;
+inline bool CGCSystemMsg_GetAccountDetails_Response::has_rt_identity_linked() const {
+  return (_has_bits_[0] & 0x80000000u) != 0;
+}
+inline void CGCSystemMsg_GetAccountDetails_Response::set_has_rt_identity_linked() {
+  _has_bits_[0] |= 0x80000000u;
+}
+inline void CGCSystemMsg_GetAccountDetails_Response::clear_has_rt_identity_linked() {
+  _has_bits_[0] &= ~0x80000000u;
+}
+inline void CGCSystemMsg_GetAccountDetails_Response::clear_rt_identity_linked() {
+  rt_identity_linked_ = 0u;
+  clear_has_rt_identity_linked();
+}
+inline ::google::protobuf::uint32 CGCSystemMsg_GetAccountDetails_Response::rt_identity_linked() const {
+  return rt_identity_linked_;
+}
+inline void CGCSystemMsg_GetAccountDetails_Response::set_rt_identity_linked(::google::protobuf::uint32 value) {
+  set_has_rt_identity_linked();
+  rt_identity_linked_ = value;
+}
+
+// optional uint32 rt_birth_date = 36;
+inline bool CGCSystemMsg_GetAccountDetails_Response::has_rt_birth_date() const {
+  return (_has_bits_[1] & 0x00000001u) != 0;
+}
+inline void CGCSystemMsg_GetAccountDetails_Response::set_has_rt_birth_date() {
+  _has_bits_[1] |= 0x00000001u;
+}
+inline void CGCSystemMsg_GetAccountDetails_Response::clear_has_rt_birth_date() {
+  _has_bits_[1] &= ~0x00000001u;
+}
+inline void CGCSystemMsg_GetAccountDetails_Response::clear_rt_birth_date() {
+  rt_birth_date_ = 0u;
+  clear_has_rt_birth_date();
+}
+inline ::google::protobuf::uint32 CGCSystemMsg_GetAccountDetails_Response::rt_birth_date() const {
+  return rt_birth_date_;
+}
+inline void CGCSystemMsg_GetAccountDetails_Response::set_rt_birth_date(::google::protobuf::uint32 value) {
+  set_has_rt_birth_date();
+  rt_birth_date_ = value;
+}
+
+// optional string txn_country_code = 37;
+inline bool CGCSystemMsg_GetAccountDetails_Response::has_txn_country_code() const {
+  return (_has_bits_[1] & 0x00000002u) != 0;
+}
+inline void CGCSystemMsg_GetAccountDetails_Response::set_has_txn_country_code() {
+  _has_bits_[1] |= 0x00000002u;
+}
+inline void CGCSystemMsg_GetAccountDetails_Response::clear_has_txn_country_code() {
+  _has_bits_[1] &= ~0x00000002u;
+}
+inline void CGCSystemMsg_GetAccountDetails_Response::clear_txn_country_code() {
+  if (txn_country_code_ != &::google::protobuf::internal::kEmptyString) {
+    txn_country_code_->clear();
+  }
+  clear_has_txn_country_code();
+}
+inline const ::std::string& CGCSystemMsg_GetAccountDetails_Response::txn_country_code() const {
+  return *txn_country_code_;
+}
+inline void CGCSystemMsg_GetAccountDetails_Response::set_txn_country_code(const ::std::string& value) {
+  set_has_txn_country_code();
+  if (txn_country_code_ == &::google::protobuf::internal::kEmptyString) {
+    txn_country_code_ = new ::std::string;
+  }
+  txn_country_code_->assign(value);
+}
+inline void CGCSystemMsg_GetAccountDetails_Response::set_txn_country_code(const char* value) {
+  set_has_txn_country_code();
+  if (txn_country_code_ == &::google::protobuf::internal::kEmptyString) {
+    txn_country_code_ = new ::std::string;
+  }
+  txn_country_code_->assign(value);
+}
+inline void CGCSystemMsg_GetAccountDetails_Response::set_txn_country_code(const char* value, size_t size) {
+  set_has_txn_country_code();
+  if (txn_country_code_ == &::google::protobuf::internal::kEmptyString) {
+    txn_country_code_ = new ::std::string;
+  }
+  txn_country_code_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* CGCSystemMsg_GetAccountDetails_Response::mutable_txn_country_code() {
+  set_has_txn_country_code();
+  if (txn_country_code_ == &::google::protobuf::internal::kEmptyString) {
+    txn_country_code_ = new ::std::string;
+  }
+  return txn_country_code_;
+}
+inline ::std::string* CGCSystemMsg_GetAccountDetails_Response::release_txn_country_code() {
+  clear_has_txn_country_code();
+  if (txn_country_code_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = txn_country_code_;
+    txn_country_code_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void CGCSystemMsg_GetAccountDetails_Response::set_allocated_txn_country_code(::std::string* txn_country_code) {
+  if (txn_country_code_ != &::google::protobuf::internal::kEmptyString) {
+    delete txn_country_code_;
+  }
+  if (txn_country_code) {
+    set_has_txn_country_code();
+    txn_country_code_ = txn_country_code;
+  } else {
+    clear_has_txn_country_code();
+    txn_country_code_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
 // -------------------------------------------------------------------
 
 // CMsgGCGetPersonaNames
@@ -15831,6 +16699,72 @@ inline ::google::protobuf::uint32 CMsgGCGetPartnerAccountLink_Response::nexonid(
 inline void CMsgGCGetPartnerAccountLink_Response::set_nexonid(::google::protobuf::uint32 value) {
   set_has_nexonid();
   nexonid_ = value;
+}
+
+// optional int32 ageclass = 3;
+inline bool CMsgGCGetPartnerAccountLink_Response::has_ageclass() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void CMsgGCGetPartnerAccountLink_Response::set_has_ageclass() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void CMsgGCGetPartnerAccountLink_Response::clear_has_ageclass() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void CMsgGCGetPartnerAccountLink_Response::clear_ageclass() {
+  ageclass_ = 0;
+  clear_has_ageclass();
+}
+inline ::google::protobuf::int32 CMsgGCGetPartnerAccountLink_Response::ageclass() const {
+  return ageclass_;
+}
+inline void CMsgGCGetPartnerAccountLink_Response::set_ageclass(::google::protobuf::int32 value) {
+  set_has_ageclass();
+  ageclass_ = value;
+}
+
+// optional bool id_verified = 4 [default = true];
+inline bool CMsgGCGetPartnerAccountLink_Response::has_id_verified() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void CMsgGCGetPartnerAccountLink_Response::set_has_id_verified() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void CMsgGCGetPartnerAccountLink_Response::clear_has_id_verified() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void CMsgGCGetPartnerAccountLink_Response::clear_id_verified() {
+  id_verified_ = true;
+  clear_has_id_verified();
+}
+inline bool CMsgGCGetPartnerAccountLink_Response::id_verified() const {
+  return id_verified_;
+}
+inline void CMsgGCGetPartnerAccountLink_Response::set_id_verified(bool value) {
+  set_has_id_verified();
+  id_verified_ = value;
+}
+
+// optional bool is_adult = 5;
+inline bool CMsgGCGetPartnerAccountLink_Response::has_is_adult() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void CMsgGCGetPartnerAccountLink_Response::set_has_is_adult() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void CMsgGCGetPartnerAccountLink_Response::clear_has_is_adult() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void CMsgGCGetPartnerAccountLink_Response::clear_is_adult() {
+  is_adult_ = false;
+  clear_has_is_adult();
+}
+inline bool CMsgGCGetPartnerAccountLink_Response::is_adult() const {
+  return is_adult_;
+}
+inline void CMsgGCGetPartnerAccountLink_Response::set_is_adult(bool value) {
+  set_has_is_adult();
+  is_adult_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -17037,6 +17971,924 @@ inline void CMsgNotificationOfSuspiciousActivity::set_allocated_multiple_instanc
   }
 }
 
+// -------------------------------------------------------------------
+
+// CMsgDPPartnerMicroTxns_PartnerMicroTxn
+
+// optional uint32 init_time = 1;
+inline bool CMsgDPPartnerMicroTxns_PartnerMicroTxn::has_init_time() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_has_init_time() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_has_init_time() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_init_time() {
+  init_time_ = 0u;
+  clear_has_init_time();
+}
+inline ::google::protobuf::uint32 CMsgDPPartnerMicroTxns_PartnerMicroTxn::init_time() const {
+  return init_time_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_init_time(::google::protobuf::uint32 value) {
+  set_has_init_time();
+  init_time_ = value;
+}
+
+// optional uint32 last_update_time = 2;
+inline bool CMsgDPPartnerMicroTxns_PartnerMicroTxn::has_last_update_time() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_has_last_update_time() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_has_last_update_time() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_last_update_time() {
+  last_update_time_ = 0u;
+  clear_has_last_update_time();
+}
+inline ::google::protobuf::uint32 CMsgDPPartnerMicroTxns_PartnerMicroTxn::last_update_time() const {
+  return last_update_time_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_last_update_time(::google::protobuf::uint32 value) {
+  set_has_last_update_time();
+  last_update_time_ = value;
+}
+
+// optional uint64 txn_id = 3;
+inline bool CMsgDPPartnerMicroTxns_PartnerMicroTxn::has_txn_id() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_has_txn_id() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_has_txn_id() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_txn_id() {
+  txn_id_ = GOOGLE_ULONGLONG(0);
+  clear_has_txn_id();
+}
+inline ::google::protobuf::uint64 CMsgDPPartnerMicroTxns_PartnerMicroTxn::txn_id() const {
+  return txn_id_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_txn_id(::google::protobuf::uint64 value) {
+  set_has_txn_id();
+  txn_id_ = value;
+}
+
+// optional uint32 account_id = 4;
+inline bool CMsgDPPartnerMicroTxns_PartnerMicroTxn::has_account_id() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_has_account_id() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_has_account_id() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_account_id() {
+  account_id_ = 0u;
+  clear_has_account_id();
+}
+inline ::google::protobuf::uint32 CMsgDPPartnerMicroTxns_PartnerMicroTxn::account_id() const {
+  return account_id_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_account_id(::google::protobuf::uint32 value) {
+  set_has_account_id();
+  account_id_ = value;
+}
+
+// optional uint32 line_item = 5;
+inline bool CMsgDPPartnerMicroTxns_PartnerMicroTxn::has_line_item() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_has_line_item() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_has_line_item() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_line_item() {
+  line_item_ = 0u;
+  clear_has_line_item();
+}
+inline ::google::protobuf::uint32 CMsgDPPartnerMicroTxns_PartnerMicroTxn::line_item() const {
+  return line_item_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_line_item(::google::protobuf::uint32 value) {
+  set_has_line_item();
+  line_item_ = value;
+}
+
+// optional uint64 item_id = 6;
+inline bool CMsgDPPartnerMicroTxns_PartnerMicroTxn::has_item_id() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_has_item_id() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_has_item_id() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_item_id() {
+  item_id_ = GOOGLE_ULONGLONG(0);
+  clear_has_item_id();
+}
+inline ::google::protobuf::uint64 CMsgDPPartnerMicroTxns_PartnerMicroTxn::item_id() const {
+  return item_id_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_item_id(::google::protobuf::uint64 value) {
+  set_has_item_id();
+  item_id_ = value;
+}
+
+// optional uint32 def_index = 7;
+inline bool CMsgDPPartnerMicroTxns_PartnerMicroTxn::has_def_index() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_has_def_index() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_has_def_index() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_def_index() {
+  def_index_ = 0u;
+  clear_has_def_index();
+}
+inline ::google::protobuf::uint32 CMsgDPPartnerMicroTxns_PartnerMicroTxn::def_index() const {
+  return def_index_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_def_index(::google::protobuf::uint32 value) {
+  set_has_def_index();
+  def_index_ = value;
+}
+
+// optional uint64 price = 8;
+inline bool CMsgDPPartnerMicroTxns_PartnerMicroTxn::has_price() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_has_price() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_has_price() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_price() {
+  price_ = GOOGLE_ULONGLONG(0);
+  clear_has_price();
+}
+inline ::google::protobuf::uint64 CMsgDPPartnerMicroTxns_PartnerMicroTxn::price() const {
+  return price_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_price(::google::protobuf::uint64 value) {
+  set_has_price();
+  price_ = value;
+}
+
+// optional uint64 tax = 9;
+inline bool CMsgDPPartnerMicroTxns_PartnerMicroTxn::has_tax() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_has_tax() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_has_tax() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_tax() {
+  tax_ = GOOGLE_ULONGLONG(0);
+  clear_has_tax();
+}
+inline ::google::protobuf::uint64 CMsgDPPartnerMicroTxns_PartnerMicroTxn::tax() const {
+  return tax_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_tax(::google::protobuf::uint64 value) {
+  set_has_tax();
+  tax_ = value;
+}
+
+// optional uint64 price_usd = 10;
+inline bool CMsgDPPartnerMicroTxns_PartnerMicroTxn::has_price_usd() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_has_price_usd() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_has_price_usd() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_price_usd() {
+  price_usd_ = GOOGLE_ULONGLONG(0);
+  clear_has_price_usd();
+}
+inline ::google::protobuf::uint64 CMsgDPPartnerMicroTxns_PartnerMicroTxn::price_usd() const {
+  return price_usd_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_price_usd(::google::protobuf::uint64 value) {
+  set_has_price_usd();
+  price_usd_ = value;
+}
+
+// optional uint64 tax_usd = 11;
+inline bool CMsgDPPartnerMicroTxns_PartnerMicroTxn::has_tax_usd() const {
+  return (_has_bits_[0] & 0x00000400u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_has_tax_usd() {
+  _has_bits_[0] |= 0x00000400u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_has_tax_usd() {
+  _has_bits_[0] &= ~0x00000400u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_tax_usd() {
+  tax_usd_ = GOOGLE_ULONGLONG(0);
+  clear_has_tax_usd();
+}
+inline ::google::protobuf::uint64 CMsgDPPartnerMicroTxns_PartnerMicroTxn::tax_usd() const {
+  return tax_usd_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_tax_usd(::google::protobuf::uint64 value) {
+  set_has_tax_usd();
+  tax_usd_ = value;
+}
+
+// optional uint32 purchase_type = 12;
+inline bool CMsgDPPartnerMicroTxns_PartnerMicroTxn::has_purchase_type() const {
+  return (_has_bits_[0] & 0x00000800u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_has_purchase_type() {
+  _has_bits_[0] |= 0x00000800u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_has_purchase_type() {
+  _has_bits_[0] &= ~0x00000800u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_purchase_type() {
+  purchase_type_ = 0u;
+  clear_has_purchase_type();
+}
+inline ::google::protobuf::uint32 CMsgDPPartnerMicroTxns_PartnerMicroTxn::purchase_type() const {
+  return purchase_type_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_purchase_type(::google::protobuf::uint32 value) {
+  set_has_purchase_type();
+  purchase_type_ = value;
+}
+
+// optional uint32 steam_txn_type = 13;
+inline bool CMsgDPPartnerMicroTxns_PartnerMicroTxn::has_steam_txn_type() const {
+  return (_has_bits_[0] & 0x00001000u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_has_steam_txn_type() {
+  _has_bits_[0] |= 0x00001000u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_has_steam_txn_type() {
+  _has_bits_[0] &= ~0x00001000u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_steam_txn_type() {
+  steam_txn_type_ = 0u;
+  clear_has_steam_txn_type();
+}
+inline ::google::protobuf::uint32 CMsgDPPartnerMicroTxns_PartnerMicroTxn::steam_txn_type() const {
+  return steam_txn_type_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_steam_txn_type(::google::protobuf::uint32 value) {
+  set_has_steam_txn_type();
+  steam_txn_type_ = value;
+}
+
+// optional string country_code = 14;
+inline bool CMsgDPPartnerMicroTxns_PartnerMicroTxn::has_country_code() const {
+  return (_has_bits_[0] & 0x00002000u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_has_country_code() {
+  _has_bits_[0] |= 0x00002000u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_has_country_code() {
+  _has_bits_[0] &= ~0x00002000u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_country_code() {
+  if (country_code_ != &::google::protobuf::internal::kEmptyString) {
+    country_code_->clear();
+  }
+  clear_has_country_code();
+}
+inline const ::std::string& CMsgDPPartnerMicroTxns_PartnerMicroTxn::country_code() const {
+  return *country_code_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_country_code(const ::std::string& value) {
+  set_has_country_code();
+  if (country_code_ == &::google::protobuf::internal::kEmptyString) {
+    country_code_ = new ::std::string;
+  }
+  country_code_->assign(value);
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_country_code(const char* value) {
+  set_has_country_code();
+  if (country_code_ == &::google::protobuf::internal::kEmptyString) {
+    country_code_ = new ::std::string;
+  }
+  country_code_->assign(value);
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_country_code(const char* value, size_t size) {
+  set_has_country_code();
+  if (country_code_ == &::google::protobuf::internal::kEmptyString) {
+    country_code_ = new ::std::string;
+  }
+  country_code_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* CMsgDPPartnerMicroTxns_PartnerMicroTxn::mutable_country_code() {
+  set_has_country_code();
+  if (country_code_ == &::google::protobuf::internal::kEmptyString) {
+    country_code_ = new ::std::string;
+  }
+  return country_code_;
+}
+inline ::std::string* CMsgDPPartnerMicroTxns_PartnerMicroTxn::release_country_code() {
+  clear_has_country_code();
+  if (country_code_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = country_code_;
+    country_code_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_allocated_country_code(::std::string* country_code) {
+  if (country_code_ != &::google::protobuf::internal::kEmptyString) {
+    delete country_code_;
+  }
+  if (country_code) {
+    set_has_country_code();
+    country_code_ = country_code;
+  } else {
+    clear_has_country_code();
+    country_code_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string region_code = 15;
+inline bool CMsgDPPartnerMicroTxns_PartnerMicroTxn::has_region_code() const {
+  return (_has_bits_[0] & 0x00004000u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_has_region_code() {
+  _has_bits_[0] |= 0x00004000u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_has_region_code() {
+  _has_bits_[0] &= ~0x00004000u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_region_code() {
+  if (region_code_ != &::google::protobuf::internal::kEmptyString) {
+    region_code_->clear();
+  }
+  clear_has_region_code();
+}
+inline const ::std::string& CMsgDPPartnerMicroTxns_PartnerMicroTxn::region_code() const {
+  return *region_code_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_region_code(const ::std::string& value) {
+  set_has_region_code();
+  if (region_code_ == &::google::protobuf::internal::kEmptyString) {
+    region_code_ = new ::std::string;
+  }
+  region_code_->assign(value);
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_region_code(const char* value) {
+  set_has_region_code();
+  if (region_code_ == &::google::protobuf::internal::kEmptyString) {
+    region_code_ = new ::std::string;
+  }
+  region_code_->assign(value);
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_region_code(const char* value, size_t size) {
+  set_has_region_code();
+  if (region_code_ == &::google::protobuf::internal::kEmptyString) {
+    region_code_ = new ::std::string;
+  }
+  region_code_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* CMsgDPPartnerMicroTxns_PartnerMicroTxn::mutable_region_code() {
+  set_has_region_code();
+  if (region_code_ == &::google::protobuf::internal::kEmptyString) {
+    region_code_ = new ::std::string;
+  }
+  return region_code_;
+}
+inline ::std::string* CMsgDPPartnerMicroTxns_PartnerMicroTxn::release_region_code() {
+  clear_has_region_code();
+  if (region_code_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = region_code_;
+    region_code_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_allocated_region_code(::std::string* region_code) {
+  if (region_code_ != &::google::protobuf::internal::kEmptyString) {
+    delete region_code_;
+  }
+  if (region_code) {
+    set_has_region_code();
+    region_code_ = region_code;
+  } else {
+    clear_has_region_code();
+    region_code_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional int32 quantity = 16;
+inline bool CMsgDPPartnerMicroTxns_PartnerMicroTxn::has_quantity() const {
+  return (_has_bits_[0] & 0x00008000u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_has_quantity() {
+  _has_bits_[0] |= 0x00008000u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_has_quantity() {
+  _has_bits_[0] &= ~0x00008000u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_quantity() {
+  quantity_ = 0;
+  clear_has_quantity();
+}
+inline ::google::protobuf::int32 CMsgDPPartnerMicroTxns_PartnerMicroTxn::quantity() const {
+  return quantity_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_quantity(::google::protobuf::int32 value) {
+  set_has_quantity();
+  quantity_ = value;
+}
+
+// optional uint64 ref_trans_id = 17;
+inline bool CMsgDPPartnerMicroTxns_PartnerMicroTxn::has_ref_trans_id() const {
+  return (_has_bits_[0] & 0x00010000u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_has_ref_trans_id() {
+  _has_bits_[0] |= 0x00010000u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_has_ref_trans_id() {
+  _has_bits_[0] &= ~0x00010000u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::clear_ref_trans_id() {
+  ref_trans_id_ = GOOGLE_ULONGLONG(0);
+  clear_has_ref_trans_id();
+}
+inline ::google::protobuf::uint64 CMsgDPPartnerMicroTxns_PartnerMicroTxn::ref_trans_id() const {
+  return ref_trans_id_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerMicroTxn::set_ref_trans_id(::google::protobuf::uint64 value) {
+  set_has_ref_trans_id();
+  ref_trans_id_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// CMsgDPPartnerMicroTxns_PartnerInfo
+
+// optional uint32 partner_id = 1;
+inline bool CMsgDPPartnerMicroTxns_PartnerInfo::has_partner_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::set_has_partner_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::clear_has_partner_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::clear_partner_id() {
+  partner_id_ = 0u;
+  clear_has_partner_id();
+}
+inline ::google::protobuf::uint32 CMsgDPPartnerMicroTxns_PartnerInfo::partner_id() const {
+  return partner_id_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::set_partner_id(::google::protobuf::uint32 value) {
+  set_has_partner_id();
+  partner_id_ = value;
+}
+
+// optional string partner_name = 2;
+inline bool CMsgDPPartnerMicroTxns_PartnerInfo::has_partner_name() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::set_has_partner_name() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::clear_has_partner_name() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::clear_partner_name() {
+  if (partner_name_ != &::google::protobuf::internal::kEmptyString) {
+    partner_name_->clear();
+  }
+  clear_has_partner_name();
+}
+inline const ::std::string& CMsgDPPartnerMicroTxns_PartnerInfo::partner_name() const {
+  return *partner_name_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::set_partner_name(const ::std::string& value) {
+  set_has_partner_name();
+  if (partner_name_ == &::google::protobuf::internal::kEmptyString) {
+    partner_name_ = new ::std::string;
+  }
+  partner_name_->assign(value);
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::set_partner_name(const char* value) {
+  set_has_partner_name();
+  if (partner_name_ == &::google::protobuf::internal::kEmptyString) {
+    partner_name_ = new ::std::string;
+  }
+  partner_name_->assign(value);
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::set_partner_name(const char* value, size_t size) {
+  set_has_partner_name();
+  if (partner_name_ == &::google::protobuf::internal::kEmptyString) {
+    partner_name_ = new ::std::string;
+  }
+  partner_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* CMsgDPPartnerMicroTxns_PartnerInfo::mutable_partner_name() {
+  set_has_partner_name();
+  if (partner_name_ == &::google::protobuf::internal::kEmptyString) {
+    partner_name_ = new ::std::string;
+  }
+  return partner_name_;
+}
+inline ::std::string* CMsgDPPartnerMicroTxns_PartnerInfo::release_partner_name() {
+  clear_has_partner_name();
+  if (partner_name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = partner_name_;
+    partner_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::set_allocated_partner_name(::std::string* partner_name) {
+  if (partner_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete partner_name_;
+  }
+  if (partner_name) {
+    set_has_partner_name();
+    partner_name_ = partner_name;
+  } else {
+    clear_has_partner_name();
+    partner_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string currency_code = 3;
+inline bool CMsgDPPartnerMicroTxns_PartnerInfo::has_currency_code() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::set_has_currency_code() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::clear_has_currency_code() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::clear_currency_code() {
+  if (currency_code_ != &::google::protobuf::internal::kEmptyString) {
+    currency_code_->clear();
+  }
+  clear_has_currency_code();
+}
+inline const ::std::string& CMsgDPPartnerMicroTxns_PartnerInfo::currency_code() const {
+  return *currency_code_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::set_currency_code(const ::std::string& value) {
+  set_has_currency_code();
+  if (currency_code_ == &::google::protobuf::internal::kEmptyString) {
+    currency_code_ = new ::std::string;
+  }
+  currency_code_->assign(value);
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::set_currency_code(const char* value) {
+  set_has_currency_code();
+  if (currency_code_ == &::google::protobuf::internal::kEmptyString) {
+    currency_code_ = new ::std::string;
+  }
+  currency_code_->assign(value);
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::set_currency_code(const char* value, size_t size) {
+  set_has_currency_code();
+  if (currency_code_ == &::google::protobuf::internal::kEmptyString) {
+    currency_code_ = new ::std::string;
+  }
+  currency_code_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* CMsgDPPartnerMicroTxns_PartnerInfo::mutable_currency_code() {
+  set_has_currency_code();
+  if (currency_code_ == &::google::protobuf::internal::kEmptyString) {
+    currency_code_ = new ::std::string;
+  }
+  return currency_code_;
+}
+inline ::std::string* CMsgDPPartnerMicroTxns_PartnerInfo::release_currency_code() {
+  clear_has_currency_code();
+  if (currency_code_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = currency_code_;
+    currency_code_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::set_allocated_currency_code(::std::string* currency_code) {
+  if (currency_code_ != &::google::protobuf::internal::kEmptyString) {
+    delete currency_code_;
+  }
+  if (currency_code) {
+    set_has_currency_code();
+    currency_code_ = currency_code;
+  } else {
+    clear_has_currency_code();
+    currency_code_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string currency_name = 4;
+inline bool CMsgDPPartnerMicroTxns_PartnerInfo::has_currency_name() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::set_has_currency_name() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::clear_has_currency_name() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::clear_currency_name() {
+  if (currency_name_ != &::google::protobuf::internal::kEmptyString) {
+    currency_name_->clear();
+  }
+  clear_has_currency_name();
+}
+inline const ::std::string& CMsgDPPartnerMicroTxns_PartnerInfo::currency_name() const {
+  return *currency_name_;
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::set_currency_name(const ::std::string& value) {
+  set_has_currency_name();
+  if (currency_name_ == &::google::protobuf::internal::kEmptyString) {
+    currency_name_ = new ::std::string;
+  }
+  currency_name_->assign(value);
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::set_currency_name(const char* value) {
+  set_has_currency_name();
+  if (currency_name_ == &::google::protobuf::internal::kEmptyString) {
+    currency_name_ = new ::std::string;
+  }
+  currency_name_->assign(value);
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::set_currency_name(const char* value, size_t size) {
+  set_has_currency_name();
+  if (currency_name_ == &::google::protobuf::internal::kEmptyString) {
+    currency_name_ = new ::std::string;
+  }
+  currency_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* CMsgDPPartnerMicroTxns_PartnerInfo::mutable_currency_name() {
+  set_has_currency_name();
+  if (currency_name_ == &::google::protobuf::internal::kEmptyString) {
+    currency_name_ = new ::std::string;
+  }
+  return currency_name_;
+}
+inline ::std::string* CMsgDPPartnerMicroTxns_PartnerInfo::release_currency_name() {
+  clear_has_currency_name();
+  if (currency_name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = currency_name_;
+    currency_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void CMsgDPPartnerMicroTxns_PartnerInfo::set_allocated_currency_name(::std::string* currency_name) {
+  if (currency_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete currency_name_;
+  }
+  if (currency_name) {
+    set_has_currency_name();
+    currency_name_ = currency_name;
+  } else {
+    clear_has_currency_name();
+    currency_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// CMsgDPPartnerMicroTxns
+
+// optional uint32 appid = 1;
+inline bool CMsgDPPartnerMicroTxns::has_appid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns::set_has_appid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void CMsgDPPartnerMicroTxns::clear_has_appid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void CMsgDPPartnerMicroTxns::clear_appid() {
+  appid_ = 0u;
+  clear_has_appid();
+}
+inline ::google::protobuf::uint32 CMsgDPPartnerMicroTxns::appid() const {
+  return appid_;
+}
+inline void CMsgDPPartnerMicroTxns::set_appid(::google::protobuf::uint32 value) {
+  set_has_appid();
+  appid_ = value;
+}
+
+// optional string gc_name = 2;
+inline bool CMsgDPPartnerMicroTxns::has_gc_name() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns::set_has_gc_name() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void CMsgDPPartnerMicroTxns::clear_has_gc_name() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void CMsgDPPartnerMicroTxns::clear_gc_name() {
+  if (gc_name_ != &::google::protobuf::internal::kEmptyString) {
+    gc_name_->clear();
+  }
+  clear_has_gc_name();
+}
+inline const ::std::string& CMsgDPPartnerMicroTxns::gc_name() const {
+  return *gc_name_;
+}
+inline void CMsgDPPartnerMicroTxns::set_gc_name(const ::std::string& value) {
+  set_has_gc_name();
+  if (gc_name_ == &::google::protobuf::internal::kEmptyString) {
+    gc_name_ = new ::std::string;
+  }
+  gc_name_->assign(value);
+}
+inline void CMsgDPPartnerMicroTxns::set_gc_name(const char* value) {
+  set_has_gc_name();
+  if (gc_name_ == &::google::protobuf::internal::kEmptyString) {
+    gc_name_ = new ::std::string;
+  }
+  gc_name_->assign(value);
+}
+inline void CMsgDPPartnerMicroTxns::set_gc_name(const char* value, size_t size) {
+  set_has_gc_name();
+  if (gc_name_ == &::google::protobuf::internal::kEmptyString) {
+    gc_name_ = new ::std::string;
+  }
+  gc_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* CMsgDPPartnerMicroTxns::mutable_gc_name() {
+  set_has_gc_name();
+  if (gc_name_ == &::google::protobuf::internal::kEmptyString) {
+    gc_name_ = new ::std::string;
+  }
+  return gc_name_;
+}
+inline ::std::string* CMsgDPPartnerMicroTxns::release_gc_name() {
+  clear_has_gc_name();
+  if (gc_name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = gc_name_;
+    gc_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void CMsgDPPartnerMicroTxns::set_allocated_gc_name(::std::string* gc_name) {
+  if (gc_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete gc_name_;
+  }
+  if (gc_name) {
+    set_has_gc_name();
+    gc_name_ = gc_name;
+  } else {
+    clear_has_gc_name();
+    gc_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional .CMsgDPPartnerMicroTxns.PartnerInfo partner = 3;
+inline bool CMsgDPPartnerMicroTxns::has_partner() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void CMsgDPPartnerMicroTxns::set_has_partner() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void CMsgDPPartnerMicroTxns::clear_has_partner() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void CMsgDPPartnerMicroTxns::clear_partner() {
+  if (partner_ != NULL) partner_->::CMsgDPPartnerMicroTxns_PartnerInfo::Clear();
+  clear_has_partner();
+}
+inline const ::CMsgDPPartnerMicroTxns_PartnerInfo& CMsgDPPartnerMicroTxns::partner() const {
+  return partner_ != NULL ? *partner_ : *default_instance_->partner_;
+}
+inline ::CMsgDPPartnerMicroTxns_PartnerInfo* CMsgDPPartnerMicroTxns::mutable_partner() {
+  set_has_partner();
+  if (partner_ == NULL) partner_ = new ::CMsgDPPartnerMicroTxns_PartnerInfo;
+  return partner_;
+}
+inline ::CMsgDPPartnerMicroTxns_PartnerInfo* CMsgDPPartnerMicroTxns::release_partner() {
+  clear_has_partner();
+  ::CMsgDPPartnerMicroTxns_PartnerInfo* temp = partner_;
+  partner_ = NULL;
+  return temp;
+}
+inline void CMsgDPPartnerMicroTxns::set_allocated_partner(::CMsgDPPartnerMicroTxns_PartnerInfo* partner) {
+  delete partner_;
+  partner_ = partner;
+  if (partner) {
+    set_has_partner();
+  } else {
+    clear_has_partner();
+  }
+}
+
+// repeated .CMsgDPPartnerMicroTxns.PartnerMicroTxn transactions = 4;
+inline int CMsgDPPartnerMicroTxns::transactions_size() const {
+  return transactions_.size();
+}
+inline void CMsgDPPartnerMicroTxns::clear_transactions() {
+  transactions_.Clear();
+}
+inline const ::CMsgDPPartnerMicroTxns_PartnerMicroTxn& CMsgDPPartnerMicroTxns::transactions(int index) const {
+  return transactions_.Get(index);
+}
+inline ::CMsgDPPartnerMicroTxns_PartnerMicroTxn* CMsgDPPartnerMicroTxns::mutable_transactions(int index) {
+  return transactions_.Mutable(index);
+}
+inline ::CMsgDPPartnerMicroTxns_PartnerMicroTxn* CMsgDPPartnerMicroTxns::add_transactions() {
+  return transactions_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::CMsgDPPartnerMicroTxns_PartnerMicroTxn >&
+CMsgDPPartnerMicroTxns::transactions() const {
+  return transactions_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::CMsgDPPartnerMicroTxns_PartnerMicroTxn >*
+CMsgDPPartnerMicroTxns::mutable_transactions() {
+  return &transactions_;
+}
+
+// -------------------------------------------------------------------
+
+// CMsgDPPartnerMicroTxnsResponse
+
+// optional uint32 eresult = 1 [default = 2];
+inline bool CMsgDPPartnerMicroTxnsResponse::has_eresult() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void CMsgDPPartnerMicroTxnsResponse::set_has_eresult() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void CMsgDPPartnerMicroTxnsResponse::clear_has_eresult() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void CMsgDPPartnerMicroTxnsResponse::clear_eresult() {
+  eresult_ = 2u;
+  clear_has_eresult();
+}
+inline ::google::protobuf::uint32 CMsgDPPartnerMicroTxnsResponse::eresult() const {
+  return eresult_;
+}
+inline void CMsgDPPartnerMicroTxnsResponse::set_eresult(::google::protobuf::uint32 value) {
+  set_has_eresult();
+  eresult_ = value;
+}
+
+// optional .CMsgDPPartnerMicroTxnsResponse.EErrorCode eerrorcode = 2 [default = k_MsgValid];
+inline bool CMsgDPPartnerMicroTxnsResponse::has_eerrorcode() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void CMsgDPPartnerMicroTxnsResponse::set_has_eerrorcode() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void CMsgDPPartnerMicroTxnsResponse::clear_has_eerrorcode() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void CMsgDPPartnerMicroTxnsResponse::clear_eerrorcode() {
+  eerrorcode_ = 0;
+  clear_has_eerrorcode();
+}
+inline ::CMsgDPPartnerMicroTxnsResponse_EErrorCode CMsgDPPartnerMicroTxnsResponse::eerrorcode() const {
+  return static_cast< ::CMsgDPPartnerMicroTxnsResponse_EErrorCode >(eerrorcode_);
+}
+inline void CMsgDPPartnerMicroTxnsResponse::set_eerrorcode(::CMsgDPPartnerMicroTxnsResponse_EErrorCode value) {
+  assert(::CMsgDPPartnerMicroTxnsResponse_EErrorCode_IsValid(value));
+  set_has_eerrorcode();
+  eerrorcode_ = value;
+}
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -17051,6 +18903,10 @@ inline const EnumDescriptor* GetEnumDescriptor< ::CMsgGCRoutingInfo_RoutingMetho
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::CMsgGCMsgSetOptions_Option>() {
   return ::CMsgGCMsgSetOptions_Option_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::CMsgDPPartnerMicroTxnsResponse_EErrorCode>() {
+  return ::CMsgDPPartnerMicroTxnsResponse_EErrorCode_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::GCProtoBufMsgSrc>() {

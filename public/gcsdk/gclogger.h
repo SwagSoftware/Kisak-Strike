@@ -9,6 +9,11 @@
 #define GCLOGGER_H
 
 
+#ifdef GC
+	#include "gc_convar.h"
+#endif
+
+
 namespace GCSDK
 {
 	//a class that defines an output group for messages that can be output to the console or to a log. This allows for individual filtering of different groups to different
@@ -54,6 +59,7 @@ namespace GCSDK
 		void	Internal_Msg( PRINTF_FORMAT_STRING const char *pchMsg, ... ) const FMTFUNCTION( 2, 3 );
 		void	Internal_Verbose( PRINTF_FORMAT_STRING const char *pchMsg, ... ) const FMTFUNCTION( 2, 3 );
 		void	Internal_Emit( EMsgLevel eLvl, PRINTF_FORMAT_STRING const char *pchMsg, ... ) const FMTFUNCTION( 3, 4 );
+		void	Internal_BoldMsg( PRINTF_FORMAT_STRING const char *pchMsg, ... ) const FMTFUNCTION( 2, 3 );
 
 		//same as the above, but takes a var args structure
 		void	AssertErrorV( PRINTF_FORMAT_STRING const char *pchMsg, va_list vaArgs ) const;		
@@ -62,6 +68,7 @@ namespace GCSDK
 		void	MsgV( PRINTF_FORMAT_STRING const char *pchMsg, va_list vaArgs ) const;		
 		void	VerboseV( PRINTF_FORMAT_STRING const char *pchMsg, va_list vaArgs ) const;
 		void	EmitV( EMsgLevel eLvl, PRINTF_FORMAT_STRING const char *pchMsg, va_list vaArgs ) const;
+		void	BoldMsgV( PRINTF_FORMAT_STRING const char *pchMsg, va_list vaArgs ) const;		
 
 	private:
 		//the display name of this group, must be a static string
@@ -82,22 +89,7 @@ namespace GCSDK
 	#define EG_MSG( EmitGroup, ... )			do{ if( EmitGroup.GetConsoleLevel() >= CGCEmitGroup::kMsg_Msg || EmitGroup.GetLogLevel() >= CGCEmitGroup::kMsg_Msg ) EmitGroup.Internal_Msg( __VA_ARGS__ ); } while(0)
 	#define EG_VERBOSE( EmitGroup, ... )		do{ if( EmitGroup.GetConsoleLevel() >= CGCEmitGroup::kMsg_Verbose || EmitGroup.GetLogLevel() >= CGCEmitGroup::kMsg_Verbose ) EmitGroup.Internal_Verbose( __VA_ARGS__ ); } while(0)
 	#define EG_EMIT( EmitGroup, eLvl, ... )		do{ if( EmitGroup.GetConsoleLevel() >= eLvl || EmitGroup.GetLogLevel() >= eLvl ) EmitGroup.Internal_Emit( eLvl, __VA_ARGS__ ); } while(0)
-
-	#ifdef GC
-
-	// Return true if we have extra logging enabled for the specified Steam ID.
-	extern bool BDetailedLoggingEnabledForAnySteamID();
-	extern bool BDetailedLoggingEnabledForSteamID( CSteamID steamID );
-	extern bool BDetailedLoggingEnabledForAccountID( AccountID_t nAccountID );
-
-	// Emit info about a particular steam ID.  This will emit/log if the level is enabled for
-	// the specified spew group, *or* if debugging is enabled for that particular SteamID.
-	#define EG_MSG_STEAMID( EmitGroup, steamID, ... )			do{ if( EmitGroup.GetConsoleLevel() >= CGCEmitGroup::kMsg_Msg || EmitGroup.GetLogLevel() >= CGCEmitGroup::kMsg_Msg || BDetailedLoggingEnabledForSteamID( steamID ) ) EmitGroup.Internal_Msg( __VA_ARGS__ ); } while(0)
-	#define EG_VERBOSE_STEAMID( EmitGroup, steamID, ... )		do{ if( EmitGroup.GetConsoleLevel() >= CGCEmitGroup::kMsg_Verbose || EmitGroup.GetLogLevel() >= CGCEmitGroup::kMsg_Verbose || BDetailedLoggingEnabledForSteamID( steamID ) ) EmitGroup.Internal_Verbose( __VA_ARGS__ ); } while(0)
-	#define EG_MSG_ACCOUNTID( EmitGroup, accountID, ... )			do{ if( EmitGroup.GetConsoleLevel() >= CGCEmitGroup::kMsg_Msg || EmitGroup.GetLogLevel() >= CGCEmitGroup::kMsg_Msg || BDetailedLoggingEnabledForAccountID( accountID ) ) EmitGroup.Internal_Msg( __VA_ARGS__ ); } while(0)
-	#define EG_VERBOSE_ACCOUNTID( EmitGroup, accountID, ... )		do{ if( EmitGroup.GetConsoleLevel() >= CGCEmitGroup::kMsg_Verbose || EmitGroup.GetLogLevel() >= CGCEmitGroup::kMsg_Verbose || BDetailedLoggingEnabledForAccountID( accountID ) ) EmitGroup.Internal_Verbose( __VA_ARGS__ ); } while(0)
-
-	#endif
+	#define EG_BOLDMSG( EmitGroup, ... )		do{ if( EmitGroup.GetConsoleLevel() >= CGCEmitGroup::kMsg_Error || EmitGroup.GetLogLevel() >= CGCEmitGroup::kMsg_Error ) EmitGroup.Internal_BoldMsg( __VA_ARGS__ ); } while(0)
 
 	//----------------------------------------
 	//Legacy interface support - Where possible, use the CGCEmitGroup above for more robust functionality

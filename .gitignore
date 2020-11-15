@@ -38,6 +38,8 @@ scaleformui/cmake-build-*/*
 #Ignore rebuilt static libs
 *.a
 *.a_VALVE
+lib/public/linux64/stWJvlNz
+lib/public/linux64/*.o
 
 #Ignore crypto++ built files
 external/crypto++-5.61/*.o
@@ -49,3 +51,10 @@ csgo_partner.mak
 #Thirdparty
 /thirdparty/RmlUi/build/
 /thirdparty/RmlUi/Samples/
+
+#protobuf generated files
+game/client/generated_proto/*
+game/server/generated_proto/*
+engine/generated_proto/*
+engine_ds/generated_proto/*
+gcsdk/generated_proto/*

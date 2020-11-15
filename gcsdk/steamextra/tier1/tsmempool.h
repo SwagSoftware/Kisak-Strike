@@ -1,4 +1,4 @@
-//=========== (C) Copyright 2000 Valve, L.L.C. All rights reserved. ===========
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // The copyright to the contents herein is the property of Valve, L.L.C.
 // The contents may be used and/or copied only with the written permission of
@@ -22,6 +22,11 @@
 #ifdef _WIN32
 #pragma once
 #endif
+
+#include <cstddef>
+#include <tier0/threadtools.h>
+#include <tier1/utlvector.h>
+#include <gcsdk/gcsteamdefines.h>
 
 #undef new
 
@@ -58,7 +63,7 @@ public:
 
 	static void * operator new( size_t size )
 	{
-		CThreadSafeMemoryPool *pNode = (CThreadSafeMemoryPool *)MemAlloc_AllocAlignedFileLine( size, 8, __FILE__, __LINE__ 
+		CThreadSafeMemoryPool *pNode = (CThreadSafeMemoryPool *)MemAlloc_AllocAlignedFileLine( size, 8, __FILE__, __LINE__
 #ifdef STEAM
 			, true // new operator
 #endif
@@ -93,7 +98,7 @@ public:
 #endif
 			);
 	}
-		
+
 private:
 	// These ain't gonna work
 	static void * operator new[] ( size_t size );

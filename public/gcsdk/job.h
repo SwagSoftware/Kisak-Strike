@@ -1,4 +1,4 @@
-//========= Copyright 1996-2004, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -24,10 +24,31 @@ class CLock;
 class CJob;
 class IMsgNetPacket;
 
-// job creation function responsible for allocating the job of the specific type
+//-----------------------------------------------------------------------------
+// Purpose: Use these macros to declare blocks where it is unsafe to yield.
+//	The job will assert if it pauses within the block
+//-----------------------------------------------------------------------------
+#define DO_NOT_YIELD_THIS_SCOPE()	GCSDK::CDoNotYieldScope doNotYieldScope_##line( FILE_AND_LINE )
+#define BEGIN_DO_NOT_YIELD()		GJobCur().PushDoNotYield( FILE_AND_LINE )
+#define END_DO_NOT_YIELD()			GJobCur().PopDoNotYield()
+
+class CDoNotYieldScope
+{
+public:
+	CDoNotYieldScope( const char *pchLocation );
+	~CDoNotYieldScope();
+private:
+	// Disallow these constructors and operators
+	CDoNotYieldScope();
+	CDoNotYieldScope( const CDoNotYieldScope &that );
+	CDoNotYieldScope &operator=( const CDoNotYieldScope &that );
+};
+
+//-----------------------------------------------------------------------------
+
+// job creation function
 typedef CJob *(*JobCreationFunc_t)( void *pvServerParent, void * pvStartParam );
-// job routing function, which allows for controlling message routing through the system. The GCs that should have the message sent to it should be added to the vector. It is fine to add the actual self GC
-typedef void (*JobRoutingFunc_t)( CUtlVector< uint32 >& vecGCsToSendTo, IMsgNetPacket *pNetPacket );
+
 
 //-----------------------------------------------------------------------------
 // Purpose: static job information
@@ -35,12 +56,10 @@ typedef void (*JobRoutingFunc_t)( CUtlVector< uint32 >& vecGCsToSendTo, IMsgNetP
 //-----------------------------------------------------------------------------
 struct JobType_t
 {
-	const char *m_pchName;              // name of this type of job
-	MsgType_t m_eCreationMsg;           // network message that creates this job
-	uint32 m_nValidContexts;			// a bit field indicating which contexts this message can be called from (i.e. from a server, or from a client, etc)
-	JobCreationFunc_t m_pJobFactory;	// virtual constructor
-	JobRoutingFunc_t m_pJobRouter;		// routing function for this job
-	const GCConVar*	m_pControlCV;		// optional console variable that can be used to disable this message
+        const char *m_pchName;               // name of this type of job
+        MsgType_t m_eCreationMsg;                     // network message that creates this job
+		EServerType m_eServerType;			// the server type that responds to this message
+        JobCreationFunc_t m_pJobFactory; // virtual constructor
 };
 
 
@@ -72,19 +91,22 @@ struct JobMsgInfo_t
 	MsgType_t m_eMsg;
 	JobID_t m_JobIDSource;
 	JobID_t m_JobIDTarget;
+	EServerType m_eServerType; 
 
 	JobMsgInfo_t()
 	{
 		m_eMsg = (MsgType_t)0;
 		m_JobIDSource = k_GIDNil;
 		m_JobIDTarget = k_GIDNil;
+		m_eServerType = k_EServerTypeInvalid;
 	}
 
-	JobMsgInfo_t( MsgType_t eMsg, JobID_t jobIDSource, JobID_t jobIDTarget )
+	JobMsgInfo_t( MsgType_t eMsg, JobID_t jobIDSource, JobID_t jobIDTarget, EServerType eServerType )
 	{
 		m_eMsg = eMsg;
 		m_JobIDSource = jobIDSource;
 		m_JobIDTarget = jobIDTarget;
+		m_eServerType = eServerType;
 	}
 };
 
@@ -108,20 +130,19 @@ public:
 	virtual ~CJob();
 
 	// starts the job, storing off the network msg and calling it's Run() function
-	void StartJobFromNetworkMsg( IMsgNetPacket *pNetPacket, const JobID_t &gidJobIDSrc, uint32 nContextMask );
+	void StartJobFromNetworkMsg( IMsgNetPacket *pNetPacket, const JobID_t &gidJobIDSrc );
 
 	// accessors
 	JobID_t GetJobID() const { return m_JobID; }
 
-	// called to start a job. The default behavior of starting a job is to start it scheduled (i.e. delayed). This is largely deprecated, and the more explicit versions
-	// below should be used instead
+	// start job immediately
+	// mostly for CMD jobs, which should immediately Yield() once
+	// so that they don't do their work until the enclosing JobMbr.Run() 
+	// is called
 	void StartJob( void * pvStartParam );
-	// schedules the job for execution, but does not interrupt the currently running job. Effectively starts the job on the yielding list as if it had immediately yielded
+	// schedules the job for execution, but does not interrup the currently running job. Effectively starts the job on the yielding list as if it had immediately yielded
 	// although is more efficient than actually doing so
 	void StartJobDelayed( void * pvStartParam );
-	// starts a job immediately, interrupting the current job if one is already running. This should only be used in special cases, and in a lot of ways should be considered
-	// yielding in that another job can run and perform modifications, although the caller will receive attention back the first time that the inner job itself yields
-	void StartJobImmediate( void * pvStartParam );
 
 	// string name of the job
 	const char *GetName() const;
@@ -139,9 +160,8 @@ public:
 	bool _BYieldingAcquireLock( CLock *pLock, const char *filename = "unknown", int line = 0 );
 	bool _BAcquireLockImmediate( CLock *pLock, const char *filename = "unknown", int line = 0 );
 	void _ReleaseLock( CLock *pLock, bool bForce = false, const char *filename = "unknown", int line = 0 );
+	bool BHoldsAnyLocks() const { return m_vecLocks.Count() > 0; }
 	void ReleaseLocks();
-	bool BJobHoldsLock( uint16 nType, uint64 nSubType ) const;
-	bool BJobHoldsLock( const CLock* pLock ) const;
 
 	/// If we hold any locks, spew about them and release them.
 	/// This is useful for long running jobs, to make sure they don't leak
@@ -161,19 +181,14 @@ public:
 	bool BYieldingWaitForMsg( CGCMsgBase *pMsg, MsgType_t eMsg );
 	bool BYieldingWaitForMsg( CProtoBufMsgBase *pMsg, MsgType_t eMsg );
 
-	// waits for another job(s) to complete
-	bool BYieldingWaitForJob( JobID_t jobToWaitFor );
-	bool BYieldingWaitForJobs( const CUtlVector<JobID_t> &vecJobsToWaitFor );
-
 #ifdef GC
-	void SOVALIDATE_SetSteamID( const CSteamID steamID )	{ m_SOCacheValidSteamID = steamID; }
-	CSteamID SOVALIDATE_GetSteamID() const					{ return m_SOCacheValidSteamID; }
-	void VALIDATE_SetJobAccessType( uint32 nAccess)			{ m_nGCJobAccessType = nAccess; }
-	uint32 VALIDATE_GetJobAccessType() const				{ return m_nGCJobAccessType; }
 	bool BYieldingWaitForMsg( CGCMsgBase *pMsg, MsgType_t eMsg, const CSteamID &expectedID );
 	bool BYieldingWaitForMsg( CProtoBufMsgBase *pMsg, MsgType_t eMsg, const CSteamID &expectedID );
 	bool BYieldingRunQuery( CGCSQLQueryGroup *pQueryGroup, ESchemaCatalog eSchemaCatalog );
 #endif
+
+	bool BYieldingWaitTimeWithLimit( uint32 cMicrosecondsToSleep, CJobTime &stimeStarted, int64 nMicroSecLimit );
+	bool BYieldingWaitTimeWithLimitRealTime( uint32 cMicrosecondsToSleep, int nSecLimit );
 
 	void RecordWaitTimeout() { m_flags.m_bits.m_bWaitTimeout = true; }
 
@@ -190,6 +205,16 @@ public:
 
 	// calls a local function in a thread, and yields until it's done
 	bool BYieldingWaitForThreadFunc( CFunctor *jobFunctor );
+
+	// Used by the DO_NOT_YIELD() macros
+	int32 GetDoNotYieldDepth() const;
+	void PushDoNotYield( const char *pchFileAndLine );
+	void PopDoNotYield();
+
+#ifdef DBGFLAG_VALIDATE
+	virtual void Validate( CValidator &validator, const char *pchName );		// Validate our internal structures
+	static void ValidateStatics( CValidator &validator, const char *pchName );
+#endif
 
 	// creates a job
 	template <typename JOB_TYPE, typename PARAM_TYPE>
@@ -213,15 +238,19 @@ public:
 	// (creating a minidump).  Useful for inspecting stuck jobs
 	void GenerateAssert( const char *pchMsg = NULL );
 
-	//called to determine if the requested context is valid. If multiple contexts are provided, this will return true only if ALL the contexts are valid
-	bool BHasContext( uint32 nContext ) const			{ return ( m_nContextMask & nContext ) == nContext; }
-	uint32 GetContexts() const							{ return m_nContextMask; }
+	/// Return true if we tried to waited on a message of this type,
+	/// and failed to receive it.  (If so, then this means we could
+	/// conceivably still receive a reply of that type at any moment.)
+	bool BHasFailedToReceivedMsgType( MsgType_t m ) const;
 
-	//called to control the default behavior for starting jobs, immediate, or delayed
-	static void SetStartDefaultJobsDelayed( bool bStartJobsDelayed )		{ s_bStartDefaultJobsDelayed = bStartJobsDelayed; }
+	/// Mark that we awaited a message of the specified type, but timed out
+	void MarkFailedToReceivedMsgType( MsgType_t m );
 
-	// accessor to get access to the JobMgr from the server we belong to
-	CJobMgr &GetJobMgr();
+	/// Clear flag that we timed out waiting on a message of the specified type.
+	/// This is used to allow you to wait ont he same message again, even if
+	/// you know the reply might be a late reply.  It's up to you to deal with
+	/// mismatched replies!
+	void ClearFailedToReceivedMsgType( MsgType_t m );
 
 protected:
 	// main job implementation, in the coroutine.  Every job must implement at least one of these methods.
@@ -235,6 +264,8 @@ protected:
 	void Heartbeat();
 
 
+	// accessor to get access to the JobMgr from the server we belong to
+	CJobMgr &GetJobMgr();
 	uint32 m_bRunFromMsg:1,
 			m_bWorkItemCanceled:1,			// true if the work item we were waiting on was canceled
 			m_bIsTest:1,
@@ -251,7 +282,7 @@ private:
 	void Debug();
 
 	// pauses the current job - can only be called from inside a coroutine
-	void Pause( EJobPauseReason eReason, const char *pszResourceName );
+	void Pause( EJobPauseReason eReason );
 
 	static void BRunProxy( void *pvThis );
 
@@ -277,14 +308,12 @@ private:
 	int m_cLocksAttempted;
 	int m_cLocksWaitedFor;
 	EJobPauseReason m_ePauseReason;
-	const char *m_pszPauseResourceName;
 	MsgType_t	m_unWaitMsgType;
 	CJobTime m_STimeStarted;				// time (frame) at which this job started
 	CJobTime m_STimeSwitched;				// time (frame) at which we were last paused or continued
 	CJobTime m_STimeNextHeartbeat;		// Time at which next heartbeat should be performed
 	CFastTimer m_FastTimerDelta;		// How much time we've been running for without yielding
 	CCycleCount m_cyclecountTotal;		// Total runtime
-	uint32		m_nContextMask;			// The context that this job was created in. Typically only used for message jobs to indicate the initiator of the message
 	CJob *m_pJobPrev;					// the job that launched us
 
 	// lock manipulation
@@ -300,21 +329,23 @@ private:
 	CJob *m_pJobToNotifyOnLockRelease;	// other job that wants this lock
 	CWorkItem *m_pWaitingOnWorkItem;	// set if job is waiting for this work item
 
-	#ifdef GC
-		//context flags indicating what this job can access. Temporary and only for validating access on the GC
-		uint32		m_nGCJobAccessType;
-		//the steam ID that we are stating is safe to access. This is temporary to validate jobs during the split of the GC
-		CSteamID	m_SOCacheValidSteamID;
-	#endif
-
 	CJobMgr &m_JobMgr;					// our job manager
 	CUtlVectorFixedGrowable< IMsgNetPacket *, 1 > m_vecNetPackets;			// list of tcp packets currently held by this job (ie, needing release on job exit)
+
+	/// List of message types that we have waited for, but timed out.
+	/// once this happens, we currently do not have a good mechanism
+	/// to recover gracefully.  But we at least can detect the situation
+	/// and avoid getting totally hosed or processing the wrong reply
+	CUtlVector<MsgType_t>	m_vecMsgTypesFailedToReceive;
 
 	// pointer to our own static job info
 	struct JobType_t const *m_pJobType;
 
 	// Name of the job for when it's not registered
 	const char *m_pchJobName;
+
+	// A stack of do not yield guards so we can print the right warning if they're nested
+	CUtlLinkedList<const char *> m_stackDoNotYieldGuards;
 
 	// setting the job info
 	friend void Job_SetJobType( CJob &job, const JobType_t *pJobType );
@@ -323,8 +354,6 @@ private:
 
 	// used to store the memory allocation stack
 	CUtlMemory< unsigned char > m_memAllocStack;
-
-	static bool	s_bStartDefaultJobsDelayed;
 };
 
 
@@ -342,28 +371,21 @@ inline CJob &GJobCur() { Assert( g_pJobCur != NULL ); return *g_pJobCur; }
 // Purpose: simple locking class
 //			add this object to any classes you want jobs to be able to lock
 //-----------------------------------------------------------------------------
-#if defined( GC )
-#include "tier0/memdbgoff.h"
-#endif
-
 class CLock
 {
-	#if defined( GC )
-		DECLARE_CLASS_MEMPOOL( CLock );
-	#endif
 public:
 	CLock( );
 	~CLock();
 	
-	bool BIsLocked() const			{ return m_pJob != NULL; }
-	CJob *GetJobLocking() 			{ return m_pJob; }
+	bool BIsLocked()		{ return m_pJob != NULL; }
+	CJob *GetJobLocking()	{ return m_pJob; }
 	CJob *GetJobWaitingQueueHead()	{ return m_pJobToNotifyOnLockRelease; }
 	CJob *GetJobWaitingQueueTail()	{ return m_pJobWaitingQueueTail; }
 	void AddToWaitingQueue( CJob *pJob );
-	
 	const char *GetName() const;
 	void SetName( const char *pchName );
-	
+	void SetName( const char *pchPrefix, uint64 ulID );
+	void SetName( const CSteamID &steamID );
 	int16 GetLockType() const { return m_nsLockType; }
 	void SetLockType( int16 nsLockType ) { m_nsLockType = nsLockType; }
 	uint64 GetLockSubType() const { return m_unLockSubType; }
@@ -378,79 +400,64 @@ public:
 	void Dump( const char *pszPrefix = "\t\t", int nPrintMax = 1, bool bPrintWaiting = true ) const;
 
 private:
+	enum ENameType
+	{
+		k_ENameTypeNone = 0,
+		k_ENameTypeSteamID = 1,
+		k_ENameTypeConstStr = 2,
+		k_ENameTypeConcat = 3,
+	};
+
 	CJob *m_pJob;						// the job that's currently locking us
 	CJob *m_pJobToNotifyOnLockRelease;	// Pointer to the first job waiting on us
 	CJob *m_pJobWaitingQueueTail;		// Pointer to the last job waiting on us
-	
+	int16 m_nsLockType;					// Lock priority for safely waiting on multiple locks
+	int16 m_nsNameType;					// Enum that controls how this lock is named
+
+	uint64 m_ulID;						// ID part of the lock's name
 	const char *m_pchConstStr;			// Prefix part of the lock's name
+	mutable CUtlString m_strName;		// Cached name
 
 	int32 m_nRefCount;					// # of times locked
 	int32 m_nWaitingCount;				// Count of jobs waiting on the lock
 	CJobTime m_sTimeAcquired;			// Time the lock was last locked
 	uint64 m_unLockSubType;
 
-	const char *m_pFilename;			// Filename of the source file who acquired this lock
+	const char *m_pFilename;			// Filename of the source file who aquired this lock
 	int m_line;							// Line number of the filename
-	int16 m_nsLockType;					// Lock priority for safely waiting on multiple locks
 
 	friend class CJob;
 };
 
-#if defined( GC )
-#include "tier0/memdbgon.h"
-#endif
+//-----------------------------------------------------------------------------
+// Purpose: automatic locking class
+//-----------------------------------------------------------------------------
 
-
-//-----------------------------------------------------------------------------------------
-// An auto lock class which handles auto lifetime management of a lock
-//-----------------------------------------------------------------------------------------
-class CGCAutoLock
+class CAutoCLock
 {
 public:
-	CGCAutoLock() : m_pLock( NULL )			{}
-	CGCAutoLock( const CGCAutoLock& rhs )	{ Acquire( rhs.m_pLock ); }
-	~CGCAutoLock()							{ Release(); }
+	CAutoCLock( CLock &refLock )
+		: m_pLock ( &refLock)
+	{
+		DbgVerify( GJobCur().BYieldingAcquireLock( m_pLock ) );
+	}
 
-	//determines if this lock is currently locked or not
-	bool IsLocked() const					{ return ( m_pLock != NULL ); }
+	// explicitly unlock before destruction
+	void Unlock()
+	{
+		if ( m_pLock != NULL )
+			GJobCur().ReleaseLock( m_pLock );
+		m_pLock = NULL;
+	}
 
-	//swaps two locks (faster than doing reassignments due to not needing all the reference counting)
-	void Swap( CGCAutoLock& rhs )				{ std::swap( m_pLock, rhs.m_pLock ); }
-
-	CGCAutoLock& operator=( const CGCAutoLock& rhs );
-
-	//called to acquire a lock (the odd naming convention is to match the macro format to automatically provide the file and line of the call site)
-	bool _BYieldingAcquireLock( CLock& lock, const char* pszFile, uint32 nLine );
-
-	//called to release the current lock
-	void Release();
+	~CAutoCLock( )
+	{
+		Unlock();
+	}
 
 private:
-	void Acquire( CLock* pLock );
-	CLock*	m_pLock;
-};
-
-
-//-----------------------------------------------------------------------------
-// Purpose: Use these macros to declare blocks where it is unsafe to yield.
-//	The job will assert if it pauses within the block
-//-----------------------------------------------------------------------------
-#define DO_NOT_YIELD_THIS_SCOPE()	CDoNotYieldScopeImpl doNotYieldScope_##line( FILE_AND_LINE )
-#define BEGIN_DO_NOT_YIELD()		CDoNotYieldScopeImpl::InternalPush( FILE_AND_LINE )
-#define END_DO_NOT_YIELD()			CDoNotYieldScopeImpl::InternalPop()
-
-class CDoNotYieldScopeImpl
-{
-public:
-	explicit CDoNotYieldScopeImpl( const char *pchLocation ) { InternalPush( pchLocation ); }
-	~CDoNotYieldScopeImpl() { InternalPop(); }
-
-	static void InternalPush( const char *pchLocation );
-	static void InternalPop();
-private:
-	// Disallow these constructors and operators
-	CDoNotYieldScopeImpl( const CDoNotYieldScopeImpl &that );
-	CDoNotYieldScopeImpl &operator=( const CDoNotYieldScopeImpl &that );
+	CLock *m_pLock;
+	CJob *m_pJob;
 };
 
 } // namespace GCSDK

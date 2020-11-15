@@ -1,4 +1,4 @@
-//=========== (C) Copyright 2000 Valve, L.L.C. All rights reserved. ===========
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // The copyright to the contents herein is the property of Valve, L.L.C.
 // The contents may be used and/or copied only with the written permission of
@@ -7,11 +7,14 @@
 //
 // Purpose: 
 //=============================================================================
+#include "tsmempool.h"
 
 
 //#include "pch_vstdlib.h"
 
+#ifdef _WIN32
 #include "stdafx.h"
+#endif
 #include "tier0/tslist.h"
 #include "tier0/t0constants.h"
 
@@ -232,3 +235,24 @@ int CThreadSafeMemoryPool::Count()
 {
 	return m_cBlocksInUse;
 }
+
+
+#ifdef DBGFLAG_VALIDATE
+//-----------------------------------------------------------------------------
+// Purpose: Run a global validation pass on all of our data structures and memory
+//			allocations.
+// Input:	validator -		Our global validator object
+//			pchName -		Our name (typically a member var in our container)
+//-----------------------------------------------------------------------------
+void CThreadSafeMemoryPool::Validate( CValidator &validator, const char *pchName )
+{
+	AUTO_LOCK_SPIN_WRITE( m_threadRWLock );
+	VALIDATE_SCOPE();
+	FOR_EACH_VEC( m_vecBlockSets, i )
+	{
+		validator.ClaimMemory( MemAlloc_Unalign( m_vecBlockSets[i].m_pubBlockSet ) );
+	}
+	ValidateObj( m_vecBlockSets );
+	validator.ClaimMemory( MemAlloc_Unalign( m_ptslistFreeBlocks ) );
+}
+#endif // DBGFLAG_VALIDATE

@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2004, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: A thread pool implementation.  You give it CWorkItems,
 // it processes them asynchronously, and hands them back to you when they've 
@@ -25,7 +25,7 @@
 
 // forward declaration for CTSQueue which we can't statically allocate as our member
 // because of alignment issues on Win64
-template <class T, bool bTestOptimizer >
+template <class T, bool bTestOptimizer>
 class CTSQueue;
 
 namespace GCSDK {
@@ -113,6 +113,10 @@ public:
 	virtual bool ThreadProcess( CWorkThread *pThread ) = 0; // called by the worker thread
 	virtual bool DispatchCompletedWorkItem( CJobMgr *jobMgr ); // called by main loop after item completed
 
+#ifdef DBGFLAG_VALIDATE
+	virtual void Validate( CValidator &validator, const char *pchName ) {}		// Validate our internal structures
+#endif
+
 protected:
 	// note: destructor is private.  This is a ref-counted object, private destructor ensures callers can't accidentally delete
 	// directly, or declare on stack
@@ -161,7 +165,15 @@ protected:
 	virtual void OnStart() { }
 	virtual void OnExit() { }
 
-	friend class CWorkThreadPool;
+#ifdef DBGFLAG_VALIDATE
+public:
+	virtual void Validate( CValidator &validator, const char *pchName )	
+	{
+		VALIDATE_SCOPE();
+	};
+#endif // DBGFLAG_VALIDATE
+
+friend class CWorkThreadPool;
 };
 
 
@@ -286,7 +298,7 @@ public:
 	int CountRetries() const { return m_cRetries; }
 	int CountCompletedFailed() const { return m_cFailures; }
 
-	bool BDispatchCompletedWorkItems( CLimitTimer &limitTimer, CJobMgr *pJobMgr );
+	bool BDispatchCompletedWorkItems( const CLimitTimer &limitTimer, CJobMgr *pJobMgr );
 	bool BExiting() const { return m_bExiting; }
 
 	int GetWorkerCount() const { return m_WorkThreads.Count(); }
@@ -361,6 +373,11 @@ protected:
 	CStat m_StatWaitTime;
 #endif
 	CLimitTimer m_LimitTimerCreateNewThreads;
+
+#ifdef DBGFLAG_VALIDATE
+public:
+	void Validate( CValidator &validator, const char *pchName );
+#endif
 };
 
 } // namespace GCSDK

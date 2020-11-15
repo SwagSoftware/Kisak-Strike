@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2004, Valve LLC, All rights reserved. ============
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Sets of columns in queries
 //
@@ -22,14 +22,23 @@ class CColumnSet
 {
 public:
 	CColumnSet( const CRecordInfo *pRecordInfo );
-	CColumnSet( const CRecordInfo *pRecordInfo, int nColumn );
 	CColumnSet( const CColumnSet & rhs );
 	CColumnSet & operator=( const CColumnSet & rhs );
 	const CColumnSet operator+( const CColumnSet & rhs ) const;
 	CColumnSet & operator+=( const CColumnSet & rhs );
 
-	bool BAddColumn( int nColumn );
-	bool BRemoveColumn( int nColumn );
+	//NOTE: These do not ensure uniqueness, the CSET_ macros below should be used instead as they will compile time enforce uniqueness
+	CColumnSet( const CRecordInfo *pRecordInfo, int col1 );
+	CColumnSet( const CRecordInfo *pRecordInfo, int col1, int col2 );
+	CColumnSet( const CRecordInfo *pRecordInfo, int col1, int col2, int col3 );
+	CColumnSet( const CRecordInfo *pRecordInfo, int col1, int col2, int col3, int col4 );
+	CColumnSet( const CRecordInfo *pRecordInfo, int col1, int col2, int col3, int col4, int col5 );
+	CColumnSet( const CRecordInfo *pRecordInfo, int col1, int col2, int col3, int col4, int col5, int col6 );
+	CColumnSet( const CRecordInfo *pRecordInfo, int col1, int col2, int col3, int col4, int col5, int col6, int col7 );
+	CColumnSet( const CRecordInfo *pRecordInfo, int col1, int col2, int col3, int col4, int col5, int col6, int col7, int col8 );
+
+	void BAddColumn( int nColumn );
+	void BRemoveColumn( int nColumn );
 	bool IsSet( int nColumn ) const;
 	bool IsEmpty() const { return m_vecColumns.Count() ==  0;}
 
@@ -39,16 +48,14 @@ public:
 
 	const CRecordInfo *GetRecordInfo() const { return m_pRecordInfo; }
 
-	// putting column sets in messages
-	void AddToMessage( CGCMsgBase *pMsg ) const;
-	bool BParseFromMessage( CGCMsgBase *pMsg );
-
 	void MakeEmpty();
 	void MakeFull();
 	void MakeInsertable();
 	void MakeNoninsertable();
 	void MakePrimaryKey();
 	void MakeInverse( const CColumnSet & columnSet );
+	//determines if the current column set has all fields set. Useful for detection of new columns being added to the schema
+	bool BAreAllFieldsSet() const;
 
 	template< typename TSchClass >
 	static CColumnSet Empty();
@@ -69,6 +76,27 @@ public:
 private:
 	CUtlVector<int> m_vecColumns;
 	const CRecordInfo *m_pRecordInfo;
+};
+
+//this is a utility class which can at compile time ensure that all of the provided column values are unique and will generate an error if that doesn't
+//hold true. The default values just need to be unique and greater than what is expected for real columns
+template < int n1 = 10001, int n2 = 10002, int n3 = 10003, int n4 = 10004, int n5 = 10005, int n6 = 10006, int n7 = 10007, int n8 = 10008 >
+class CUniqueColChecker
+{
+public:
+
+	//this is a simple pass through so that it can wrap the declaration of a column set
+	static const CColumnSet& VerifyUnique( const CColumnSet& cs )
+	{
+		COMPILE_TIME_ASSERT( n1 != n2 && n1 != n3 && n1 != n4 && n1 != n5 && n1 != n6 && n1 != n7 && n1 != n8 );
+		COMPILE_TIME_ASSERT( n2 != n3 && n2 != n4 && n2 != n5 && n2 != n6 && n2 != n7 && n2 != n8 );
+		COMPILE_TIME_ASSERT( n3 != n4 && n3 != n5 && n3 != n6 && n3 != n7 && n3 != n8 );
+		COMPILE_TIME_ASSERT( n4 != n5 && n4 != n6 && n4 != n7 && n4 != n8 );
+		COMPILE_TIME_ASSERT( n5 != n6 && n5 != n7 && n5 != n8 );
+		COMPILE_TIME_ASSERT( n6 != n7 && n6 != n8 );
+		COMPILE_TIME_ASSERT( n7 != n8 );
+		return cs;
+	}
 };
 
 // Usage notes:
@@ -98,103 +126,33 @@ private:
 	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1 )
 
 #define CSET_2_COL( schClass, col1, col2 ) \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col2 )
+	CUniqueColChecker< schClass::col1, schClass::col2 >::VerifyUnique( \
+	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1, schClass::col2 ) )
 
 #define CSET_3_COL( schClass, col1, col2, col3 ) \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col2 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col3 )
+	CUniqueColChecker< schClass::col1, schClass::col2, schClass::col3 >::VerifyUnique( \
+	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1, schClass::col2, schClass::col3 ) )
 
 #define CSET_4_COL( schClass, col1, col2, col3, col4 ) \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col2 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col3 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col4 )
+	CUniqueColChecker< schClass::col1, schClass::col2, schClass::col3, schClass::col4 >::VerifyUnique( \
+	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1, schClass::col2, schClass::col3, schClass::col4 ) )
 
 #define CSET_5_COL( schClass, col1, col2, col3, col4, col5 ) \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col2 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col3 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col4 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col5 )
+	CUniqueColChecker< schClass::col1, schClass::col2, schClass::col3, schClass::col4, schClass::col5 >::VerifyUnique( \
+	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1, schClass::col2, schClass::col3, schClass::col4, schClass::col5 ) )
 
 #define CSET_6_COL( schClass, col1, col2, col3, col4, col5, col6 ) \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col2 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col3 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col4 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col5 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col6 )
+	CUniqueColChecker< schClass::col1, schClass::col2, schClass::col3, schClass::col4, schClass::col5, schClass::col6 >::VerifyUnique( \
+	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1, schClass::col2, schClass::col3, schClass::col4, schClass::col5, schClass::col6 ) )
 
 #define CSET_7_COL( schClass, col1, col2, col3, col4, col5, col6, col7 ) \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col2 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col3 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col4 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col5 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col6 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col7 )
+	CUniqueColChecker< schClass::col1, schClass::col2, schClass::col3, schClass::col4, schClass::col5, schClass::col6, schClass::col7 >::VerifyUnique( \
+	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1, schClass::col2, schClass::col3, schClass::col4, schClass::col5, schClass::col6, schClass::col7 ) )
 
 #define CSET_8_COL( schClass, col1, col2, col3, col4, col5, col6, col7, col8 ) \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col2 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col3 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col4 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col5 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col6 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col7 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col8 )
+	CUniqueColChecker< schClass::col1, schClass::col2, schClass::col3, schClass::col4, schClass::col5, schClass::col6, schClass::col7, schClass::col8 >::VerifyUnique( \
+	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1, schClass::col2, schClass::col3, schClass::col4, schClass::col5, schClass::col6, schClass::col7, schClass::col8 ) )
 
-#define CSET_9_COL( schClass, col1, col2, col3, col4, col5, col6, col7, col8, col9 ) \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col2 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col3 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col4 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col5 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col6 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col7 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col8 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col9 )
-
-#define CSET_10_COL( schClass, col1, col2, col3, col4, col5, col6, col7, col8, col9, col10 ) \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col2 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col3 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col4 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col5 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col6 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col7 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col8 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col9 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col10 )
-
-#define CSET_11_COL( schClass, col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11 ) \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col2 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col3 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col4 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col5 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col6 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col7 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col8 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col9 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col10 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col11 )
-
-#define CSET_12_COL( schClass, col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12 ) \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col1 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col2 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col3 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col4 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col5 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col6 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col7 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col8 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col9 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col10 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col11 ) + \
-	CColumnSet( GSchemaFull().GetSchema( schClass::k_iTable ).GetRecordInfo(), schClass::col12 )
 
 //-----------------------------------------------------------------------------
 // Purpose: Returns an empty Column Set for a schema class

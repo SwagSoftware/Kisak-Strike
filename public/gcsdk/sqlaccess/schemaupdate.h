@@ -1,4 +1,4 @@
-//====== Copyright ©, Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Contains the job that's responsible for updating the database schema
 //
@@ -71,12 +71,9 @@ private:
 	SQLRETURN YieldingGetColumnIndexes( ESchemaCatalog eSchemaCatalog, CRecordInfo *pRecordInfo );
 	SQLRETURN YieldingGetTriggers( ESchemaCatalog eSchemaCatalog, int nSchemaID, CUtlVector< CTriggerInfo > &vecTriggerInfo );
 	SQLRETURN YieldingCreateTable( ESchemaCatalog eSchemaCatalog, CRecordInfo *pRecordInfo );
-	SQLRETURN YieldingAddIndex( ESchemaCatalog eSchemaCatalog, CRecordInfo *pRecordInfo, const CColumnInfo *pColumnInfo );
 	SQLRETURN YieldingAddIndex( ESchemaCatalog eSchemaCatalog, CRecordInfo *pRecordInfo, const FieldSet_t &refFields );
-	SQLRETURN YieldingRemoveIndex( ESchemaCatalog eSchemaCatalog, CRecordInfo *pRecordInfo, const CColumnInfo *pColumnInfo );
 	SQLRETURN YieldingAlterTableAddColumn( ESchemaCatalog eSchemaCatalog, CRecordInfo *pRecordInfo, const CColumnInfo *pColumnInfo );
 	SQLRETURN YieldingAddConstraint( ESchemaCatalog eSchemaCatalog, CRecordInfo *pRecordInfo, const CColumnInfo *pColumnInfo, int nColFlagConstraint );
-	SQLRETURN YieldingRemoveConstraint( ESchemaCatalog eSchemaCatalog, CRecordInfo *pRecordInfo, const CColumnInfo *pColumnInfo, int nColFlagConstraint );
 	SQLRETURN YieldingChangeColumnTypeOrLength( ESchemaCatalog eSchemaCatalog, CRecordInfo *pRecordInfo, const CColumnInfo *pColumnInfoDesired );
 	SQLRETURN YieldingChangeColumnProperties( ESchemaCatalog eSchemaCatalog, CRecordInfo *pRecordInfo, const CColumnInfo *pColumnInfoActual, const CColumnInfo *pColumnInfoDesired );
 	SQLRETURN YieldingCreateTrigger( ESchemaCatalog eSchemaCatalog, CTriggerInfo &refTriggerInfo );
@@ -84,6 +81,13 @@ private:
 
 	CUtlMap<int,EGCSQLType> m_mapSQLTypeToEType;
 	int m_iTableCount;
+
+	EConversionMode m_eConversionMode;
+
+	CUtlString m_sRecommendedSQL;
+	CUtlString m_sDataDestroyingCleanupSQL;
+	void AddDataDestroyingConversion( const char *pszSQL, const char *pszComment );
+	SQLRETURN YieldingProcessUnsafeConversion( ESchemaCatalog eSchemaCatalog, const char *pszSQL, const char *pszComment = NULL );
 };
 
 

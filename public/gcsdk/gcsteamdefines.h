@@ -1,4 +1,4 @@
-//====== Copyright (c), Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Defines a bunch of stuff that would be defined in Steam, but
 //			isn't in Source.
@@ -18,12 +18,6 @@
 #define PvAlloc(x) malloc(x)
 #define PvRealloc(x, y) realloc(x, y)
 #define FreePv(x) free(x)
-
-#ifdef _DEBUG
-#define DbgVerify(x) Assert(x)
-#else
-#define DbgVerify(x) (x)
-#endif
 
 // auto-lock class for read-write locks
 template< class T >

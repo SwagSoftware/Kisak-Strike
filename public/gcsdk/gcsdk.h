@@ -1,4 +1,4 @@
-//====== Copyright (c), Valve Corporation, All rights reserved. =======
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: includes all the headers required for the GC SDK. Include this
 //			in your stdafx.h
@@ -38,7 +38,6 @@
 #include "tier1/utllinkedlist.h"
 #include "tier1/utlpriorityqueue.h"
 #include "tier1/utlstring.h"
-#include "tier1/utlsymbollarge.h"
 #include "tier1/utlbuffer.h"
 #include "tier1/utldict.h"
 #include "tier1/utlhashmaplarge.h"
@@ -62,7 +61,6 @@
 // These are first since they're used all over
 #include "gcconstants.h"
 #include "refcount.h"
-#include "string_misc.h"
 #include "netpacket.h"
 #include "gcmsg.h"
 #include "msgprotobuf.h"

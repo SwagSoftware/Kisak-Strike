@@ -17,7 +17,6 @@ SDL2 SDL2_mixer tcmalloc_minimal rt openal curl ssl z crypto dl pthread fontconf
 #### blobs
 * steamdatagramlib_client.a
 * libsteam_api.so
-* gcsdk_client.a
 
 #### Ubuntu 
 ```
@@ -68,7 +67,6 @@ Linux Binaries: Depot ID: 734 4197642562793798650
     * [OPTIONAL]./game/bin/linux64/scaleformui_client.so -- If you want the ScaleformUI for some reason.
 
 ## Current Nonfree blobs
-* ${LIBPUBLIC}/gcsdk_client.a
 * ${LIBPUBLIC}/libsteam_api.so
 * ${LIBPUBLIC}/steamdatagramlib_client.a
 

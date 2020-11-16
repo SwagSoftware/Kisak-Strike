@@ -23,9 +23,14 @@
 inline void IVP_VecFPU::fpu_add_multiple_row(IVP_DOUBLE *target_adress,IVP_DOUBLE *source_adress,IVP_DOUBLE factor,int size,IVP_BOOL adress_aligned) {
     if(adress_aligned==IVP_FALSE) {
 	//we have to calculate the block size and shift adresses to lower aligned adresses
-	long result_adress = long(source_adress) & IVP_VECFPU_MEM_MASK;
-	target_adress = (IVP_DOUBLE *)( long (target_adress) & IVP_VECFPU_MEM_MASK);
-	size += (long(source_adress)-result_adress)>>IVP_VECFPU_MEMSHIFT;
+	//lwss- x64 fixes
+	//long result_adress = long(source_adress) & IVP_VECFPU_MEM_MASK;
+	//target_adress = (IVP_DOUBLE *)( long (target_adress) & IVP_VECFPU_MEM_MASK);
+	//size += (long(source_adress)-result_adress)>>IVP_VECFPU_MEMSHIFT;
+    intptr_t result_adress = intptr_t(source_adress) & IVP_VECFPU_MEM_MASK;
+    target_adress = (IVP_DOUBLE *)( intptr_t (target_adress) & IVP_VECFPU_MEM_MASK);
+    size += (intptr_t(source_adress)-result_adress)>>IVP_VECFPU_MEMSHIFT;
+	//lwss end
 	source_adress=(IVP_DOUBLE *)result_adress;
     }
 

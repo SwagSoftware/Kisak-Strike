@@ -9,9 +9,17 @@
 
 #include <cstdint> //lwss -x64 fixes
 
+//lwss - x64 changes
+#ifdef __x86_64__
+#define IVU_MEM_ALIGN 0x50 // grabbed from vphysics retail
+#define IVU_MEM_MASK 0xffffffffffffffe0; //^^
+#define IVU_MEMORY_BLOCK_SIZE 0x7fe0	// size of block loaded by
+#else
 #define IVU_MEM_ALIGN 0x20 //align to chach line data 32Byte
 #define IVU_MEM_MASK 0xffffffe0; 
-#define IVU_MEMORY_BLOCK_SIZE (0x8000-IVU_MEM_ALIGN)	// size of block loaded by 
+#define IVU_MEMORY_BLOCK_SIZE (0x8000-IVU_MEM_ALIGN)	// size of block loaded by
+#endif
+//lwss end
 
 struct p_Memory_Elem {
     struct p_Memory_Elem *next;

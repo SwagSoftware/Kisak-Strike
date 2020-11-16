@@ -54,7 +54,12 @@ csgo_partner.mak
 
 #protobuf generated files
 game/client/generated_proto/*
+!game/client/generated_proto/placeholder.txt
 game/server/generated_proto/*
+!game/server/generated_proto/placeholder.txt
 engine/generated_proto/*
+!engine/generated_proto/placeholder.txt
 engine_ds/generated_proto/*
+!engine_ds/generated_proto/placeholder.txt
 gcsdk/generated_proto/*
+!gcsdk/generated_proto/placeholder.txt

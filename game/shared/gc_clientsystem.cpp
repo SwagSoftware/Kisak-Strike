@@ -381,11 +381,12 @@ void CGCClientSystem::ReceivedClientWelcome( const CMsgClientWelcome &msg )
     Msg( "Connection to game coordinator established.\n" );
     fprintf( stderr, "Connection to game coordinator established.\n" );
 
-    IGameEvent *pEvent = gameeventmanager->CreateEvent( "gc_new_session" );
-    if ( pEvent )
-    {
-        gameeventmanager->FireEventClientSide( pEvent );
-    }
+//lwss- unused in csgo.
+//IGameEvent *pEvent = gameeventmanager->CreateEvent( "gc_new_session" );
+//if ( pEvent )
+//{
+//    gameeventmanager->FireEventClientSide( pEvent );
+//}
 
 //	GTFGCClientSystem()->UpdateGCServerInfo();
 //
@@ -425,6 +426,49 @@ public:
     }
 };
 GC_REG_JOB( GCSDK::CGCClient, CGCClientJobClientWelcome, "CGCClientJobClientWelcome", k_EMsgGCClientWelcome, k_EServerTypeGCClient );
+
+void CGCClientSystem::ReceivedClientGCConnectionStatus(const CMsgConnectionStatus &msg)
+{
+    Msg("[GC] ===Connection Status: ===\n" );
+    if( msg.has_status() )
+    {
+        Msg("Status Code: %d\n", msg.status() );
+    }
+    if( msg.has_wait_seconds() )
+    {
+        Msg( "Wait Seconds: %d\n", msg.wait_seconds() );
+    }
+    if( msg.has_estimated_wait_seconds_remaining() )
+    {
+        Msg( "Estimated Wait Seconds Remaining: %d\n", msg.estimated_wait_seconds_remaining() );
+    }
+    if( msg.has_queue_size() )
+    {
+        Msg( "Queue Size: %d\n", msg.queue_size() );
+    }
+    if( msg.has_queue_position() )
+    {
+        Msg( "Queue Position: %d\n", msg.queue_position() );
+    }
+    if( msg.has_client_session_need() )
+    {
+        Msg( "Client Session need: %d\n", msg.client_session_need() );
+    }
+}
+
+class CGCClientJobGCConnectionStatus : public GCSDK::CGCClientJob
+{
+public:
+    CGCClientJobGCConnectionStatus( GCSDK::CGCClient *pGCClient ) : GCSDK::CGCClientJob( pGCClient ) { }
+
+    virtual bool BYieldingRunJobFromMsg( IMsgNetPacket *pNetPacket )
+    {
+        CProtoBufMsg<CMsgConnectionStatus> msg( pNetPacket );
+        GCClientSystem()->ReceivedClientGCConnectionStatus( msg.Body() );
+        return true;
+    }
+};
+GC_REG_JOB( GCSDK::CGCClient, CGCClientJobGCConnectionStatus, "CGCClientJobGCConnectionStatus", k_EMsgGCClientConnectionStatus, k_EServerTypeGCClient );
 
 //void CGCClientSystem::ReceivedClientGoodbye( const CMsgClientGoodbye &msg )
 //{

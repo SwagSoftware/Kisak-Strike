@@ -30,6 +30,7 @@
 #include "filesystem/IXboxInstaller.h"
 #include "inputsystem/iinputsystem.h"
 #include <time.h>
+#include <gc_clientsystem.h>
 #include "messagebox_scaleform.h"
 
 
@@ -1492,8 +1493,12 @@ void CUIGameData::OnEvent( KeyValues *pEvent )
                 joinServerData.Body().set_server_ip( netadr.GetIPHostByteOrder() );
                 joinServerData.Body().set_server_port( netadr.GetPort() );
 
-                //TODO: NOT DONE - We need the GCClientSystem() now :)
-                //GCClientSystem()->BSendMessage( joinServerData );
+                GCClientSystem()->BSendMessage( joinServerData );
+                //g_xuidFriendWatchSessionJoiningXUID = (one of the above data, unsure)
+                //g_chFriendWatchSessionJoiningXUIDAction = 99;
+
+                //TODO: This is where the game pulls up a Panel "JoiningInvite" with CMatchMakingStatus
+                //CMatchMakingStatus::SetTimeToAutoCancel( Plat_FloatTime + 15.0 );
             }
         }
 

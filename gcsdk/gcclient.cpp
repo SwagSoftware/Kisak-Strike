@@ -90,7 +90,9 @@ bool CGCClient::BMainLoop( uint64 ulLimitMicroseconds, uint64 ulFrameTimeMicrose
 //------------------------------------------------------------------------------
 bool CGCClient::BSendMessage( uint32 unMsgType, const uint8 *pubData, uint32 cubData )
 {
-    Msg("[GC] Send msgID(%u) - data(%p) - size(%d)\n", unMsgType, (void*)pubData, cubData );
+    uint32 msgType = unMsgType;
+    msgType &= ~k_EMsgProtoBufFlag;
+    Msg("[GC] Send msgID(%d) - data(%p) - size(%d)\n", msgType, (void*)pubData, cubData );
 	if( m_pSteamGameCoordinator )
 		return m_pSteamGameCoordinator->SendMessage( unMsgType, pubData, cubData ) == k_EGCResultOK;
 	else

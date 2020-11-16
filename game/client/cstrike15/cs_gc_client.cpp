@@ -59,7 +59,65 @@ void CCSGCClientSystem::Update( float frametime )
 
 void CCSGCClientSystem::OnReceivedMatchmakingWelcomeMessage(const CMsgGCCStrike15_v2_MatchmakingGC2ClientHello &msg)
 {
-    Msg("[GC] Matchmaking Hello Recieved...\nYou are Account#(%lu) - you are %s\n", msg.account_id(), msg.vac_banned() > 0 ? "VAC BANNED!" : "NOT VAC Banned." );
+    Msg("[GC] Matchmaking Hello Recieved...\n");
+    if( msg.has_account_id() )
+    {
+        Msg("\tAccount ID: %d\n", msg.account_id() );
+    }
+    if( msg.has_ongoingmatch() )
+    {
+        Msg("\tWow, it looks like you're in an ongoing MatchMaking Match!\n");
+    }
+    if( msg.has_vac_banned() )
+    {
+        Msg("\tYou %s VAC Banned\n", msg.vac_banned() > 0 ? "ARE" : "are NOT");
+    }
+    if( msg.has_ranking() )
+    {
+        Msg( "\tYou have some ranking info available.\n");
+    }
+    if( msg.has_commendation() )
+    {
+        Msg( "\tYou have commendation info available.\n" );
+    }
+    if( msg.has_medals() )
+    {
+        Msg( "\tYou have medals info available.\n" );
+    }
+    if( msg.has_my_current_event() )
+    {
+        Msg( "\tYou have a current Tournament event.\n" );
+        // current team
+        // current event stages
+        // ...
+    }
+    if( msg.has_survey_vote() )
+    {
+        Msg( "\tSurvey Vote: %d\n", msg.survey_vote() );
+    }
+    if( msg.has_activity() )
+    {
+        Msg( "\tYou have Account Activity...\n");
+        Msg( "\t\tactivity: %d\n", msg.activity().activity());
+        Msg( "\t\tmode: %d", msg.activity().mode());
+        Msg( "\t\tmap: %d", msg.activity().map());
+    }
+    if( msg.has_player_level() )
+    {
+        Msg("\tPlayer Level: %d\n", msg.player_level() );
+    }
+    if( msg.has_player_cur_xp() )
+    {
+        Msg("\tPlayer XP: %d\n", msg.player_cur_xp() );
+    }
+    if( msg.has_player_xp_bonus_flags() )
+    {
+        Msg("\tPlayer Bonus XP: %d\n", msg.player_xp_bonus_flags() );
+    }
+    if( msg.has_ranking() )
+    {
+        Msg("\tYou have Ranking Data available.\n" );
+    }
 }
 
 class CGCClientCStrike15MatchmakingWelcomeMessage : public GCSDK::CGCClientJob

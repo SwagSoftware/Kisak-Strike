@@ -2297,20 +2297,23 @@ void CBaseClientState::HandleDeferredConnection()
 			g_pMatchFramework->GetEventsSubscription()->BroadcastEvent( kvCreateSession );
 		}
 
-		if ( !uiReservationCookie )
-		{
-			Disconnect( true );	// disconnect the current attempt, will retry with GC reservation
-			{
-				KeyValues *kvCreateSession = new KeyValues( "OnEngineLevelLoadingSession" );
-				kvCreateSession->SetString( "reason", "CreateSession" );
-				kvCreateSession->SetString( "adr", ns_address_render( dc.m_adrServerAddress ).String() );
-				kvCreateSession->SetUint64( "gsid", dc.m_unGSSteamID );
-				// NO PTR HERE, FORCE COOKIE: kvCreateSession->SetPtr( "ptr", &uiReservationCookie );
-				g_pMatchFramework->GetEventsSubscription()->BroadcastEvent( kvCreateSession );
-			}
-		}
-		else
-			SendConnectPacket( dc.m_adrServerAddress, dc.m_nChallenge, dc.m_nAuthprotocol, dc.m_unGSSteamID, dc.m_bGSSecure );
+		//lwss - commented out so we can connect even without GC reservation.
+		//if ( !uiReservationCookie )
+		//{
+		//	Disconnect( true );	// disconnect the current attempt, will retry with GC reservation
+		//	{
+		//		KeyValues *kvCreateSession = new KeyValues( "OnEngineLevelLoadingSession" );
+		//		kvCreateSession->SetString( "reason", "CreateSession" );
+		//		kvCreateSession->SetString( "adr", ns_address_render( dc.m_adrServerAddress ).String() );
+		//		kvCreateSession->SetUint64( "gsid", dc.m_unGSSteamID );
+		//		// NO PTR HERE, FORCE COOKIE: kvCreateSession->SetPtr( "ptr", &uiReservationCookie );
+		//		g_pMatchFramework->GetEventsSubscription()->BroadcastEvent( kvCreateSession );
+		//	}
+		//}
+		//else
+        {
+            SendConnectPacket( dc.m_adrServerAddress, dc.m_nChallenge, dc.m_nAuthprotocol, dc.m_unGSSteamID, dc.m_bGSSecure );
+        }
 #endif
 	}
 	else

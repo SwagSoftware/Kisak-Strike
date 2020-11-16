@@ -5,6 +5,7 @@
 #include "igamesystem.h"
 #include "networkvar.h"
 #include <gcsdk/gcsystemmsgs.h>
+#include <gcsdk_gcmessages.pb.h>
 
 #ifdef CLIENT_DLL
 #include "clientsteamcontext.h"
@@ -71,7 +72,8 @@ protected:
 #ifdef CLIENT_DLL
     friend class CGCClientJobClientWelcome;
     virtual void ReceivedClientWelcome( const CMsgClientWelcome &msg );
-
+    friend class CGCClientJobGCConnectionStatus;
+    virtual void ReceivedClientGCConnectionStatus( const CMsgConnectionStatus &msg );
     //lwss- goodbye has been removed
     //friend class CGCClientJobClientGoodbye;
     //virtual void ReceivedClientGoodbye( const CMsgClientGoodbye &msg );

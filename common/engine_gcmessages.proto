@@ -1,3 +1,5 @@
+// LWSS: Slightly updated from retail November 17th 2020
+
 //====== Copyright (c) 2016, Valve Corporation, All rights reserved. ========//
 //
 // Redistribution and use in source and binary forms, with or without 
@@ -35,7 +37,7 @@
 // There is an important difference between the signed int types (sint32 and sint64)
 // and the "standard" int types (int32 and int64) when it comes to encoding negative
 // numbers.  If you use int32 or int64 as the type for a negative number, the
-// resulting varint is always ten bytes long – it is, effectively, treated like a
+// resulting varint is always ten bytes long ï¿½ it is, effectively, treated like a
 // very large unsigned integer.  If you use one of the signed types, the resulting
 // varint uses ZigZag encoding, which is much more efficient.
 
@@ -82,6 +84,7 @@ message CEngineGotvSyncPacket
 	optional float rtdelay = 8;				// delay of this fragment from real-time, seconds
 	optional float rcvage = 9;				// Receive age: how many seconds since relay last received data from game server
 	optional float keyframe_interval = 10;	// the interval between full keyframes, in seconds
+	optional uint32 cdndelay = 11; //lwss- November 17th 2020 - this is the only new member.
 }; 
 
 

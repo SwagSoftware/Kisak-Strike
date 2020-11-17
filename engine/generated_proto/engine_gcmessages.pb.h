@@ -172,6 +172,13 @@ class CEngineGotvSyncPacket : public ::google::protobuf::Message {
   inline float keyframe_interval() const;
   inline void set_keyframe_interval(float value);
 
+  // optional uint32 cdndelay = 11;
+  inline bool has_cdndelay() const;
+  inline void clear_cdndelay();
+  static const int kCdndelayFieldNumber = 11;
+  inline ::google::protobuf::uint32 cdndelay() const;
+  inline void set_cdndelay(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:CEngineGotvSyncPacket)
  private:
   inline void set_has_match_id();
@@ -192,6 +199,8 @@ class CEngineGotvSyncPacket : public ::google::protobuf::Message {
   inline void clear_has_rcvage();
   inline void set_has_keyframe_interval();
   inline void clear_has_keyframe_interval();
+  inline void set_has_cdndelay();
+  inline void clear_has_cdndelay();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -204,9 +213,10 @@ class CEngineGotvSyncPacket : public ::google::protobuf::Message {
   float rtdelay_;
   float rcvage_;
   float keyframe_interval_;
+  ::google::protobuf::uint32 cdndelay_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
 
   friend void  protobuf_AddDesc_engine_5fgcmessages_2eproto();
   friend void protobuf_AssignDesc_engine_5fgcmessages_2eproto();
@@ -418,6 +428,28 @@ inline float CEngineGotvSyncPacket::keyframe_interval() const {
 inline void CEngineGotvSyncPacket::set_keyframe_interval(float value) {
   set_has_keyframe_interval();
   keyframe_interval_ = value;
+}
+
+// optional uint32 cdndelay = 11;
+inline bool CEngineGotvSyncPacket::has_cdndelay() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void CEngineGotvSyncPacket::set_has_cdndelay() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void CEngineGotvSyncPacket::clear_has_cdndelay() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void CEngineGotvSyncPacket::clear_cdndelay() {
+  cdndelay_ = 0u;
+  clear_has_cdndelay();
+}
+inline ::google::protobuf::uint32 CEngineGotvSyncPacket::cdndelay() const {
+  return cdndelay_;
+}
+inline void CEngineGotvSyncPacket::set_cdndelay(::google::protobuf::uint32 value) {
+  set_has_cdndelay();
+  cdndelay_ = value;
 }
 
 

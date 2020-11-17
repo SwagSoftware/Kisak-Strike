@@ -32,7 +32,7 @@ void protobuf_AssignDesc_engine_5fgcmessages_2eproto() {
       "engine_gcmessages.proto");
   GOOGLE_CHECK(file != NULL);
   CEngineGotvSyncPacket_descriptor_ = file->message_type(0);
-  static const int CEngineGotvSyncPacket_offsets_[9] = {
+  static const int CEngineGotvSyncPacket_offsets_[10] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CEngineGotvSyncPacket, match_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CEngineGotvSyncPacket, instance_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CEngineGotvSyncPacket, signupfragment_),
@@ -42,6 +42,7 @@ void protobuf_AssignDesc_engine_5fgcmessages_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CEngineGotvSyncPacket, rtdelay_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CEngineGotvSyncPacket, rcvage_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CEngineGotvSyncPacket, keyframe_interval_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CEngineGotvSyncPacket, cdndelay_),
   };
   CEngineGotvSyncPacket_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -86,12 +87,13 @@ void protobuf_AddDesc_engine_5fgcmessages_2eproto() {
   ::google::protobuf::protobuf_AddDesc_google_2fprotobuf_2fdescriptor_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\027engine_gcmessages.proto\032 google/protob"
-    "uf/descriptor.proto\"\313\001\n\025CEngineGotvSyncP"
+    "uf/descriptor.proto\"\335\001\n\025CEngineGotvSyncP"
     "acket\022\020\n\010match_id\030\001 \001(\004\022\023\n\013instance_id\030\002"
     " \001(\r\022\026\n\016signupfragment\030\003 \001(\r\022\027\n\017currentf"
     "ragment\030\004 \001(\r\022\020\n\010tickrate\030\005 \001(\002\022\014\n\004tick\030"
     "\006 \001(\r\022\017\n\007rtdelay\030\010 \001(\002\022\016\n\006rcvage\030\t \001(\002\022\031"
-    "\n\021keyframe_interval\030\n \001(\002B\003\200\001\000", 270);
+    "\n\021keyframe_interval\030\n \001(\002\022\020\n\010cdndelay\030\013 "
+    "\001(\rB\003\200\001\000", 288);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "engine_gcmessages.proto", &protobuf_RegisterTypes);
   CEngineGotvSyncPacket::default_instance_ = new CEngineGotvSyncPacket();
@@ -118,6 +120,7 @@ const int CEngineGotvSyncPacket::kTickFieldNumber;
 const int CEngineGotvSyncPacket::kRtdelayFieldNumber;
 const int CEngineGotvSyncPacket::kRcvageFieldNumber;
 const int CEngineGotvSyncPacket::kKeyframeIntervalFieldNumber;
+const int CEngineGotvSyncPacket::kCdndelayFieldNumber;
 #endif  // !_MSC_VER
 
 CEngineGotvSyncPacket::CEngineGotvSyncPacket()
@@ -145,6 +148,7 @@ void CEngineGotvSyncPacket::SharedCtor() {
   rtdelay_ = 0;
   rcvage_ = 0;
   keyframe_interval_ = 0;
+  cdndelay_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -191,6 +195,7 @@ void CEngineGotvSyncPacket::Clear() {
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     keyframe_interval_ = 0;
+    cdndelay_ = 0u;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -341,6 +346,22 @@ bool CEngineGotvSyncPacket::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(88)) goto parse_cdndelay;
+        break;
+      }
+
+      // optional uint32 cdndelay = 11;
+      case 11: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_cdndelay:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &cdndelay_)));
+          set_has_cdndelay();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -408,6 +429,11 @@ void CEngineGotvSyncPacket::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(10, this->keyframe_interval(), output);
   }
 
+  // optional uint32 cdndelay = 11;
+  if (has_cdndelay()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(11, this->cdndelay(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -459,6 +485,11 @@ void CEngineGotvSyncPacket::SerializeWithCachedSizes(
   // optional float keyframe_interval = 10;
   if (has_keyframe_interval()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(10, this->keyframe_interval(), target);
+  }
+
+  // optional uint32 cdndelay = 11;
+  if (has_cdndelay()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(11, this->cdndelay(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -529,6 +560,13 @@ int CEngineGotvSyncPacket::ByteSize() const {
       total_size += 1 + 4;
     }
 
+    // optional uint32 cdndelay = 11;
+    if (has_cdndelay()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->cdndelay());
+    }
+
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -585,6 +623,9 @@ void CEngineGotvSyncPacket::MergeFrom(const CEngineGotvSyncPacket& from) {
     if (from.has_keyframe_interval()) {
       set_keyframe_interval(from.keyframe_interval());
     }
+    if (from.has_cdndelay()) {
+      set_cdndelay(from.cdndelay());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -617,6 +658,7 @@ void CEngineGotvSyncPacket::Swap(CEngineGotvSyncPacket* other) {
     std::swap(rtdelay_, other->rtdelay_);
     std::swap(rcvage_, other->rcvage_);
     std::swap(keyframe_interval_, other->keyframe_interval_);
+    std::swap(cdndelay_, other->cdndelay_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

@@ -23,11 +23,14 @@ namespace GCSDK
 class CMessageListRegistration
 {
 public:
-	CMessageListRegistration( MsgInfo_t *pMsgInfo, int cMsgInfo, void *pExtra = NULL );
+	CMessageListRegistration( MsgInfo_t *pMsgInfo, int cMsgInfo, const ::google::protobuf::EnumDescriptor* desc, void *pExtra = NULL );
 
 	static CMessageListRegistration *sm_pFirst;
 	CMessageListRegistration *m_pNext;
 	MsgInfo_t *m_pMsgInfo;
+	//lwss add- Add the protobuf descriptor
+	const ::google::protobuf::EnumDescriptor *m_pDescriptor;
+	//lwss end
 	int m_cMsgInfo;
 };
 
@@ -42,9 +45,10 @@ static void HandleUntrackedMsg( const char* pszMsgOperation, uint32 nMsgID )
 }
 
 
-CMessageListRegistration::CMessageListRegistration( MsgInfo_t *pMsgInfo, int cMsgInfo, void *pExtra )
+CMessageListRegistration::CMessageListRegistration( MsgInfo_t *pMsgInfo, int cMsgInfo, const ::google::protobuf::EnumDescriptor* desc, void *pExtra )
 : m_pMsgInfo( pMsgInfo ),
-	m_cMsgInfo( cMsgInfo )
+  m_cMsgInfo( cMsgInfo ),
+  m_pDescriptor( desc )
 {
 	m_pNext = sm_pFirst;
 	sm_pFirst = this;
@@ -78,7 +82,7 @@ void MsgRegistrationFromEnumDescriptor( const ::google::protobuf::EnumDescriptor
 		pMsgInfos[ i ].nFlags = nTypeMask;
 	}
 
-	new CMessageListRegistration( pMsgInfos, pEnumDescriptor->value_count() );
+	new CMessageListRegistration( pMsgInfos, pEnumDescriptor->value_count(), pEnumDescriptor );
 }
 
 //-----------------------------------------------------------------------------
@@ -133,7 +137,7 @@ bool CMessageList::BInit(  )
 			int nBucket = HashMessage( pReg->m_pMsgInfo[nRegIndex].eMsg, nSlot );
 
 			AssureBucket( nBucket );
-			
+
 			if ( m_vecMessageInfoBuckets[nBucket][nSlot] != -1 )
 			{
 				int otherIndex = m_vecMessageInfoBuckets[nBucket][nSlot];
@@ -646,6 +650,21 @@ bool CMessageList::GetMessage( MsgType_t eMsg, const char **ppMsgName, int nType
 	if ( ppMsgName != NULL )
 		*ppMsgName = k_rgchUnknown;
 
+	//lwss - new code here that uses the FindValueByNumber protobuf function instead.
+    for( CMessageListRegistration *pReg = CMessageListRegistration::sm_pFirst; pReg != NULL; pReg = pReg->m_pNext)
+    {
+        const ::google::protobuf::EnumValueDescriptor* enumValue = pReg->m_pDescriptor->FindValueByNumber( eMsg );
+        if( !enumValue )
+            continue;
+
+        // found
+        // TODO: I think these strings are valid for the lifetime of the program, but I am not sure!
+        *ppMsgName = enumValue->name().c_str();
+        return true;
+    }
+
+    return false;
+	/* lwss- commented out, this code doesn't work.
 	short nIndex = GetMessageIndex( eMsg );
 
 	// good index?
@@ -666,6 +685,8 @@ bool CMessageList::GetMessage( MsgType_t eMsg, const char **ppMsgName, int nType
 
 	// it's good if it matches the flags
 	return ( 0 != ( msgInfo.nFlags & nTypeMask ) );
+	 */
+	//lwss end
 }
 
 

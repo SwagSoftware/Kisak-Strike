@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2004, Valve Corporation, All rights reserved. =======
+//====== Copyright ï¿½ 1996-2004, Valve Corporation, All rights reserved. =======
 //
 // Purpose:
 //
@@ -381,7 +381,7 @@ bool CProtoBufMsgBase::BAsyncSend( IProtoBufSendHandler & sender ) const
 bool CProtoBufMsgBase::BAsyncSendProto( IProtoBufSendHandler& sender, MsgType_t eMsgType, const CMsgProtoBufHeader& hdr, const ::google::protobuf::Message& proto )
 {
 	VPROF_BUDGET( "CProtoBufMsg::BAsyncSendProto", VPROF_BUDGETGROUP_OTHER_NETWORKING );
-	// Compute message sizes and serialize out to buffer.  Need to work on a more efficient 
+	// Compute message sizes and serialize out to buffer.  Need to work on a more efficient
 	// way to write these to the net without so much copying.
 	uint32 cubBodySize = proto.ByteSize();
 
@@ -392,7 +392,8 @@ bool CProtoBufMsgBase::BAsyncSendProto( IProtoBufSendHandler& sender, MsgType_t 
 	bool bSuccess = sender.BAsyncSend( eMsgType, pMsgMem, cubTotalSize );
 	FreeMessageMemory( pMsgMem );
 
-	return bSuccess;
+    Msg("[GCClient] Send msg %d (%s), %d bytes\n", eMsgType & ~k_EMsgProtoBufFlag, proto.GetDescriptor()->name().c_str(), cubTotalSize );
+    return bSuccess;
 }
 
 

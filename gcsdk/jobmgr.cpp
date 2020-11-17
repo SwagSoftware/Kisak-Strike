@@ -351,7 +351,7 @@ bool CJobMgr::BRouteMsgToJob( void *pParent, IMsgNetPacket *pNetPacket, const Jo
 		return false;
 	}
 
-    Msg("[GC] Recv msgID(%d) - size(%d)\n", pNetPacket->GetEMsg(), pNetPacket->GetCNetPacket()->CubData() );
+    Msg("[GCClient] Recv msg %d (%s), %d bytes\n", pNetPacket->GetEMsg(), PchMsgNameFromEMsg( pNetPacket->GetEMsg() ), pNetPacket->GetCNetPacket()->CubData() );
 
 	if ( jobMsgInfo.m_JobIDTarget != k_GIDNil )
 	{

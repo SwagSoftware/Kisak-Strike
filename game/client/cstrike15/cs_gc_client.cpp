@@ -19,7 +19,10 @@ CCSGCClientSystem::~CCSGCClientSystem() noexcept
 
 bool CCSGCClientSystem::Init()
 {
-    // This is accurate to the retail build
+    // The retail build does nothing here.
+
+    // Register the CSGO-specific messages with the gcsdk so it can log the names.
+    GCSDK::MsgRegistrationFromEnumDescriptor( ECsgoGCMsg_descriptor(), GCSDK::MT_GC );
     return true;
 }
 

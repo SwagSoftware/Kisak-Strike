@@ -90,9 +90,6 @@ bool CGCClient::BMainLoop( uint64 ulLimitMicroseconds, uint64 ulFrameTimeMicrose
 //------------------------------------------------------------------------------
 bool CGCClient::BSendMessage( uint32 unMsgType, const uint8 *pubData, uint32 cubData )
 {
-    uint32 msgType = unMsgType;
-    msgType &= ~k_EMsgProtoBufFlag;
-    Msg("[GC] Send msgID(%d) - data(%p) - size(%d)\n", msgType, (void*)pubData, cubData );
 	if( m_pSteamGameCoordinator )
 		return m_pSteamGameCoordinator->SendMessage( unMsgType, pubData, cubData ) == k_EGCResultOK;
 	else
@@ -232,6 +229,7 @@ bool CGCClient::BInit( ISteamGameCoordinator *pSteamGameCoordinator )
 	m_JobMgr.SetThreadPoolSize( GetCPUInformation().m_nLogicalProcessors - 1 );
 
 	MsgRegistrationFromEnumDescriptor( EGCSystemMsg_descriptor(), GCSDK::MT_GC );
+    MsgRegistrationFromEnumDescriptor( EGCBaseClientMsg_descriptor(), GCSDK::MT_GC );
 
 	m_pSteamGameCoordinator = pSteamGameCoordinator;
 #ifndef STEAM

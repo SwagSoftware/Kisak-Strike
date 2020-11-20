@@ -37,5 +37,5 @@ include(${CMAKE_MODULE_PATH}/source_exe_base.cmake)
 target_sources(${OUTBINNAME} PRIVATE main.cpp)
 
 if( LINUXALL )
-    target_link_libraries(${OUTBINNAME} dl) #link for dlopen.
+    target_link_libraries(${OUTBINNAME} dl pthread)
 endif()

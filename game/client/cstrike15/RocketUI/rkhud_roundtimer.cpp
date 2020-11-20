@@ -21,7 +21,8 @@ struct RoundTimerData
 } roundTimerData;
 
 RkHudRoundTimer::RkHudRoundTimer(const char *value) : CHudElement( value ),
-    m_bVisible( false )
+                                                      m_bVisible( false ),
+                                                      m_pInstance( nullptr )
 {
     SetHiddenBits( /* HIDEHUD_MISCSTATUS */ 0 );
 }

@@ -302,6 +302,7 @@ static void LoadRkChat()
 // Called on program startup by a Macro with the HUD UI system
 // HudElementHelper::CreateAllElements
 RkHudChat::RkHudChat(const char *value) : CHudElement( value ),
+                                          m_pInstance( nullptr ),
                                           m_bVisible( false ),
                                           m_iMode( MM_NONE ),
                                           m_bGrabbingInput( false ),

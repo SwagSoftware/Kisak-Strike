@@ -264,7 +264,9 @@ static void LoadRkBuyMenu()
 }
 
 RkHudBuyMenu::RkHudBuyMenu(const char *value) : CHudElement( value ),
-m_bVisible( false ), m_bGrabbingInput( false )
+                                                m_bVisible( false ),
+                                                m_bGrabbingInput( false ),
+                                                m_pInstance( nullptr )
 {
     SetHiddenBits( /* HIDEHUD_MISCSTATUS */ 0 );
 }

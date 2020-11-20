@@ -29,6 +29,7 @@ RocketRender::RocketRender() { }
 
 void RocketRender::PrepareGLState()
 {
+    glActiveTexture(GL_TEXTURE0);
     glDisable(GL_CULL_FACE);
 
     //make sure to set both of these to zero otherwise mesa will segfault even though it only mentions GL_ARRAY_BUFFER in the docs

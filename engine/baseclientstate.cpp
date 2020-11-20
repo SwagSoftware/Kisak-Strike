@@ -366,7 +366,8 @@ void CServerMsg_CheckReservation::SendMsg( const ns_address &serverAdr, int sock
 	msg.WriteLongLong( 0 );
 #endif
 
-	#ifndef DEDICATED
+    //lwss - ifdef the SDR stuff out, it is out of scope for kisak-strike as of now
+	#if !defined(DEDICATED) && defined(KISAK_USE_SDR)
 		if ( serverAdr.GetAddressType() == NSAT_PROXIED_GAMESERVER )
 			NET_InitSteamDatagramProxiedGameserverConnection( serverAdr );
 	#endif
@@ -432,7 +433,8 @@ void CServerMsg_Ping::SendMsg( const ns_address &serverAdr, int socket, uint32 t
 	msg.WriteLong( GetHostVersion() );
 	msg.WriteLong( token );
 
-	#ifndef DEDICATED
+    //lwss - ifdef the SDR stuff out, it is out of scope for kisak-strike as of now
+    #if !defined(DEDICATED) && defined(KISAK_USE_SDR)
 		if ( serverAdr.GetAddressType() == NSAT_PROXIED_GAMESERVER )
 			NET_InitSteamDatagramProxiedGameserverConnection( serverAdr );
 	#endif
@@ -1495,6 +1497,11 @@ void CBaseClientState::CheckForResend ( bool bForceResendNow /* = false */ )
 				case NSAT_PROXIED_GAMESERVER:
 					#ifdef DEDICATED
 						Assert( false );
+                    //lwss - ifdef the SDR stuff out, it is out of scope for kisak-strike as of now
+                    #elif !defined(KISAK_USE_SDR)
+						Warning( "Kisak-Strike does not support SDR relays!\n" );
+						Assert( false );
+                    //lwss end
 					#else
 
 						// Make sure we have a ticket, and are setup to talk to this guy

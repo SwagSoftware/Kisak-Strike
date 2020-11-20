@@ -466,7 +466,10 @@ if( NOT DEDICATED )
     target_link_libraries(${OUTBINNAME} vgui_controls_client)
 endif()
 if( NOT VS2015 )
-    target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/steamdatagramlib_client.a) #Link with Evil Proprietary steamdatagram lib
+    if( KISAK_USE_SDR )
+        add_definitions(-DKISAK_USE_SDR)
+        target_link_libraries(${OUTBINNAME} ${LIBPUBLIC}/steamdatagramlib_client.a) #Link with Evil Proprietary steamdatagram lib
+    endif()
 else()
     message(FATAL_ERROR "Visual Studio 2015 detected... Weird.")
 endif()

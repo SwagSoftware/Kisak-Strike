@@ -1421,7 +1421,8 @@ static int NET_ReceiveRawPacket( int sock, void *buf, int len, ns_address *from 
 	}
 
 	// Still nothing?  Check proxied server
-	#ifndef DEDICATED
+    //lwss - ifdef the SDR stuff out, it is out of scope for kisak-strike as of now
+	#if !defined(DEDICATED) && defined(KISAK_USE_SDR)
 		if ( sock == NS_CLIENT && ret <= 0 && g_pSteamDatagramClient && g_addrSteamDatagramProxiedGameServer.IsValid() )
 		{
 			//CSteamID remoteSteamID;
@@ -2944,7 +2945,8 @@ private:
 static CBindAddressHelper g_BindAddressHelper;
 #endif
 
-#ifndef DEDICATED
+//lwss - ifdef the SDR stuff out, it is out of scope for kisak-strike as of now
+#if !defined(DEDICATED) && defined(KISAK_USE_SDR)
 
 // Initialize steam client datagram lib if we haven't already
 static bool CheckInitSteamDatagramClientLib()
@@ -3124,7 +3126,8 @@ static void OpenSocketInternal( int nModule, int nSetPort, int nDefaultPort, con
 	{
 		g_pSteamSocketMgr->OpenSocket( *handle, nModule, nSetPort, nDefaultPort, pName, nProtocol, bTryAny );
 	}
-	#ifndef DEDICATED
+    //lwss - ifdef the SDR stuff out, it is out of scope for kisak-strike as of now
+    #if !defined(DEDICATED) && defined(KISAK_USE_SDR)
 		if ( nModule == NS_CLIENT )
 			CheckInitSteamDatagramClientLib();
 	#endif
@@ -4162,7 +4165,8 @@ void NET_Init( bool bIsDedicated )
 	NET_SetMultiplayer( !!( g_pMatchFramework->GetMatchTitle()->GetTitleSettingsFlags() & MATCHTITLE_SETTING_MULTIPLAYER ) );
 
 	// Go ahead and create steam datagram client, and start measuring pings to data centers
-	#ifndef DEDICATED
+    //lwss - ifdef the SDR stuff out, it is out of scope for kisak-strike as of now
+    #if !defined(DEDICATED) && defined(KISAK_USE_SDR)
 	if ( CheckInitSteamDatagramClientLib() )
 	{
 		if ( ::SteamNetworkingUtils() )
@@ -4193,7 +4197,8 @@ void NET_Shutdown (void)
 
 	NET_CloseAllSockets();
 	NET_ConfigLoopbackBuffers( false );
-#ifndef DEDICATED
+//lwss - ifdef the SDR stuff out, it is out of scope for kisak-strike as of now
+#if !defined(DEDICATED) && defined(KISAK_USE_SDR)
 	SteamDatagramClient_Kill();
 #endif
 
@@ -4449,6 +4454,8 @@ bool NET_GetPublicAdr( netadr_t &adr )
 
 void NET_SteamDatagramServerListen()
 {
+//lwss - ifdef the SDR stuff out, it is out of scope for kisak-strike as of now
+#if defined(KISAK_USE_SDR)
 	// Receiving on steam datagram transport?
 	// We only open one interface object (corresponding to one UDP port).
 	// The other "sockets" are different channels on this interface
@@ -4471,6 +4478,7 @@ void NET_SteamDatagramServerListen()
 		// Clear the convar so we don't advertise that we are listening!
 		sv_steamdatagramtransport_port.SetValue( 0 );
 	}
+#endif
 }
 
 void NET_TerminateConnection( int sock, const ns_address &peer )
@@ -4482,7 +4490,8 @@ void NET_TerminateConnection( int sock, const ns_address &peer )
 		NET_TerminateSteamConnection( steamIDRemote );
 	}
 #endif
-#ifndef DEDICATED
+//lwss - ifdef the SDR stuff out, it is out of scope for kisak-strike as of now
+#if !defined(DEDICATED) && defined(KISAK_USE_SDR)
 	if ( peer == g_addrSteamDatagramProxiedGameServer )
 		CloseSteamDatagramClientConnection();
 #endif		
@@ -4740,13 +4749,18 @@ bool NET_CryptVerifyServerCertificateAndAllocateSessionKey( bool bOfficial, cons
 			break;
 		case NSAT_PROXIED_GAMESERVER:
 		{
-			unCertIP = SteamNetworkingUtils()->GetIPForServerSteamIDFromTicket( from.m_steamID.GetSteamID() );
+            //lwss - ifdef the SDR stuff out, it is out of scope for kisak-strike as of now
+            #if defined(KISAK_USE_SDR)
+            unCertIP = SteamNetworkingUtils()->GetIPForServerSteamIDFromTicket( from.m_steamID.GetSteamID() );
 			if ( unCertIP == 0 )
 			{
 				Warning( "NET_CryptVerifyServerCertificateAndAllocateSessionKey - cannot check signature for proxied server '%s', because we don't have an SDR ticket to that server.\n", ns_address_render( from ).String() );
 				Assert(false);
 				return false;
 			}
+            #else
+			Warning("Kisak Strike does not support SDR!\n");
+            #endif
 			break;
 		}
 	}

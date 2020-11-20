@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2009, Valve Corporation, All rights reserved. =======//
+//====== Copyright ï¿½ 1996-2009, Valve Corporation, All rights reserved. =======//
 //
 // Purpose: 
 //
@@ -290,6 +290,11 @@ ISteamNetworkingUtils *CNetSupportImpl::GetSteamNetworkingUtils()
 	#ifdef DEDICATED
 		Assert( false ); // why are we asking?
 		return nullptr;
+    //lwss - ifdef the SDR stuff out, it is out of scope for kisak-strike as of now
+    #elif !defined(KISAK_USE_SDR)
+        Assert( false );
+		return nullptr;
+    //lwss end
 	#else
 		return ::SteamNetworkingUtils();
 	#endif

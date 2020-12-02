@@ -12,6 +12,8 @@
 #include <RmlUi/Debugger.h>
 
 #include "rocketkeys.h"
+#include "customelements/KisakConvarSetting.h"
+#include "customelements/KisakURL.h"
 
 RocketUIImpl RocketUIImpl::m_Instance;
 EXPOSE_SINGLE_INTERFACE_GLOBALVAR( RocketUIImpl, IRocketUI, ROCKETUI_INTERFACE_VERSION, RocketUIImpl::m_Instance )
@@ -185,6 +187,14 @@ Rml::ElementDocument *RocketUIImpl::LoadDocumentFile(RocketDesinationContext_t c
         case ROCKET_CONTEXT_HUD:
             destinationCtx = m_ctxHud;
             break;
+        case ROCKET_CONTEXT_CURRENT:
+            if( !m_ctxCurrent )
+            {
+                Error("Couldn't load document: %s - loaded before 1st frame.\n", filepath );
+                return nullptr;
+            }
+            destinationCtx = m_ctxCurrent;
+            break;
         default:
             return nullptr;
     }
@@ -221,6 +231,9 @@ InitReturnVal_t RocketUIImpl::Init( void )
     RocketRender::m_Instance.SetScreenSize( width, height );
     RocketRender::m_Instance.SetContext( m_pLauncherMgr->GetMainContext() );
 
+    // Allocate and store system cursors so we can swap to them on the fly
+    RocketSystem::m_Instance.InitCursors();
+
     Rml::SetFileInterface( &RocketFileSystem::m_Instance );
     Rml::SetRenderInterface( &RocketRender::m_Instance );
     Rml::SetSystemInterface( &RocketSystem::m_Instance );
@@ -250,6 +263,10 @@ InitReturnVal_t RocketUIImpl::Init( void )
     m_ctxMenu->SetDensityIndependentPixelRatio(1.0f );
     m_ctxHud->SetDensityIndependentPixelRatio(1.0f );
 
+    // Register Custom Elements with the factory.
+    Rml::Factory::RegisterElementInstancer( "KisakConvarSettingEnum", new KisakConvarSettingEnumInstancer() );
+    Rml::Factory::RegisterElementInstancer( "KisakConvarSettingSlider", new KisakConvarSettingSliderInstancer() );
+    Rml::Factory::RegisterElementInstancer( "KisakURL", new KisakURLInstancer() );
     return INIT_OK;
 }
 
@@ -264,6 +281,9 @@ void RocketUIImpl::Shutdown()
         unsigned char *fontAlloc = m_fontAllocs[i];
         delete[] fontAlloc;
     }
+
+    // Free Cursors
+    RocketSystem::m_Instance.FreeCursors();
 
     if ( m_pShaderDeviceMgr )
     {
@@ -346,6 +366,9 @@ bool RocketUIImpl::HandleInputEvent(const InputEvent_t &event)
 {
     // Haven't rendered our very first frame ever yet.
     if( !m_ctxCurrent )
+        return false;
+
+    if( !rocket_enable.GetBool() )
         return false;
 
     // Always get the mouse location.
@@ -530,7 +553,6 @@ void RocketUIImpl::RenderMenuFrame()
 #if defined ( DX_TO_GL_ABSTRACTION )
     m_pDevice->SaveGLState();
     RocketRender::m_Instance.PrepareGLState();
-    glActiveTexture(GL_TEXTURE0);
 #endif
 
     //TODO: don't update here. update only after input or new elements

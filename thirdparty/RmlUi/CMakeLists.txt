@@ -313,6 +313,11 @@ foreach(library ${LIBRARIES})
 		${${library}_SRC_FILES}
 	)
 
+	#Kisak-Strike memoverride.cpp
+	target_compile_definitions(${NAME} PRIVATE -DLINUX -D_LINUX -DPOSIX -DCOMPILER_GCC -DBASE -DNDEBUG -DGNUC)
+	target_include_directories(${NAME} PRIVATE ../../public)
+	target_sources(${NAME} PRIVATE ../../public/tier0/memoverride.cpp)
+	#end
 	set_target_properties(${NAME} PROPERTIES
 	   VERSION ${PROJECT_VERSION}
 	   SOVERSION ${PROJECT_VERSION_MAJOR}

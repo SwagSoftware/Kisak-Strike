@@ -21,8 +21,17 @@ target_sources(${OUTBINNAME} PRIVATE rocketuiimpl.cpp)
 target_sources(${OUTBINNAME} PRIVATE rocketsystem.cpp)
 target_sources(${OUTBINNAME} PRIVATE rocketfilesystem.cpp)
 
-#OpenGL rendering imp
-target_sources(${OUTBINNAME} PRIVATE rocketrenderGL.cpp)
+#Custom Elements
+target_sources(${OUTBINNAME} PRIVATE customelements/KisakConvarSetting.cpp)
+target_sources(${OUTBINNAME} PRIVATE customelements/KisakURL.cpp)
+
+if( POSIX )
+    #OpenGL rendering imp
+    target_sources(${OUTBINNAME} PRIVATE rocketrenderGL.cpp)
+    target_link_libraries(${OUTBINNAME} SDL2)
+else()
+    message(FATAL_ERROR "not implemented for windows")
+endif()
 
 #target_link_libraries(${OUTBINNAME} ${SRCDIR}/thirdparty/RmlUi/build/libRmlCore.so)
 target_link_libraries(${OUTBINNAME} RmlCore RmlDebugger) #thirdparty/RmlUI

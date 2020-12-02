@@ -303,7 +303,6 @@ void CSystem::OpenURL(const char *szURL)
 {
     struct stat buffer;
     static const char *xdgPath = "/usr/bin/xdg-open";
-    int pid;
     if( stat( xdgPath, &buffer ) != 0 )
     {
         Warning( "Couldn't open URL! It seems your %s doesn't exist!\n", xdgPath );
@@ -319,8 +318,6 @@ void CSystem::OpenURL(const char *szURL)
 
     if( !fork() )
         execlp("xdg-open", "xdg-open", szURL, NULL );
-    else
-        Warning( "OpenURL fork() failed.\n" );
 }
 
 void CSystem::SetClipboardText(const char *text, int textLen)

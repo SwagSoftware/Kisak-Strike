@@ -139,8 +139,6 @@ void RkHudRadar::UpdateRadarSize()
     // these are children so we dont need the x+ or y+
     m_radarCenterX = ( m_radarWidth / 2.0f );
     m_radarCenterY = ( m_radarHeight / 2.0f );
-    ConMsg( "radarXY(%f/%f) - width/height(%f/%f) - centerX/Y(%f/%f)\n", m_radarX, m_radarY, m_radarWidth, m_radarHeight, m_radarCenterX, m_radarCenterY );
-
 }
 
 void RkHudRadar::UpdateRadarFrame()

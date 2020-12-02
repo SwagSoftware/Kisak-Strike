@@ -7,6 +7,7 @@
 #include "rkhud_chat.h"
 #include "rkhud_teammenu.h"
 #include "rkhud_buymenu.h"
+#include "rkpanel_options.h"
 
 Rml::ElementDocument *RocketPauseMenuDocument::m_pInstance = nullptr;
 bool RocketPauseMenuDocument::m_bVisible = false;
@@ -39,7 +40,8 @@ public:
         }
         else if( id == "pm_options" )
         {
-
+            RocketOptionsDocument::ShowPanel( true );
+            RocketPauseMenuDocument::ShowPanel( false );
         }
         else if( id == "pm_disconnect" )
         {

@@ -17,7 +17,8 @@ namespace Rml
 enum RocketDesinationContext_t
 {
     ROCKET_CONTEXT_MENU,
-    ROCKET_CONTEXT_HUD
+    ROCKET_CONTEXT_HUD,
+    ROCKET_CONTEXT_CURRENT, // whichever context is active.
 };
 
 inline IRocketUI* RocketUI()

@@ -629,6 +629,16 @@ void RocketUIImpl::SetRenderingDevice(IDirect3DDevice9 *pDevice, D3DPRESENT_PARA
     SetScreenSize( viewport.Width, viewport.Height );
 }
 
+void RocketUIImpl::SetScreenSize(int width, int height)
+{
+    m_ctxCurrent = nullptr;
+
+    m_ctxHud->SetDimensions( Rml::Vector2i( width, height ) );
+    m_ctxMenu->SetDimensions( Rml::Vector2i( width, height ) );
+
+    RocketRender::m_Instance.SetScreenSize( width, height );
+}
+
 void RocketUIImpl::ToggleDebugger()
 {
     static bool open = false;

@@ -145,11 +145,7 @@ public:
     {
         return m_fTime;
     }
-    inline void SetScreenSize( int width, int height )
-    {
-        RocketRender::m_Instance.SetScreenSize( width, height );
-    }
-
+    void SetScreenSize( int width, int height );
 };
 
 class DeviceCallbacks: public IShaderDeviceDependentObject

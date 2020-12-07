@@ -63,3 +63,5 @@ engine_ds/generated_proto/*
 !engine_ds/generated_proto/placeholder.txt
 gcsdk/generated_proto/*
 !gcsdk/generated_proto/placeholder.txt
+
+lib/common/linux64/stG3LqP3

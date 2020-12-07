@@ -24,7 +24,6 @@ set(CMAKE_CXX_FLAGS_RELEASE "")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "")
 set(CMAKE_CXX_FLAGS_MINSIZEREL "")
 set(CMAKE_CXX_FLAGS_DEBUG "")
-set(CMAKE_CXX_FLAGS_DEBUG "")
 
 #-Werror=return-type - Set these warnings to ERRORS because they can ruin your stack/day
 set(LINUX_FLAGS_COMMON " -ffast-math -march=native -Wno-invalid-offsetof -Wno-ignored-attributes -Wno-enum-compare -Werror=return-type ")

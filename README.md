@@ -24,7 +24,7 @@ sudo apt install git build-essential cmake libsdl2-mixer-dev libsdl2-dev libgoog
 ```
 #### Fedora
 ```
-TODO
+sudo dnf install git SDL2-devel SDL2_mixer-devel gperftools-devel openal-soft-devel libcurl-devel openssl-devel fontconfig-devel freetype-devel cmake gcc g++ mesa-libGL-devel
 ```
 #### Arch
 ```

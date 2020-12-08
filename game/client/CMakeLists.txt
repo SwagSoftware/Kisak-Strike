@@ -349,6 +349,7 @@ elseif( USE_ROCKETUI )
     target_sources(${OUTBINNAME} PRIVATE "cstrike15/RocketUI/rkhud_buymenu.cpp")
     target_sources(${OUTBINNAME} PRIVATE "cstrike15/RocketUI/rkhud_radar.cpp")
     target_sources(${OUTBINNAME} PRIVATE "cstrike15/RocketUI/rkpanel_options.cpp")
+    target_sources(${OUTBINNAME} PRIVATE "cstrike15/RocketUI/rkpanel_popup.cpp")
 endif()
 
 #$Folder	"vgui"

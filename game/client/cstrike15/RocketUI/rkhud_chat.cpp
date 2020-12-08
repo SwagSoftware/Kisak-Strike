@@ -10,6 +10,8 @@
 
 #include "../../../../thirdparty/RmlUi/Include/RmlUi/Core.h"
 
+#include "rkpanel_popup.h"
+
 DECLARE_HUDELEMENT( RkHudChat );
 
 ConVar rocket_hud_chat_idle_opacity( "rocket_hud_chat_idle_opacity", "0.2", 0, "The Opacity of the Chat while it is not active" );
@@ -177,8 +179,8 @@ static bool __MsgFunc_TextMsg( const CCSUsrMsg_TextMsg &msg )
     switch( dest )
     {
         case HUD_PRINTCENTER:
-            // TODO: center popup
-            Msg( "[center popup](%s)", ConvertCRtoNL( szString ) );
+            // Center popup with RocketUI that deletes itself after 4.5 seconds
+            new RocketPopupDocument( ConvertCRtoNL( szString ), 4.5f );
             break;
         case HUD_PRINTTALK:
             pChat = GET_HUDELEMENT( RkHudChat );

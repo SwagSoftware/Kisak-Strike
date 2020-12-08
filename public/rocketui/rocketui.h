@@ -12,6 +12,7 @@ namespace Rml
     class Element;
     class ElementDocument;
     class Context;
+    class EventListener;
 }
 
 enum RocketDesinationContext_t

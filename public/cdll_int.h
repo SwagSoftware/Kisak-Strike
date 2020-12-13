@@ -1150,7 +1150,7 @@ public:
 	virtual void PrepareSignedEvidenceData( void *pvData, int numBytes, CDemoPlaybackParameters_t const *pPlaybackParameters ) = 0;
 	virtual bool ShouldSkipEvidencePlayback( CDemoPlaybackParameters_t const *pPlaybackParameters ) = 0;
 
-#if defined( NCLUDE_SCALEFORM )
+#if defined( INCLUDE_SCALEFORM )
     // Scaleform slot controller
 	virtual IScaleformSlotInitController * GetScaleformSlotInitController() = 0;
 #endif

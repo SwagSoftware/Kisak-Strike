@@ -1296,7 +1296,9 @@ void ClientModeShared::FireGameEvent( IGameEvent *event )
 			}
 		}
 
-		if ( team == 0 && GetLocalTeam() > 0 )
+		//lwss fix
+		//if ( team == 0 && GetLocalTeam() > 0 )
+		if ( team == 0 && GetLocalPlayerTeam() > 0 )
 		{
 			bValidTeam = false;
 		}

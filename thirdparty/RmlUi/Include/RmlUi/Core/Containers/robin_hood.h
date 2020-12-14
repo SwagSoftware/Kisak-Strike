@@ -38,7 +38,7 @@
 #define ROBIN_HOOD_VERSION_MAJOR 3 // for incompatible API changes
 #define ROBIN_HOOD_VERSION_MINOR 5 // for adding functionality in a backwards-compatible manner
 #define ROBIN_HOOD_VERSION_PATCH 0 // for backwards-compatible bug fixes
-
+#include <limits>
 #include <algorithm>
 #include <cstdlib>
 #include <cstring>

@@ -691,7 +691,7 @@ bool CShaderDeviceMgrDx8::ComputeCapsFromD3D( HardwareCaps_t *pCaps, int nAdapte
 		if ( pVendorID )
 		{
 			int nVendorID = V_atoi( pVendorID );	// use V_atoi for hex support
-			if ( pVendorID > 0 )
+			if ( pVendorID > (const char*)0 )
 			{
 				ident.VendorId = nVendorID;
 			}

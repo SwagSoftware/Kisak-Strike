@@ -533,7 +533,9 @@ void inline SinCos( float radians, float * RESTRICT sine, float * RESTRICT cosin
 		fstp DWORD PTR [eax]
 	}
 #elif defined( GNUC )
-	register double __cosr, __sinr;
+    //lwss - remove 'register' keyword
+	//register double __cosr, __sinr;
+	double __cosr, __sinr;
  	__asm __volatile__ ("fsincos" : "=t" (__cosr), "=u" (__sinr) : "0" (radians));
 
   	*sine = __sinr;
@@ -2807,7 +2809,7 @@ inline bool CloseEnough( const Vector &a, const Vector &b, float epsilon = EQUAL
 // Fast compare
 // maxUlps is the maximum error in terms of Units in the Last Place. This 
 // specifies how big an error we are willing to accept in terms of the value
-// of the least significant digit of the floating point number’s 
+// of the least significant digit of the floating point numberï¿½s 
 // representation. maxUlps can also be interpreted in terms of how many 
 // representable floats we are willing to accept between A and B. 
 // This function will allow maxUlps-1 floats between A and B.

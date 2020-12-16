@@ -1,11 +1,16 @@
 # Kisak-Strike
-Kisak-Strike: Gentoo Offensive is a CSGO port aimed towards Linux enthusiasts. 
+Kisak-Strike: Gentoo Offensive(KSGO) is a CSGO port aimed towards Linux enthusiasts. 
 
-Our goal is to accomplish a fully open-source CSGO, something good enough to be "gentoo-approved".
+It can be built 100% Open-Source with optional Closed-source components.
 
 # Current Building Steps
 
-**Note: builds game in folder `../game`, make sure to clone the repo into a folder first!**
+```
+Attention!
+
+Kisak-Strike will build into folder ../game/
+Make sure you clone this repo inside an existing folder!
+```
 
 Kisak-Strike uses CMake, the following sections will provide more information.
 
@@ -13,10 +18,6 @@ If you want to build with VPC for an authentic experience(not recommended), see 
 
 ## Packages
 SDL2 SDL2_mixer tcmalloc_minimal rt openal curl ssl z crypto dl pthread fontconfig freetype GL
-
-#### blobs
-* steamdatagramlib_client.a
-* libsteam_api.so
 
 #### Ubuntu 
 ```
@@ -36,6 +37,7 @@ TODO
 ```
 
 ## BUILD - cmake/make
+#### CMake Options
 * -DUSE_KISAK_PHYSICS=1
     * Use the open source Physics rebuild instead of a blob from the 734 Binary repo
 * -DUSE_ROCKETUI=1
@@ -44,13 +46,14 @@ TODO
     * Change the build to dedicated server mode. Note that the builds are not in-tree compatible, some things will have to be rebuilt. Make sure to use -DDEDICATED=0 once you want to go back to the client build.
 * -DUSE_VALVE_HRTF=1
     * By default the HRTF is disabled because it requires a proprietary blob(libphonon3d.so), set this flag to re-enable it.
+ #### Usage
 ```
 cd ./cmake-build
 cmake .. <VARIOUS OPTIONS HERE>
 make -j<NUM_THREADS>
 ```
-## POSTBUILD - Acquire needed extras
-Use Depot Downloader( https://github.com/SteamRE/DepotDownloader ) with your steam account
+## POSTBUILD - Acquire Original Game Files
+Use Depot Downloader( https://github.com/SteamRE/DepotDownloader ) with your steam account. The depotdownloader built-into Steam was broken earlier this year and this is the only option currently.
 ```
 CSGO SteamAppID: 730
 CSGO Assets: DepotID: 731 ManifestID: 7043469183016184477
@@ -66,10 +69,67 @@ Linux Binaries: Depot ID: 734 4197642562793798650
     * [OPTIONAL]./game/bin/linux64/vphysics_client.so -- If you want Valve-Original physics engine. (It runs a bit better than the rebuild, but is closed-source)
     * [OPTIONAL]./game/bin/linux64/scaleformui_client.so -- If you want the ScaleformUI for some reason.
 
+## POSTBUILD - Acquire Additional Kisak-Strike Files
+Head over to the Files Repo: https://github.com/SwagSoftware/Kisak-Strike-Files
+These belong inside of your `../game/` folder.
+
+
 ## Current Nonfree blobs
-* ${LIBPUBLIC}/libsteam_api.so
-* ${LIBPUBLIC}/steamdatagramlib_client.a
+* ${LIBPUBLIC}/libsteam_api.so  - Left for Convenience, can be removed in the future.
 
 ## Launch
 `./csgo_linux64`
-    
+
+
+
+
+## License
+##### Kisak-Strike code is Property of Valve Software, do not use this code in any commercial project without first contacting sourceengine@valvesoftware.com.
+##### Any contributions made to Kisak-Strike will be considered donations to the public domain.
+
+##### The following Inherited License from Source SDK also applies.
+
+SOURCE 1 SDK LICENSE
+
+Source SDK Copyright(c) Valve Corp.  
+
+THIS DOCUMENT DESCRIBES A CONTRACT BETWEEN YOU AND VALVE 
+CORPORATION ("Valve").  PLEASE READ IT BEFORE DOWNLOADING OR USING 
+THE SOURCE ENGINE SDK ("SDK"). BY DOWNLOADING AND/OR USING THE 
+SOURCE ENGINE SDK YOU ACCEPT THIS LICENSE. IF YOU DO NOT AGREE TO 
+THE TERMS OF THIS LICENSE PLEASE DON’T DOWNLOAD OR USE THE SDK.  
+
+  You may, free of charge, download and use the SDK to develop a modified Valve game 
+running on the Source engine.  You may distribute your modified Valve game in source and 
+object code form, but only for free. Terms of use for Valve games are found in the Steam 
+Subscriber Agreement located here: http://store.steampowered.com/subscriber_agreement/ 
+
+  You may copy, modify, and distribute the SDK and any modifications you make to the 
+SDK in source and object code form, but only for free.  Any distribution of this SDK must 
+include this LICENSE file and thirdpartylegalnotices.txt.  
+ 
+  Any distribution of the SDK or a substantial portion of the SDK must include the above 
+copyright notice and the following: 
+
+    DISCLAIMER OF WARRANTIES.  THE SOURCE SDK AND ANY 
+    OTHER MATERIAL DOWNLOADED BY LICENSEE IS PROVIDED 
+    "AS IS".  VALVE AND ITS SUPPLIERS DISCLAIM ALL 
+    WARRANTIES WITH RESPECT TO THE SDK, EITHER EXPRESS 
+    OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED 
+    WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, 
+    TITLE AND FITNESS FOR A PARTICULAR PURPOSE.  
+
+    LIMITATION OF LIABILITY.  IN NO EVENT SHALL VALVE OR 
+    ITS SUPPLIERS BE LIABLE FOR ANY SPECIAL, INCIDENTAL, 
+    INDIRECT, OR CONSEQUENTIAL DAMAGES WHATSOEVER 
+    (INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF 
+    BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF 
+    BUSINESS INFORMATION, OR ANY OTHER PECUNIARY LOSS) 
+    ARISING OUT OF THE USE OF OR INABILITY TO USE THE 
+    ENGINE AND/OR THE SDK, EVEN IF VALVE HAS BEEN 
+    ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.  
+ 
+       
+If you would like to use the SDK for a commercial purpose, please contact Valve at 
+sourceengine@valvesoftware.com.
+

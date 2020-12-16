@@ -30,8 +30,9 @@ sudo dnf install git SDL2-devel SDL2_mixer-devel gperftools-devel openal-soft-de
 ```
 #### Arch
 ```
-TODO
+sdl2 sdl2_mixer gperftools openal libcurl-compat openssl fontconfig freetype2 mesa cmake gcc base-devel
 ```
+
 #### Gentoo
 ```
 TODO

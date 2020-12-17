@@ -60,7 +60,8 @@ protected:
     TogglePauseMenuFn     m_togglePauseMenuFunc;
 
     // List of Document Reload functions for hot-reloading.
-    CUtlVector< CUtlPair<LoadDocumentFn, UnloadDocumentFn> > m_documentReloadFuncs;
+    // Has a DestinationContext, and then an Load/Unload function ptr for each entry.
+    CUtlVector< CUtlPair< RocketDesinationContext_t, CUtlPair<LoadDocumentFn, UnloadDocumentFn> > > m_documentReloadFuncs;
 
     // if > 0, we are stealing input from the game.
     int                 m_numInputConsumers;

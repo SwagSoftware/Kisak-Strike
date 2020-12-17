@@ -205,7 +205,8 @@ Rml::ElementDocument *RocketUIImpl::LoadDocumentFile(RocketDesinationContext_t c
     if( loadDocumentFunc && unloadDocumentFunc )
     {
         CUtlPair<LoadDocumentFn, UnloadDocumentFn> documentFuncPair( loadDocumentFunc, unloadDocumentFunc );
-        m_documentReloadFuncs.AddToTail( documentFuncPair );
+        CUtlPair<RocketDesinationContext_t, CUtlPair<LoadDocumentFn, UnloadDocumentFn>> reloadFunctionEntry( ctx, documentFuncPair );
+        m_documentReloadFuncs.AddToTail( reloadFunctionEntry );
     }
 
     return document;
@@ -572,7 +573,7 @@ bool RocketUIImpl::ReloadDocuments()
     // I dont feel like adding a mutex check every frame for something rarely used by devs
     ThreadSleep( 100 );
 
-    CUtlVector<CUtlPair<LoadDocumentFn, UnloadDocumentFn>> copyOfPairs;
+    CUtlVector< CUtlPair< RocketDesinationContext_t, CUtlPair<LoadDocumentFn, UnloadDocumentFn> > > copyOfPairs;
 
     // Copy the pairs into a local Vector( grug, copy constructor no work )
     // We want a copy because the loading functions will mess with our Vector when we call them.
@@ -587,11 +588,22 @@ bool RocketUIImpl::ReloadDocuments()
     // Go through the copy and reload
     for( int i = 0; i < copyOfPairs.Count(); i++ )
     {
-        CUtlPair<LoadDocumentFn, UnloadDocumentFn> documentPair( copyOfPairs[i] );
+        // Only reload the ones for the current context!
+        if( copyOfPairs[i].first == ROCKET_CONTEXT_HUD && m_ctxCurrent != m_ctxHud )
+            continue;
+        if( copyOfPairs[i].first == ROCKET_CONTEXT_MENU && m_ctxCurrent != m_ctxMenu )
+            continue;
+        if( copyOfPairs[i].first == ROCKET_CONTEXT_CURRENT )
+        {
+            // Unload only, these should only be used for popups/etc
+            copyOfPairs[i].second.second();
+            continue;
+        }
+
         // Unload...
-        documentPair.second();
+        copyOfPairs[i].second.second();
         // Load...
-        documentPair.first();
+        copyOfPairs[i].second.first();
     }
 
     rocket_enable.SetValue( true );

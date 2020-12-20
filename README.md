@@ -85,8 +85,7 @@ These belong inside of your `../game/` folder.
 
 
 
-## License
-##### Kisak-Strike code is Property of Valve Software, do not use this code in any commercial project without first contacting sourceengine@valvesoftware.com.
+## License(s)
 ##### Any contributions made to Kisak-Strike will be considered donations to the public domain.
 
 ##### The following Inherited License from Source SDK also applies.

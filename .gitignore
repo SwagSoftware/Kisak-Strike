@@ -65,3 +65,7 @@ gcsdk/generated_proto/*
 !gcsdk/generated_proto/placeholder.txt
 
 lib/common/linux64/stG3LqP3
+
+
+#stashed
+hammer_qt/*

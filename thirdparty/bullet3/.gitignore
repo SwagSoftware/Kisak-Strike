@@ -1,0 +1,27 @@
+/bin
+/build3/gmake
+/build3/vs2013
+/build_cmake/
+
+*.pyc
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Pip
+pip-selfcheck.json
+*.whl
+*.egg
+*.egg-info
+
+# Setuptools
+/build
+/dist
+*.eggs
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestFile.cmake

@@ -738,6 +738,8 @@ bool CSourceAppSystemGroup::Create()
 		{ LAUNCHER_APPSYSTEM( "inputsystem" ),			INPUTSYSTEM_INTERFACE_VERSION },
 #if defined( USE_KISAK_PHYSICS )
         { LAUNCHER_APPSYSTEM( "kisakvphysics" ),				VPHYSICS_INTERFACE_VERSION },
+#elif defined( USE_BULLET_PHYSICS )
+        { LAUNCHER_APPSYSTEM( "bulletvphysics" ),			VPHYSICS_INTERFACE_VERSION },
 #else
 		{ LAUNCHER_APPSYSTEM( "vphysics" ),				VPHYSICS_INTERFACE_VERSION },
 #endif

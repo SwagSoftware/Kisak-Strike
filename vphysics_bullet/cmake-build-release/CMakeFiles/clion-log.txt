@@ -1,0 +1,149 @@
+/home/blackops/Downloads/CLion-2020.1.1/clion-2020.1.1/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Release -DUSE_ROCKETUI=1 -DCMAKE_BUILD_TYPE=RELEASE -DUSE_KISAK_PHYSICS=1 -DGL=1 -G "CodeBlocks - Unix Makefiles" /home/blackops/Documents/cstrike15_src/vphysics_bullet
+-- The C compiler identification is GNU 11.0.0
+-- The CXX compiler identification is GNU 11.0.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+CMake Error at CMakeLists.txt:12 (include):
+  include could not find load file:
+
+    /home/blackops/Documents/cstrike15_src/vphysics_bullet/cmake/detect_platform.cmake
+
+
+CMake Error at CMakeLists.txt:13 (include):
+  include could not find load file:
+
+    /home/blackops/Documents/cstrike15_src/vphysics_bullet/cmake/source_dll_base.cmake
+
+
+CMake Error at CMakeLists.txt:27 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:28 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:29 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:30 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:31 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:32 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:33 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:34 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:35 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:36 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:37 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:38 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:39 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:40 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:41 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:42 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:43 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:44 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:45 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:46 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:47 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:48 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:49 (target_sources):
+  Cannot specify sources for target "bulletvphysics_client" which is not
+  built by this project.
+
+
+CMake Error at CMakeLists.txt:52 (target_link_libraries):
+  Cannot specify link libraries for target "bulletvphysics_client" which is
+  not built by this project.
+
+
+-- Configuring incomplete, errors occurred!
+See also "/home/blackops/Documents/cstrike15_src/vphysics_bullet/cmake-build-release/CMakeFiles/CMakeOutput.log".

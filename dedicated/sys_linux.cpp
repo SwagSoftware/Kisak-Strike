@@ -274,6 +274,8 @@ bool CSys::LoadModules( CDedicatedAppSystemGroup *pAppSystemGroup )
 		{ "studiorender" DLL_EXT_STRING,		STUDIO_RENDER_INTERFACE_VERSION },
 #if defined( USE_KISAK_PHYSICS )
 		{ "kisakvphysics" DLL_EXT_STRING,			VPHYSICS_INTERFACE_VERSION },
+#elif defined( USE_BULLET_PHYSICS )
+        { "bulletvphysics" DLL_EXT_STRING,			VPHYSICS_INTERFACE_VERSION },
 #else
         { "vphysics" DLL_EXT_STRING,			VPHYSICS_INTERFACE_VERSION },
 #endif

@@ -39,6 +39,8 @@ endif()
 
 if( USE_KISAK_PHYSICS )
     add_definitions(-DUSE_KISAK_PHYSICS)
+elseif( USE_BULLET_PHYSICS )
+    add_definitions(-DUSE_BULLET_PHYSICS)
 endif()
 
 if( LINUXALL )

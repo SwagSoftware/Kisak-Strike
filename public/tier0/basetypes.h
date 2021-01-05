@@ -405,15 +405,21 @@ inline T AlignValue( T val, uintp alignment )
 
 #ifdef __cplusplus
 
-inline unsigned long& FloatBits( vec_t& f )
+//lwss these function used long, which is 64bits on linux.
+//inline unsigned long& FloatBits( vec_t& f )
+inline unsigned int& FloatBits( vec_t& f )
 {
-	return *reinterpret_cast<unsigned long*>(&f);
+	//return *reinterpret_cast<unsigned long*>(&f);
+	return *reinterpret_cast<unsigned int*>(&f);
 }
 
-inline unsigned long const& FloatBits( vec_t const& f )
+//inline unsigned long const& FloatBits( vec_t const& f )
+inline unsigned int const& FloatBits( vec_t const& f )
 {
-	return *reinterpret_cast<unsigned long const*>(&f);
+	//return *reinterpret_cast<unsigned long const*>(&f);
+	return *reinterpret_cast<unsigned int const*>(&f);
 }
+//lwss end
 
 inline vec_t BitsToFloat( unsigned long i )
 {

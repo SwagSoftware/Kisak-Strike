@@ -43,7 +43,7 @@ public:
 	// use this with the "open" command to launch web browsers/explorer windows, eg. ShellExecute("open", "www.valvesoftware.com")
 	//virtual void ShellExecute(const char *command, const char *file) = 0;
     // use this with the "open" command to launch web browsers/explorer windows, eg. ShellExecute("open", "www.valvesoftware.com")
-    virtual void ShellExecuteEx( const char *command, const char *file, const char *pParams ) = 0;
+    //virtual void ShellExecuteEx( const char *command, const char *file, const char *pParams ) = 0;
 	virtual void OpenURL( const char *szURL ) = 0;
 	// lwss: end
 

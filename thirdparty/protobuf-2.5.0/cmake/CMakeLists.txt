@@ -5,7 +5,6 @@ cmake_minimum_required(VERSION 2.8.12)
 if(UNIX AND NOT APPLE)
   #Downgrade ABI for kisakstrike
   message(STATUS "Downgrading CXX11 ABI for kisakstrike!")
-  #Also add -fvisibility=hidden, otherwise descriptor database is global
   add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -O2 -march=native)
 endif()
 

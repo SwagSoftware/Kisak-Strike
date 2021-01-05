@@ -64,8 +64,12 @@ engine_ds/generated_proto/*
 gcsdk/generated_proto/*
 !gcsdk/generated_proto/placeholder.txt
 
-lib/common/linux64/stG3LqP3
+lib/common/linux64/st*
+lib/public/linux64/st*
 
-
-#stashed
+#lwss stashed
 hammer_qt/*
+public/vphysics_interfaceV32.h
+public/vphysics_bullet/*
+vphysics_bullet/*
+thirdparty/bullet3/*

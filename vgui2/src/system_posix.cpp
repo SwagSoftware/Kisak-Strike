@@ -72,7 +72,7 @@ public:
 
     // lwss: replaced these vulnerable functions for a more friendly one (OpenURL)
     //virtual void ShellExecute(const char *command, const char *file);
-    virtual void ShellExecuteEx( const char *command, const char *file, const char *pParams );
+    //virtual void ShellExecuteEx( const char *command, const char *file, const char *pParams );
     virtual void OpenURL( const char *szURL );
 
 	virtual int GetClipboardTextCount();
@@ -288,16 +288,16 @@ long CSystem::GetTimeMillis()
 //	system( szRealCommand );
 //}
 //
-void CSystem::ShellExecuteEx( const char *command, const char *file, const char *pParams )
-{
-	//NOTE_UNUSED( pParams );
-	//ShellExecute( command, file );
-
-	// lwss: this function is only really needed on windows in a couple of spots.
-	// replaced most uses with OpenURL instead.
-	Warning("ShellExecuteEx is not implemented on Posix! Are you sure you need this function?\n" );
-	return;
-}
+//void CSystem::ShellExecuteEx( const char *command, const char *file, const char *pParams )
+//{
+//	//NOTE_UNUSED( pParams );
+//	//ShellExecute( command, file );
+//
+//	// lwss: this function is only really needed on windows in a couple of spots.
+//	// replaced most uses with OpenURL instead.
+//	Warning("ShellExecuteEx is not implemented on Posix! Are you sure you need this function?\n" );
+//	return;
+//}
 
 void CSystem::OpenURL(const char *szURL)
 {

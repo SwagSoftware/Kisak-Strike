@@ -596,9 +596,13 @@ bool ContainsBinding( const char *pszBindingString, const char *pszBinding, bool
 	}
 	else
 	{
-		// Tokenize the binding name
-		CUtlVectorAutoPurge< char *> cmdStrings;
-		V_SplitString( pszBindingString, ";", cmdStrings );
+		//lwss: change this to a regular CUtlVector.
+		// This is the only use of this weird Vector class that calls the wrong delete operator instead of delete[] on destruction.
+		//CUtlVectorAutoPurge< char *> cmdStrings;
+		CUtlVector< char *> cmdStrings;
+		//lwss end
+        // Tokenize the binding name
+        V_SplitString( pszBindingString, ";", cmdStrings );
 		FOR_EACH_VEC( cmdStrings, i )
 		{
 			char* szCmd = cmdStrings[ i ];

@@ -1271,6 +1271,14 @@ bool CBaseClient::CLCMsg_ListenEvents( const CCLCMsg_ListenEvents& msg )
 
 	CBitVec<MAX_EVENT_NUMBER> EventArray;
 
+	//lwss add - Prevent stack overflow (yes this is in retail too)
+	if( msg.event_mask_size() > 15 )
+    {
+	    DevMsg("ProcessListenEvents: Overflow! Too many event masks in protobuf!\n");
+	    return false;
+    }
+	//lwss end
+
 	for( int i = 0; i < msg.event_mask_size(); i++ )
 	{
 		EventArray.SetDWord( i, msg.event_mask( i ) );

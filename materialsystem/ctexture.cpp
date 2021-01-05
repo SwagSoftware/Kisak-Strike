@@ -4714,7 +4714,10 @@ void CTexture::ReconstructTexture( void *pSourceData, int nSourceDataSize )
 	}
 #endif // _GAMECONSOLE
 
-	delete [] pResolvedFilename;
+	//lwss - This is actually done with malloc(). Goes through about 15 function calls, unsure where exactly but it was flagged by ASAN
+	//delete [] pResolvedFilename;
+	free( pResolvedFilename );
+	//lwss end
 
 	// the 360 does not persist a large buffer
 	// the pc can afford to persist a large buffer

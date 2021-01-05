@@ -159,7 +159,10 @@ protected:
 	public:
 		// This should be a virtual destructor to avoid undefined behavior and many warnings, but doing so
 		// causes plugins to break. It's not worth the trouble at this point.
-        //virtual ~ICVarIteratorInternal() {}
+		//lwss - This causes a leak of 32 bytes whenever it's used. Going to revert, it's normal in the source 2013 SDK
+		// TODO: what did he mean by plugins breaking? Talking about CSGO community servers?
+        virtual ~ICVarIteratorInternal() {}
+        //lwss end
 		virtual void		SetFirst( void ) RESTRICT = 0;
 		virtual void		Next( void ) RESTRICT = 0;
 		virtual	bool		IsValid( void ) RESTRICT = 0;

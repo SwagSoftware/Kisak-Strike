@@ -842,6 +842,9 @@ typedef void * HINSTANCE;
 	#define DISABLE_VC_WARNING( x ) __pragma(warning(disable:4310) )
 	#define DEFAULT_VC_WARNING( x ) __pragma(warning(default:4310) )
 
+    //lwss add - For ASAN exceptions/false positives. ( Not usable on windows )
+    #define ATTRIBUTE_NO_SANITIZE_ADDRESS
+
 
 #elif defined ( COMPILER_GCC ) || defined( COMPILER_SNC )
 
@@ -876,7 +879,10 @@ typedef void * HINSTANCE;
 	#define EXPLICIT
 	#define NO_VTABLE
 
-	#define NULLTERMINATED			
+	//lwss add - For ASAN exceptions/false positives.
+    #define ATTRIBUTE_NO_SANITIZE_ADDRESS __attribute__((no_sanitize_address))
+
+    #define NULLTERMINATED
 
 #if defined( COMPILER_SNC )
 	#define TEMPLATE_STATIC static

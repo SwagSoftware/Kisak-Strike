@@ -20,6 +20,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(KisakStrike)
 
+include(kisak-strike-build-options.cmake)
+
 add_subdirectory(appframework)
 add_subdirectory(external/crypto++-5.61)
 add_subdirectory(interfaces)
@@ -38,6 +40,7 @@ add_subdirectory(vgui2/vgui_controls)
 add_subdirectory(vgui2/vgui_surfacelib)
 add_subdirectory(soundsystem/lowlevel)
 add_subdirectory(thirdparty/quickhull)
+add_subdirectory(thirdparty/gperftools-2.8.1) #We include this version instead of distro-pkg because there is a false positive in ASAN
 add_subdirectory(thirdparty/protobuf-2.5.0/cmake)
 add_subdirectory(utils/bzip2)
 add_subdirectory(utils/jpeglib)

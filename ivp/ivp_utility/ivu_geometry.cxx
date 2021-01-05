@@ -191,6 +191,9 @@ IVP_U_INTERSECT_TYPE IVP_U_Straight::calc_intersect_with(const IVP_U_Straight *s
 	return IVP_U_INTERSECT_NO_INTERSECTION; // have distance
     }
     CORE;
+
+    //lwss add - Need to return something even if it coredumps (gcc -Werror=return-type)
+    return IVP_U_INTERSECT_NO_INTERSECTION;
 }
 
 

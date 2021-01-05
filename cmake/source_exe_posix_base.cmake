@@ -41,7 +41,7 @@ endif()
 if( LINUXALL AND NOT DEDICATED )
     if( LINUX64 )
         #target_link_libraries(${OUTBINNAME} "${SRCDIR}/thirdparty/gperftools-2.0/.libs/x86_64/libtcmalloc_minimal.so")# [$LINUX64]
-        #Switch to system package for tcmalloc_minimal ( gperftools-devel.x86_64 for fedora )
+        #SWITCH BACK to a new version in /thirdparty. Unfortunately ASAN detects a false positive in this library and we need to edit the source.
         target_link_libraries(${OUTBINNAME} tcmalloc_minimal)
     else()
         #$ImpLibExternal	"$SRCDIR/thirdparty/gperftools-2.0/.libs/tcmalloc_minimal" [$LINUX32]

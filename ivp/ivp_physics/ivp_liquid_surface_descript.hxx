@@ -8,6 +8,10 @@
 
 class IVP_Liquid_Surface_Descriptor {
 public:
+    //lwss add virtual destructor ( was leaking 40 bytes )
+    virtual ~IVP_Liquid_Surface_Descriptor() {}
+    //lwss end
+
     virtual void calc_liquid_surface( IVP_Environment *environment,
 				      IVP_Core *core,
 				      IVP_U_Float_Hesse *surface_normal_out,

@@ -1942,6 +1942,9 @@ private:
 #elif defined(POSIX)
 	pthread_t m_threadId;
 	volatile pthread_t	m_threadZombieId;
+	//lwss add - Thread params. These were previously allocated on the heap and leaked.
+    ThreadInit_t m_threadInit;
+    //lwss end
 #endif
 	int		m_result;
 	char	m_szName[32];

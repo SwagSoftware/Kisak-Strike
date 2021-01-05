@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======//
+//====== Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. =======//
 //
 // Purpose: 
 //
@@ -169,6 +169,9 @@ public:
 
 	// Purges the list and calls delete on each element in it.
 	void PurgeAndDeleteElements();
+    //lwss add
+    void PurgeAndDeleteElementsArray(); // Similar to the above but uses delete[] operator instead of delete
+    //lwss end
 
 	// Compacts the vector to the number of elements actually in use 
 	void Compact();
@@ -481,6 +484,20 @@ public:
 			RemoveAll();
 		}
 	}
+
+    //lwss add - Similar to above, but uses delete[] operator instead of delete
+    void PurgeAndDeleteElementsArray()
+    {
+        if ( m_pData != StaticData() )
+        {
+            for( int i=0; i < m_pData->m_Size; i++ )
+            {
+                delete[] Element(i);
+            }
+            RemoveAll();
+        }
+    }
+    //lwss end
 
 	void FastRemove( int elem )
 	{
@@ -1375,6 +1392,17 @@ inline void CUtlVector<T, A>::PurgeAndDeleteElements()
 	}
 	Purge();
 }
+//lwss add - similar to above, but uses delete[] operator instead of delete
+template< typename T, class A >
+inline void CUtlVector<T, A>::PurgeAndDeleteElementsArray()
+{
+    for( int i=0; i < m_Size; i++ )
+    {
+        delete[] Element(i);
+    }
+    Purge();
+}
+//lwss end
 
 template< typename T, class A >
 inline void CUtlVector<T, A>::Compact()
@@ -1404,23 +1432,37 @@ void CUtlVector<T, A>::Validate( CValidator &validator, char *pchName )
 }
 #endif // DBGFLAG_VALIDATE
 
+//lwss - Removed this stinky class. It uses the wrong delete[] operator for char* allocated by new[]
+// only used in 1 place
+// --
 // A vector class for storing pointers, so that the elements pointed to by the pointers are deleted
 // on exit.
-template<class T> class CUtlVectorAutoPurge : public CUtlVector< T, CUtlMemory< T, int> >
-{
-public:
-	~CUtlVectorAutoPurge( void )
-	{
-		this->PurgeAndDeleteElements();
-	}
-
-};
+//template<class T> class CUtlVectorAutoPurge : public CUtlVector< T, CUtlMemory< T, int> >
+//{
+//public:
+//	~CUtlVectorAutoPurge( void )
+//	{
+//		this->PurgeAndDeleteElements();
+//	}
+//
+//};
+//lwss end
 
 // easy string list class with dynamically allocated strings. For use with V_SplitString, etc.
 // Frees the dynamic strings in destructor.
-class CUtlStringList : public CUtlVectorAutoPurge< char *>
+
+//lwss- Remove intermediate class above
+//class CUtlStringList : public CUtlVectorAutoPurge< char *>
+class CUtlStringList : public CUtlVector< char*, CUtlMemory< char*, int > >
+//lwss end
 {
 public:
+    //lwss - Change destructor to call a Version where delete[] is used instead of delete
+    ~CUtlStringList( void )
+    {
+        PurgeAndDeleteElementsArray();
+    }
+    //lwss end
 	void CopyAndAddToTail( char const *pString )			// clone the string and add to the end
 	{
 		char *pNewStr = new char[1 + strlen( pString )];
@@ -1477,6 +1519,9 @@ public:
 private:
 	void Construct(const char *pString, const char **pSeparators, int nSeparators);
 	void PurgeAndDeleteElements();
+	//lwss add
+    void PurgeAndDeleteElementsArray(); // Similar to the above but uses delete[] operator instead of delete
+	//lwss end
 private:
 	char *m_szBuffer; // a copy of original string, with '\0' instead of separators
 };

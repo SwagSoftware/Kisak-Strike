@@ -636,6 +636,11 @@ void MXR_SetSoloActive(void)
 
 	if ( !snd_disable_mixer_solo.GetBool() )
 	{
+	    //lwss bugfix: this sometimes is -1 and is used to index the array below.
+	    // Other portions of the code check for it to be < 0 and return early, so that's what I'll do
+	    if( g_isoundmixer < 0 )
+	        return;
+	    //lwss end
 		soundmixer_t *pmixer = &g_soundmixers[g_isoundmixer];
 
 		// for every entry in mapMixgroupidToSolo which is not 0

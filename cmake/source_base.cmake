@@ -19,6 +19,12 @@ add_definitions(-DALLOW_DEVELOPMENT_CVARS) #let's allow development convars sinc
 
 set(RAD_TELEMETRY_DISABLED "1")
 
+#CMAKE FILLS THESE IN BY DEFAULT. NUKE THEM!
+set(CMAKE_CXX_FLAGS_RELEASE "")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "")
+set(CMAKE_CXX_FLAGS_MINSIZEREL "")
+set(CMAKE_CXX_FLAGS_DEBUG "")
+
 #add_definitions(-DVPC) #lwss - might not be needed?
 #if( ${CSTRIKE_TRUNK_BUILD} MATCHES "1" )
 #    message("On Branch - Trunk.")

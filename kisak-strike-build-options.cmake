@@ -22,7 +22,7 @@ option(USE_BULLET_PHYSICS "( NOT DONE )" OFF)
 
 
 # Kisak-Strike Developer Options
-#ASAN - note that you cannot use GDB with ASAN because it uses ptrace
+# (Gamer Tip: use gdb command `b __asan::ReportGenericError` to break on ASAN errors)
 option(USE_ASAN "Enable the Address Sanitizer GCC plugin, used for finding memory errors/bugs" OFF)
 
 

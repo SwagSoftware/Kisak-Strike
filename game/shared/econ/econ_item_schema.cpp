@@ -1062,7 +1062,12 @@ void CEconQuestDefinition::PopulateQuestStringTokens( CEconQuestDefinition &ques
 				// insert the weapon into the 'items' true subkey
 				for ( int i = 1; i < 20; i++ )
 				{
-					const char * szItemKeyName = CFmtStr( "item%d", i );
+
+                    //lwss fix: this CFmtStr() is a stack-use-after-scope.
+					//const char * szItemKeyName = CFmtStr( "item%d", i );
+                    char szItemKeyName[16];
+                    V_snprintf(szItemKeyName, 16, "item%d", i );
+                    //lwss end
 					if ( !pkvItems->FindKey( szItemKeyName ) )
 					{
 						pkvItems->SetString( szItemKeyName, pWeaponItemDef->GetItemBaseName( ) );
@@ -1097,7 +1102,12 @@ void CEconQuestDefinition::PopulateQuestStringTokens( CEconQuestDefinition &ques
 						// insert the weapon into the 'items' true subkey
 						for ( int j = 1; j < 20; j++ )
 						{
-							const char * szItemKeyName = CFmtStr( "item%d", j );
+						    //lwss fix: this CFmtStr() is a stack-use-after-scope.
+							//const char * szItemKeyName = CFmtStr( "item%d", j );
+							char szItemKeyName[16];
+							V_snprintf(szItemKeyName, 16, "item%d", j );
+							//lwss end
+
 							if ( !pkvItems->FindKey( szItemKeyName ) )
 							{
 								const char * szLoadoutStringNoHashMark = g_szLoadoutStringsForDisplay[ i ] + 1;
@@ -1964,6 +1974,8 @@ void CEconQuestDefinition::TokenizeQuestExpression( const char * szExpression, K
 
 			// step past '%'
 			pCur++;
+            //lwss bugfix: add continue so pCur++ is not incremented 2x without being checked at the start of the loop. ( fix oob )
+            continue;
 		}
 		else if ( *pCur == '%' && bReadingKeyword )
 		{
@@ -1979,6 +1991,8 @@ void CEconQuestDefinition::TokenizeQuestExpression( const char * szExpression, K
 
 			// step past '%'
 			pCur++;
+			//lwss bugfix: add continue so pCur++ is not incremented 2x without being checked at the start of the loop. ( fix oob )
+			continue;
 		}
 
 		if ( bReadingKeyword )

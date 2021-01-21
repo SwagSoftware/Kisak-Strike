@@ -2,6 +2,7 @@
 
 #include <tier1/keyvalues.h>
 #include <vphysics/constraints.h>
+#include <filesystem_helpers.h>
 
 #include "Physics_KeyParser.h"
 #include "Physics_SurfaceProps.h"
@@ -239,8 +240,7 @@ void CPhysicsKeyParser::ParseVehicle(vehicleparams_t *pVehicle, IVPhysicsKeyHand
 //lwss add
 void CPhysicsKeyParser::ParseCollisionRules( ragdollcollisionrules_t *pRules, IVPhysicsKeyHandler *unknownKeyHandler )
 {
-    char value[MAX_KEYVALUE], temp[MAX_KEYVALUE];
-
+    char temp[MAX_KEYVALUE];
     for( KeyValues *data = m_pCurrentBlock->GetFirstSubKey(); data; data = data->GetNextKey() ) {
         const char *key = data->GetName();
 
@@ -252,21 +252,23 @@ void CPhysicsKeyParser::ParseCollisionRules( ragdollcollisionrules_t *pRules, IV
         {
             if( pRules->bSelfCollisions )
             {
-                const char *token = nexttoken( temp, value, ',' );
+                const char *token = nexttoken( temp, data->GetString(), ',' );
                 int tokenValue = atoi( temp );
                 nexttoken( temp, token, ',' );
                 int tokenValue2 = atoi( temp );
                 pRules->pCollisionSet->EnableCollisions( tokenValue, tokenValue2 );
             }
         }
-        else
-        {
-            if( unknownKeyHandler )
-            {
-                unknownKeyHandler->ParseKeyValue( pRules, key, value );
-            }
-        }
+        //lwss: this is never the case in this codebase
+        //else
+        //{
+        //    if( unknownKeyHandler )
+        //    {
+        //        unknownKeyHandler->ParseKeyValue( pRules, key, value );
+        //    }
+        //}
     }
+    NextBlock();
 }
 void CPhysicsKeyParser::ParseRagdollAnimatedFriction( ragdollanimatedfriction_t *pFriction, IVPhysicsKeyHandler *unknownKeyHandler	)
 {
@@ -282,23 +284,23 @@ void CPhysicsKeyParser::ParseRagdollAnimatedFriction( ragdollanimatedfriction_t 
 
         if( !Q_stricmp( key, "animfrictionmin" ) )
         {
-            pFriction->minFriction = atof( value );
+            pFriction->minFriction = data->GetFloat();
         }
         else if( !Q_stricmp( key, "animfrictionmax" ) )
         {
-            pFriction->maxFriction = atof( value );
+            pFriction->maxFriction = data->GetFloat();
         }
         else if( !Q_stricmp( key, "animfrictiontimein" ) )
         {
-            pFriction->timeIn = atof( value );
+            pFriction->timeIn = data->GetFloat();
         }
         else if( !Q_stricmp( key, "animfrictiontimeout" ) )
         {
-            pFriction->timeOut = atof( value );
+            pFriction->timeOut = data->GetFloat();
         }
         else if( !Q_stricmp( key, "animfrictiontimehold" ) )
         {
-            pFriction->timeHold = atof( value );
+            pFriction->timeHold = data->GetFloat();
         }
         else
         {
@@ -308,6 +310,7 @@ void CPhysicsKeyParser::ParseRagdollAnimatedFriction( ragdollanimatedfriction_t 
             }
         }
     }
+    NextBlock();
 }
 //lwss end
 

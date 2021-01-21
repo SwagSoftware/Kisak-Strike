@@ -14,8 +14,9 @@ option(DEDICATED "Build as DEDICATED server. This is Separate from the main buil
 Make sure to build with -DDEDICATED=0 once you want a regular client again." OFF)
 
 # Physics Options
-option(USE_KISAK_PHYSICS "Use the Open Source Physics Re-Build made for kisak-strike from various leaked sources" ON)
-option(USE_BULLET_PHYSICS "( NOT DONE )" OFF)
+option(USE_KISAK_PHYSICS "Use the Open Source Physics Re-Build made for kisak-strike from various leaked sources" OFF)
+option(USE_BULLET_PHYSICS "Use Open Source Bullet3 Physics Engine(zlib)" OFF)
+option(USE_BULLET_PHYSICS_THREADED "Use Multi-Threading for the Bullet Physics Engine. Use convar 'bt_threadcount' to set." OFF)
 # 3rd option is to have both of these OFF, the closed source blob from Valve will be used instead.
 
 

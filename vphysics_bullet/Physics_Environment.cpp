@@ -653,10 +653,15 @@ CPhysicsEnvironment::CPhysicsEnvironment() {
 #ifdef BT_THREADSAFE
 	// Initilize task scheduler, we will be using TBB
 	// btSetTaskScheduler(btGetSequentialTaskScheduler()); // Can be used for debugging purposes
-	btSetTaskScheduler(btGetTBBTaskScheduler());
-	const int maxNumThreads = btGetTBBTaskScheduler()->getMaxNumThreads();
-	btGetTBBTaskScheduler()->setNumThreads(maxNumThreads);
-	cvar_threadcount.SetValue(maxNumThreads);
+
+	//btSetTaskScheduler(btGetTBBTaskScheduler());
+	//const int maxNumThreads = btGetTBBTaskScheduler()->getMaxNumThreads();
+	//btGetTBBTaskScheduler()->setNumThreads(maxNumThreads);
+
+    btSetTaskScheduler(btGetOpenMPTaskScheduler());
+    //lwss: this is silly to use all cpu threads, how about just 2
+    btGetOpenMPTaskScheduler()->setNumThreads(2);
+	cvar_threadcount.SetValue(2);
 #endif
 	
 	// Create a fresh new dynamics world
@@ -722,6 +727,7 @@ btConstraintSolver* createSolverByType(SolverType t)
 	return NULL;
 }
 
+IVPhysicsDebugOverlay *g_pDebugOverlay = NULL;
 void CPhysicsEnvironment::CreateEmptyDynamicsWorld()
 {
 	if(gBulletDynamicsWorldGuard)
@@ -848,8 +854,10 @@ void CPhysicsEnvironment::CreateEmptyDynamicsWorld()
 #endif
 
 	// HACK: Get ourselves a debug overlay on the client
-	CreateInterfaceFn engine = Sys_GetFactory("engine");
-	CPhysicsEnvironment::SetDebugOverlay(engine);
+	// CreateInterfaceFn engine = Sys_GetFactory("engine");
+	// CPhysicsEnvironment::SetDebugOverlay(engine);
+	m_pDebugOverlay = g_Physics.GetPhysicsDebugOverlay();
+	g_pDebugOverlay = m_pDebugOverlay;
 }
 
 // Don't call this directly
@@ -861,16 +869,15 @@ void CPhysicsEnvironment::TickCallback(btDynamicsWorld *world, btScalar timeStep
 		pEnv->BulletTick(timeStep);
 }
 
-IVPhysicsDebugOverlay *g_pDebugOverlay = NULL;
-void CPhysicsEnvironment::SetDebugOverlay(CreateInterfaceFn debugOverlayFactory) {
-	if (debugOverlayFactory && !g_pDebugOverlay)
-		g_pDebugOverlay = static_cast<IVPhysicsDebugOverlay*>(debugOverlayFactory(VPHYSICS_DEBUG_OVERLAY_INTERFACE_VERSION, NULL));
-
-#if DEBUG_DRAW
-	if (g_pDebugOverlay)
-		m_debugdraw->SetDebugOverlay(g_pDebugOverlay);
-#endif
-}
+//void CPhysicsEnvironment::SetDebugOverlay(CreateInterfaceFn debugOverlayFactory) {
+//	if (debugOverlayFactory && !g_pDebugOverlay)
+//		g_pDebugOverlay = static_cast<IVPhysicsDebugOverlay*>(debugOverlayFactory(VPHYSICS_DEBUG_OVERLAY_INTERFACE_VERSION, NULL));
+//
+//#if DEBUG_DRAW
+//	if (g_pDebugOverlay)
+//		m_debugdraw->SetDebugOverlay(g_pDebugOverlay);
+//#endif
+//}
 
 IVPhysicsDebugOverlay *CPhysicsEnvironment::GetDebugOverlay() {
 	return g_pDebugOverlay;

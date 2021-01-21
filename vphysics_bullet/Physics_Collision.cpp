@@ -101,7 +101,7 @@ void CCollisionQuery::SetTriangleMaterialIndex(int convexIndex, int triangleInde
 ****************************/
 
 BEGIN_BYTESWAP_DATADESC(collideheader_t)
-	//DEFINE_FIELD(size, FIELD_INTEGER), //lwss: removed in csgo
+	DEFINE_FIELD(size, FIELD_INTEGER),
 	DEFINE_FIELD(vphysicsID, FIELD_INTEGER),
 	DEFINE_FIELD(version, FIELD_SHORT),
 	DEFINE_FIELD(modelType, FIELD_SHORT),
@@ -1478,7 +1478,7 @@ void CPhysicsCollision::VCollideLoad(vcollide_t *pOutput, int solidCount, const 
 	memcpy(pOutput->pKeyValues, pBuffer + position, bufferSize - position);
 
 	// swap argument means byte swap - we must byte swap all of the collision shapes before loading them if true!
-	DevMsg("VPhysics: VCollideLoad with %d solids, swap is %s\n", solidCount, swap ? "true" : "false");
+	// DevMsg("VPhysics: VCollideLoad with %d solids, swap is %s\n", solidCount, swap ? "true" : "false");
 
 	// Now for the fun part:
 	// We must convert all of the ivp shapes into something we can use.

@@ -108,6 +108,12 @@ if( USE_KISAK_PHYSICS )
 #Experimental open source Bullet Physics
 elseif( USE_BULLET_PHYSICS )
     add_definitions(-DUSE_BULLET_PHYSICS)
+    #lwss: threading is experimental
+    if( USE_BULLET_PHYSICS_THREADED )
+        add_definitions(-DBT_THREADSAFE -DBT_USE_OPENMP)
+        set(BULLET2_MULTITHREADING ON CACHE BOOL "" FORCE)
+        set(BULLET2_USE_OPEN_MP_MULTITHREADING ON CACHE BOOL "" FORCE)
+    endif()
     message("Using Bullet Open-Source Physics\n")
     set(BUILD_BULLET2_DEMOS OFF CACHE BOOL "" FORCE)
     set(BUILD_CPU_DEMOS OFF CACHE BOOL "" FORCE)

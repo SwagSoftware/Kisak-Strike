@@ -8,7 +8,7 @@
 struct collideheader_t {
 	DECLARE_BYTESWAP_DATADESC()
 
-	//int		size; // lwss: this is gone in csgo
+	int		size;
 	int		vphysicsID;		// Generally the ASCII for "VPHY" in newer files
 	short	version;
 	short	modelType;

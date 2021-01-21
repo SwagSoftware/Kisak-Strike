@@ -234,8 +234,27 @@ void btDbgFreeInternal(void *ptr, int blockType)
 
 #else  // BT_DEBUG_MEMORY_ALLOCATIONS
 
-static btAlignedAllocFunc *sAlignedAllocFunc = btAlignedAllocDefault;
-static btAlignedFreeFunc *sAlignedFreeFunc = btAlignedFreeDefault;
+//lwss add: The default memory allocator crashes
+// Bullet has a function to set custom allocators(btAlignedAllocSetCustom), However it does not work!
+// So here I am setting the default allocator in the library to g_pMemAlloc()
+
+#include <tier0/memalloc.h>
+
+static void *KisakBulletAlloc( size_t size, int alignment )
+{
+    return g_pMemAlloc->Alloc( size );
+}
+static void KisakBulletFree( void *ptr )
+{
+    g_pMemAlloc->Free( ptr );
+}
+
+static btAlignedAllocFunc *sAlignedAllocFunc = KisakBulletAlloc;
+//static btAlignedAllocFunc *sAlignedAllocFunc = btAlignedAllocDefault;
+static btAlignedFreeFunc *sAlignedFreeFunc = KisakBulletFree;
+//static btAlignedFreeFunc *sAlignedFreeFunc = btAlignedFreeDefault;
+
+//lwss end
 
 void btAlignedAllocSetCustomAligned(btAlignedAllocFunc *allocFunc, btAlignedFreeFunc *freeFunc)
 {

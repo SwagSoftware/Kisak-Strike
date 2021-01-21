@@ -57,7 +57,7 @@ public:
 	CPhysicsEnvironment();
 	~CPhysicsEnvironment();
 
-	void									SetDebugOverlay(CreateInterfaceFn debugOverlayFactory);
+	void									SetDebugOverlay(CreateInterfaceFn debugOverlayFactory) { /* Do Nothing */}
 	IVPhysicsDebugOverlay *					GetDebugOverlay();
 	btIDebugDraw *							GetDebugDrawer() const;
 

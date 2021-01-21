@@ -7,6 +7,8 @@
 #include "Physics_ObjectPairHash.h"
 #include "Physics_CollisionSet.h"
 
+#include <engine/ivdebugoverlay.h>
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -35,6 +37,24 @@ CPhysics::~CPhysics() {
 #endif
 }
 
+//lwss add
+bool CPhysics::Connect(CreateInterfaceFn factory)
+{
+    if ( !BaseClass::Connect( factory ) )
+    {
+        return false;
+    }
+
+    this->m_pPhysicsDebugOverlay = ( IVPhysicsDebugOverlay * )factory( VPHYSICS_DEBUG_OVERLAY_INTERFACE_VERSION, NULL );
+
+    return true;
+}
+
+void CPhysics::Disconnect()
+{
+    BaseClass::Disconnect();
+}
+//lwss end
 InitReturnVal_t CPhysics::Init() {
 	const InitReturnVal_t nRetVal = BaseClass::Init();
 	if (nRetVal != INIT_OK) return nRetVal;

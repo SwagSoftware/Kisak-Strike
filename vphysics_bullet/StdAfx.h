@@ -22,9 +22,6 @@
 	#define DEBUG_DRAW 0
 #endif
 
-// Thread support is enabled by default
-#define BT_THREADSAFE
-
 // Probably shouldn't be using defines for these.
 #define SLEEP_LINEAR_THRESHOLD 0.15 // m/s
 #define SLEEP_ANGULAR_THRESHOLD 0.1 // rad/s

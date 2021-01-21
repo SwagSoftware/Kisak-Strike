@@ -9,8 +9,13 @@ FILE (STRINGS "VERSION" BULLET_VERSION)
 
 SET(THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
-#kisak-strike: add -fpic
+#kisak-strike changes:
 add_definitions(-fpic)
+if( LINUX )
+	add_definitions(-DLINUX -D_LINUX -DPOSIX -DCOMPILER_GCC -DBASE -DNDEBUG -DGNUC)
+endif()
+#TODO: do we need memoverride.cpp?
+include_directories(${CMAKE_SOURCE_DIR}/public) #Change the allocator is btAlignedAllocator.cpp
 
 IF(COMMAND cmake_policy)
    cmake_policy(SET CMP0003 NEW)

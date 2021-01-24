@@ -20,9 +20,9 @@
 
 // BUG: Debug draw causes memory leak in the server
 
-static ConVar cvar_renderoverlay("vphysics_renderoverlay", "0", FCVAR_CHEAT | FCVAR_ARCHIVE, "Render debug overlay");
-static ConVar cvar_overlaywireframe("vphysics_overlay_wireframe", "0", FCVAR_CHEAT, "Render wireframe on the overlay (lags on most maps!)");
-static ConVar cvar_overlaydepthtest("vphysics_overlay_nodepthtest", "0", FCVAR_CHEAT | FCVAR_ARCHIVE, "No depth test when rendering the overlay");
+static ConVar cvar_renderoverlay("bt_renderoverlay", "0", FCVAR_CHEAT | FCVAR_ARCHIVE, "Render debug overlay");
+static ConVar cvar_overlaywireframe("bt_overlay_wireframe", "0", FCVAR_CHEAT, "Render wireframe on the overlay (lags on most maps!)");
+static ConVar cvar_overlaydepthtest("bt_overlay_nodepthtest", "0", FCVAR_CHEAT | FCVAR_ARCHIVE, "No depth test when rendering the overlay");
 
 CDebugDrawer::CDebugDrawer(btCollisionWorld *world) : m_debugMode(0), m_overlay(NULL) {
 	setDebugMode(/*DBG_DrawAabb |*/ DBG_DrawConstraintLimits | DBG_DrawConstraints | DBG_DrawContactPoints |

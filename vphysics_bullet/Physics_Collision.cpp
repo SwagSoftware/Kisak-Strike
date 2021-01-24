@@ -991,7 +991,7 @@ class CFilteredConvexResultCallback : public btCollisionWorld::ClosestConvexResu
 		btCollisionShape *m_pShape;
 };
 
-static ConVar vphysics_visualizetraces("vphysics_visualizetraces", "0", FCVAR_CHEAT, "Visualize physics traces");
+static ConVar bt_visualizetraces("bt_visualizetraces", "0", FCVAR_CHEAT, "Visualize physics traces");
 
 void CPhysicsCollision::TraceBox(const Ray_t &ray, unsigned int contentsMask, IConvexInfo *pConvexInfo, const CPhysCollide *pCollide, const Vector &collideOrigin, const QAngle &collideAngles, trace_t *ptr) {
 	if (!pCollide || !ptr) return;
@@ -1057,7 +1057,7 @@ void CPhysicsCollision::TraceBox(const Ray_t &ray, unsigned int contentsMask, IC
 			ptr->endpos = ptr->startpos + ray.m_Delta;
 		}
 
-		if (vphysics_visualizetraces.GetBool() && g_pDebugOverlay) {
+		if (bt_visualizetraces.GetBool() && g_pDebugOverlay) {
 			g_pDebugOverlay->AddLineOverlay(ptr->startpos, ptr->endpos, 0, 0, 255, false, 0.f);
 
 			if (ptr->fraction < 1.f) {
@@ -1070,7 +1070,7 @@ void CPhysicsCollision::TraceBox(const Ray_t &ray, unsigned int contentsMask, IC
 			}
 		}
 	} else if (ray.m_IsSwept) { // Box trace!
-		if (vphysics_visualizetraces.GetBool() && g_pDebugOverlay) {
+		if (bt_visualizetraces.GetBool() && g_pDebugOverlay) {
 			// Trace start box (red)
 			g_pDebugOverlay->AddBoxOverlay(ray.m_Start, -ray.m_Extents, ray.m_Extents, QAngle(0, 0, 0), 255, 0, 0, 10, 0.0f);
 
@@ -1130,7 +1130,7 @@ void CPhysicsCollision::TraceBox(const Ray_t &ray, unsigned int contentsMask, IC
 			}
 
 			// Debug trace visualizing
-			if (vphysics_visualizetraces.GetBool() && g_pDebugOverlay) {
+			if (bt_visualizetraces.GetBool() && g_pDebugOverlay) {
 				if (!ptr->allsolid) {
 					btVector3 lineEnd = cb.m_hitPointWorld + (cb.m_hitNormalWorld * 1);
 					Vector hlEnd, hlStart;
@@ -1144,7 +1144,7 @@ void CPhysicsCollision::TraceBox(const Ray_t &ray, unsigned int contentsMask, IC
 
 		ptr->endpos = ptr->startpos + (ray.m_Delta * ptr->fraction);
 
-		if (vphysics_visualizetraces.GetBool() && g_pDebugOverlay) {
+		if (bt_visualizetraces.GetBool() && g_pDebugOverlay) {
 			if (ptr->startsolid) {
 				g_pDebugOverlay->AddTextOverlay(ptr->endpos, 0, 0.f, "Trace started in solid!");
 			}

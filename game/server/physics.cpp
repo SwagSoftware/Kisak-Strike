@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//===== Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: Interface layer for ipion IVP physics.
 //
@@ -2789,7 +2789,7 @@ void PhysFrictionSound( CBaseEntity *pEntity, IPhysicsObject *pObject, const cha
 {
 	if ( !pEntity )
 		return;
-	
+
 #if defined ( PORTAL2 )
 	if ( ( pObject->GetGameFlags() & FVPHYSICS_PLAYER_HELD ) )  
 		return;
@@ -2797,7 +2797,7 @@ void PhysFrictionSound( CBaseEntity *pEntity, IPhysicsObject *pObject, const cha
 	// cut out the quiet sounds
 	// UNDONE: Separate threshold for starting a sound vs. continuing?
 	flVolume = clamp( flVolume, 0.0f, 1.0f );
-	if ( flVolume > (1.0f/128.0f) )
+	if ( flVolume > (1.0f/128.0f) ) // 0.0078125
 	{
 		friction_t *pFriction = g_Collisions.FindFriction( pEntity );
 		if ( !pFriction )

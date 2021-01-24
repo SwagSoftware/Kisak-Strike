@@ -1178,8 +1178,18 @@ float CPhysicsEnvironment::GetNextFrameTime() const {
 }
 
 void CPhysicsEnvironment::SetCollisionEventHandler(IPhysicsCollisionEvent *pCollisionEvents) {
-	// TODO
-	// m_pCollisionListener->SetCollisionEventCallback(pCollisionEvents);
+	//lwss: This enables the CCollisionEvent::PreCollision() and CCollisionEvent::PostCollision()
+	// Used for: Physics hit sounds, dust particles, and screen shake(unused?)
+	// I enabled this to see why this physics guy has commented it out
+	// The physics sounds are somewhat unreliable on guns, and make horrible spasm noises on props/ragdolls.
+	// Bullet Physics needs more work before this is enabled.
+	//
+	// There is another section that calls m_pCollisionEvent->Friction().
+	// That section is somewhat similar, But deals with friction Scrapes instead of impacts.
+	// It is ran on the server, which sends the particle/sound commands to the client
+
+    // TODO
+    // m_pCollisionListener->SetCollisionEventCallback(pCollisionEvents);
 	m_pCollisionEvent = pCollisionEvents;
 }
 
@@ -1537,7 +1547,11 @@ void CPhysicsEnvironment::BulletTick(btScalar dt) {
 		CleanupDeleteList();
 	}
 
+	//lwss: This part of the code is used by the server to send Friction Scrape Dust and Scrape Sounds events to the clients.
+	// It currently seems OK, but before it's enabled we should fix the infinite jiggling weapons.
+	// They will spam particles/scraping noises forever. Also the ragdoll sleep detection fix should be fixed (requires GetSimulationTime())
 	// DoCollisionEvents(dt);
+	//lwss end.
 
 	if (m_pCollisionEvent)
 		m_pCollisionEvent->PostSimulationFrame();
@@ -1594,7 +1608,7 @@ void CPhysicsEnvironment::DoCollisionEvents(float dt) {
 
 			for (int j = 0; j < contactManifold->getNumContacts(); j++) {
 				btManifoldPoint manPoint = contactManifold->getContactPoint(j);
-				
+
 				// FRICTION CALLBACK
 				// FIXME: We need to find the energy used by the friction! Bullet doesn't provide this in the manifold point.
 				// This may not be the proper variable but whatever, as of now it works.

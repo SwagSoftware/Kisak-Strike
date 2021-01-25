@@ -25,6 +25,7 @@ struct InfoBarData
     bool hasGrenade;
     bool hasFlash;
     bool hasFlashPair;
+    bool hasDecoy;
     bool hasSmoke;
     bool hasFire;
     bool hasC4;
@@ -45,6 +46,7 @@ static void UpdateInfoFromPlayer( const C_CSPlayer &pPlayer )
     infoBarData.hasGrenade = false;
     //infoBarData.hasFlash = false;
     //infoBarData.hasFlashPair = false;
+    infoBarData.hasDecoy = false;
     infoBarData.hasSmoke = false;
     infoBarData.hasFire = false;
     infoBarData.hasC4 = false;
@@ -96,6 +98,8 @@ static void UpdateInfoFromPlayer( const C_CSPlayer &pPlayer )
                     case WEAPON_INCGRENADE:
                         infoBarData.hasFire = true;
                         break;
+                    case WEAPON_DECOY:
+                        infoBarData.hasDecoy = true;
                     default:
                         break;
                 }
@@ -193,6 +197,7 @@ static void LoadRkInfoBar()
     constructor.Bind("secondary_string", &infoBarData.secondaryString);
     constructor.Bind("knife_string", &infoBarData.knifeString);
     constructor.Bind("has_grenade", &infoBarData.hasGrenade);
+    constructor.Bind("has_decoy", &infoBarData.hasDecoy);
     constructor.Bind("has_flash", &infoBarData.hasFlash);
     constructor.Bind("has_flash_pair", &infoBarData.hasFlashPair);
     constructor.Bind("has_smoke", &infoBarData.hasSmoke);
@@ -271,6 +276,7 @@ void RkHudInfoBar::ShowPanel(bool bShow, bool force)
         m_dataModel.DirtyVariable( "secondary_string" );
         m_dataModel.DirtyVariable( "knife_string" );
         m_dataModel.DirtyVariable( "has_grenade" );
+        m_dataModel.DirtyVariable( "has_decoy" );
         m_dataModel.DirtyVariable( "has_flash" );
         m_dataModel.DirtyVariable( "has_flash_pair" );
         m_dataModel.DirtyVariable( "has_smoke" );

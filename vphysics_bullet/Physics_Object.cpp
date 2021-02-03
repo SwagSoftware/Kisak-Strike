@@ -357,10 +357,16 @@ void CPhysicsObject::SetInertia(const Vector &inertia) {
 
 // FIXME: The API is confusing because we need to add the BT_DISABLE_WORLD_GRAVITY flag to the object
 // by calling EnableGravity(false)
+void CPhysicsObject::SetLocalGravity(const btVector3 &gravityVector)
+{
+    //m_pObject->setFlags( BT_DISABLE_WORLD_GRAVITY );
+    m_pObject->setGravity( gravityVector );
+}
+
 void CPhysicsObject::SetLocalGravity(const Vector &gravityVector) {
 	btVector3 tmp;
 	ConvertPosToBull(gravityVector, tmp);
-	m_pObject->setGravity(tmp);
+	SetLocalGravity( tmp );
 }
 
 Vector CPhysicsObject::GetLocalGravity() const {
@@ -1213,21 +1219,17 @@ void CPhysicsObject::DetachEventListener(IObjectEventListener *pListener) {
 //lwss add
 void CPhysicsObject::SetUseAlternateGravity(bool bSet)
 {
-    //lwss hack
-    //Warning("LWSS didn't implement SetUseAlternateGravity!");
+    // lwss: Changed ragdolls to set their gravity manually instead of an "alternate" gravity
 }
 
 void CPhysicsObject::SetCollisionHints(uint32 collisionHints)
 {
-    //lwss hack
-    //Warning("LWSS didn't implement SetCollisionHints!");
+    m_collisionHints = collisionHints;
 }
 
 uint32 CPhysicsObject::GetCollisionHints() const
 {
-    //lwss hack
-    //Warning("LWSS didn't implement GetCollisionHints!");
-    return 0;
+    return m_collisionHints;
 }
 
 IPredictedPhysicsObject* CPhysicsObject::GetPredictedInterface() const

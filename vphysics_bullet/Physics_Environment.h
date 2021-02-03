@@ -140,17 +140,17 @@ public:
 	void									PostRestore();
 
     //lwss add
-    virtual void                            SetAlternateGravity( const Vector &gravityVector );
-    virtual void                            GetAlternateGravity( Vector *pGravityVector ) const;
-    virtual float                           GetDeltaFrameTime( int maxTicks ) const;
-    virtual void                            ForceObjectsToSleep( IPhysicsObject **pList, int listCount );
-    virtual void                            SetPredicted( bool bPredicted ); //Interaction with this system and it's objects may not always march forward, sometimes it will get/set data in the past.
-    virtual bool                            IsPredicted( void );
-    virtual void                            SetPredictionCommandNum( int iCommandNum ); //what command the client is working on right now
-    virtual int                             GetPredictionCommandNum( void );
-    virtual void                            DoneReferencingPreviousCommands( int iCommandNum ); //won't need data from commands before this one any more
-    virtual void                            RestorePredictedSimulation( void ); //called to restore results from a previous simulation with the same predicted timestamp set
-    virtual void                            DestroyCollideOnDeadObjectFlush( CPhysCollide * );
+    void		                        	SetAlternateGravity( const Vector &gravityVector ) override;
+    void                                    GetAlternateGravity( Vector *pGravityVector ) const override;
+    float                                   GetDeltaFrameTime( int maxTicks ) const override;
+    void                                    ForceObjectsToSleep( IPhysicsObject **pList, int listCount ) override;
+    void                                    SetPredicted( bool bPredicted ) override; //Interaction with this system and it's objects may not always march forward, sometimes it will get/set data in the past.
+    bool                                    IsPredicted( void ) override;
+    void                                    SetPredictionCommandNum( int iCommandNum ) override; //what command the client is working on right now
+    int                                     GetPredictionCommandNum( void ) override;
+    void                                    DoneReferencingPreviousCommands( int iCommandNum ) override; //won't need data from commands before this one any more
+    void                                    RestorePredictedSimulation( void ) override; //called to restore results from a previous simulation with the same predicted timestamp set
+    void                                    DestroyCollideOnDeadObjectFlush( CPhysCollide * ) override;
     //lwss end
 
 	bool									IsCollisionModelUsed(CPhysCollide *pCollide) const;
@@ -180,6 +180,7 @@ public:
 	float									GetSubStepTime() { return m_subStepTime; }
 	int										GetNumSubSteps() { return m_numSubSteps; }
 	int										GetCurSubStep() { return m_curSubStep; }
+	btVector3                               GetDesiredRagdollGravity() { return m_vecRagdollGravity; }
 
 	CPhysicsDragController *				GetDragController() const;
 	CCollisionSolver *						GetCollisionSolver() const;
@@ -210,6 +211,9 @@ private:
 	int										m_numSubSteps;
 	int										m_curSubStep;
 	float									m_subStepTime;
+	//lwss add
+	float                                   m_simTime; // current time in simulation. ( goes up += deltaTime in simulation steps )
+	//lwss end
 
 	btCollisionConfiguration *				m_pBulletConfiguration;
 	btCollisionDispatcher *					m_pBulletDispatcher;
@@ -245,6 +249,7 @@ private:
     //lwss add
     bool                                    m_predictionEnabled; //+273 bytes in debug bin
     int                                     m_predictionCmdNum; //+69 bytes
+    btVector3                               m_vecRagdollGravity;
     //lwss end
 
 private:

@@ -484,11 +484,25 @@ CPhysicsConstraint::CPhysicsConstraint(CPhysicsEnvironment *pEnv, IPhysicsConstr
 	m_pConstraint->setUserConstraintPtr(this);
 
 	if (pReferenceObject) {
+        //lwss: Apply ragdoll gravity from csgo and disable sounds on ragdolls
+        if( m_type == CONSTRAINT_RAGDOLL )
+        {
+            pReferenceObject->SetLocalGravity( m_pEnv->GetDesiredRagdollGravity() );
+            pReferenceObject->SetCollisionHints( COLLISION_HINT_NOSOUND );
+        }
+        //lwss end
 		pReferenceObject->AttachedToConstraint(this);
 		pReferenceObject->AttachEventListener(this);
 	}
 
 	if (pAttachedObject) {
+        //lwss: Apply ragdoll gravity from csgo and disable sounds on ragdolls
+        if( m_type == CONSTRAINT_RAGDOLL )
+        {
+            pAttachedObject->SetLocalGravity( m_pEnv->GetDesiredRagdollGravity() );
+            pReferenceObject->SetCollisionHints( COLLISION_HINT_NOSOUND );
+        }
+        //lwss end
 		pAttachedObject->AttachedToConstraint(this);
 		pAttachedObject->AttachEventListener(this);
 	}

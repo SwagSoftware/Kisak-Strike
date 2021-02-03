@@ -81,6 +81,7 @@ class CPhysicsObject : public IPhysicsObject32 {
 		void								SetInertia(const Vector &inertia);
 
 		void								SetLocalGravity(const Vector &gravityVector);
+		void 								SetLocalGravity(const btVector3 &gravityVector); // already converted to bullet.
 		Vector								GetLocalGravity() const;
 
 		void								SetDamping(const float *speed, const float *rot);
@@ -250,6 +251,10 @@ class CPhysicsObject : public IPhysicsObject32 {
 		CUtlVector<IObjectEventListener *>	m_pEventListeners;
 
 		int									m_iLastActivationState;
+
+        //lwss add
+        uint32          m_collisionHints;
+        //lwss end
 };
 
 CPhysicsObject *CreatePhysicsObject(CPhysicsEnvironment *pEnvironment, const CPhysCollide *pCollisionModel, int materialIndex, const Vector &position, const QAngle &angles, objectparams_t *pParams, bool isStatic);

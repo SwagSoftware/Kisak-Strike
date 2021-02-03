@@ -1903,15 +1903,12 @@ void CPhysicsObject::SetUseAlternateGravity(bool bSet)
 
 void CPhysicsObject::SetCollisionHints(uint32 collisionHints)
 {
-    //lwss hack
-    //Warning("LWSS didn't implement SetCollisionHints!");
+    m_collisionHints = collisionHints;
 }
 
 uint32 CPhysicsObject::GetCollisionHints() const
 {
-    //lwss hack
-    //Warning("LWSS didn't implement GetCollisionHints!");
-    return 0;
+    return m_collisionHints;
 }
 
 IPredictedPhysicsObject* CPhysicsObject::GetPredictedInterface() const

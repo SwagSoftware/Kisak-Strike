@@ -23,8 +23,14 @@
 #endif
 
 // Probably shouldn't be using defines for these.
-#define SLEEP_LINEAR_THRESHOLD 0.15 // m/s
-#define SLEEP_ANGULAR_THRESHOLD 0.1 // rad/s
+//lwss: These are the sleep velocity thresholds. -- Go under these and the object will settle/deactivate
+
+//Having issues with objects never settling, i'm going to revert these to the default Bullet physics values.
+#define SLEEP_LINEAR_THRESHOLD 0.8 // m/s -- DEFAULT
+#define SLEEP_ANGULAR_THRESHOLD 1.0 // rad/s -- DEFAULT
+//#define SLEEP_LINEAR_THRESHOLD 0.15 // m/s
+//#define SLEEP_ANGULAR_THRESHOLD 0.1 // rad/s
+//lwss end
 
 #define NOT_IMPLEMENTED				DevWarning("VPhysics UNIMPLEMENTED: %s (%s:%u)\n", __FUNCTION__, __FILE__, __LINE__);
 #define NOT_IMPLEMENTED_CRITICAL	Error("VPhysics UNIMPLEMENTED: %s (%s:%u)\n", __FUNCTION__, __FILE__, __LINE__);

@@ -424,9 +424,18 @@ class CCollisionEventListener : public btSolveCallback {
 			const btScalar combinedInvMass = rb0->getInvMass() + rb1->getInvMass();
 			m_tmpEvent.collisionSpeed = BULL2HL(cp->m_appliedImpulse * combinedInvMass); // Speed of body 1 rel to body 2 on axis of constraint normal
 
-			// FIXME: Find a way to track the real delta time
-			// IVP tracks this delta time between object pairs
-			m_tmpEvent.deltaCollisionTime = 10.f;
+            // FIXME: Find a way to track the real delta time
+            // IVP tracks this delta time between object pairs
+            m_tmpEvent.deltaCollisionTime = 10.f;
+
+			//lwss hack - I want to disable sounds on ragdolls, because currently they are very spammy.
+			// The way I will do this is by setting DeltaCollisionTime < 0.1f
+			if( pObj0->GetCollisionHints() & COLLISION_HINT_NOSOUND || pObj1->GetCollisionHints() & COLLISION_HINT_NOSOUND )
+            {
+                m_tmpEvent.deltaCollisionTime = 0.0f;
+            }
+			//lwss end
+
 			/*
 			m_tmpEvent.isCollision = (flags0 & flags1 & CALLBACK_GLOBAL_COLLISION); // False when either one of the objects don't have CALLBACK_GLOBAL_COLLISION
 			m_tmpEvent.isShadowCollision = (flags0 ^ flags1) & CALLBACK_SHADOW_COLLISION; // True when only one of the objects is a shadow
@@ -562,7 +571,7 @@ static void cvar_solver_residualthreshold_Change(IConVar *var, const char *pOldV
 }
 
 // bt_substeps
-static ConVar cvar_world_substeps("bt_world_substeps", "1", FCVAR_REPLICATED, "The amount of simulation substeps (higher number means higher precision)", true, 1, true, 8);
+static ConVar bt_max_world_substeps("bt_max_world_substeps", "5", FCVAR_REPLICATED, "Maximum amount of catchup simulation-steps BulletPhysics is allowed to do per Simulation()", true, 1, true, 12);
 
 // Threadsafe specific console variables
 #ifdef BT_THREADSAFE
@@ -649,6 +658,7 @@ CPhysicsEnvironment::CPhysicsEnvironment() {
 	m_invPSIScale = 0.f;
 	m_simPSICurrent = 0;
 	m_simPSI = 0;
+	m_simTime = 0.0f;
 
 #ifdef BT_THREADSAFE
 	// Initilize task scheduler, we will be using TBB
@@ -1122,25 +1132,34 @@ void CPhysicsEnvironment::Simulate(float deltaTime) {
 	}
 
 	// sim PSI: How many substeps are done in a single simulation step
-	m_simPSI = cvar_world_substeps.GetInt() != 0 ? cvar_world_substeps.GetInt() : 1;
+	m_simPSI = bt_max_world_substeps.GetInt() != 0 ? bt_max_world_substeps.GetInt() : 1;
 	m_simPSICurrent = m_simPSI; // Substeps left in this step
 	m_numSubSteps = m_simPSI;
 	m_curSubStep = 0;
 	
 	// Simulate no less than 1 ms
-	if (deltaTime > 0.0001) {
+	if (deltaTime > 0.001) {
 		// Now mark us as being in simulation. This is used for callbacks from bullet mid-simulation
 		// so we don't end up doing stupid things like deleting objects still in use
 		m_inSimulation = true;
 
 		m_subStepTime = m_timestep;
-		
+
 		// Okay, how this fixed timestep shit works:
 		// The game sends in deltaTime which is the amount of time that has passed since the last frame
 		// Bullet will add the deltaTime to its internal counter
 		// When this internal counter exceeds m_timestep (param 3 to the below), the simulation will run for fixedTimeStep seconds
 		// If the internal counter does not exceed fixedTimeStep, bullet will just interpolate objects so the game can render them nice and happy
-		m_pBulletDynamicsWorld->stepSimulation(deltaTime, cvar_world_substeps.GetInt(), m_timestep, m_simPSICurrent);
+		//if( deltaTime > (bt_max_world_substeps.GetInt() * m_timestep) )
+        //{
+		//    Msg("Warning! We are losing physics-time! - deltaTime(%f) - maxTime(%f)\n", deltaTime, (bt_max_world_substeps.GetInt() * m_timestep));
+        //}
+		int stepsTaken = m_pBulletDynamicsWorld->stepSimulation(deltaTime, bt_max_world_substeps.GetInt(), m_timestep, m_simPSICurrent);
+
+		//lwss: stepSimulation returns the number of steps taken in the simulation this go-around.
+		// We can simply multiply this by the timestep(60hz client - 64hz server) to get the time simulated.
+		// and add it to our simtime.
+		m_simTime += ( stepsTaken * m_timestep );
 
 		// No longer in simulation!
 		m_inSimulation = false;
@@ -1164,12 +1183,12 @@ void CPhysicsEnvironment::SetSimulationTimestep(float timestep) {
 }
 
 float CPhysicsEnvironment::GetSimulationTime() const {
-	NOT_IMPLEMENTED
-	return 0;
+    //lwss - add simulation time. (mainly used for forced ragdoll sleeping hack in csgo)
+	return m_simTime;
 }
 
 void CPhysicsEnvironment::ResetSimulationClock() {
-	NOT_IMPLEMENTED
+    m_simTime = 0.0f;
 }
 
 float CPhysicsEnvironment::GetNextFrameTime() const {
@@ -1179,17 +1198,16 @@ float CPhysicsEnvironment::GetNextFrameTime() const {
 
 void CPhysicsEnvironment::SetCollisionEventHandler(IPhysicsCollisionEvent *pCollisionEvents) {
 	//lwss: This enables the CCollisionEvent::PreCollision() and CCollisionEvent::PostCollision()
+	// in client/physics.cpp and server/physics.cpp
 	// Used for: Physics hit sounds, dust particles, and screen shake(unused?)
-	// I enabled this to see why this physics guy has commented it out
-	// The physics sounds are somewhat unreliable on guns, and make horrible spasm noises on props/ragdolls.
-	// Bullet Physics needs more work before this is enabled.
+	// The accuracy of the physics highly depends on the stepSimulation() maxSteps and resolution.
 	//
 	// There is another section that calls m_pCollisionEvent->Friction().
 	// That section is somewhat similar, But deals with friction Scrapes instead of impacts.
 	// It is ran on the server, which sends the particle/sound commands to the client
 
     // TODO
-    // m_pCollisionListener->SetCollisionEventCallback(pCollisionEvents);
+    m_pCollisionListener->SetCollisionEventCallback(pCollisionEvents);
 	m_pCollisionEvent = pCollisionEvents;
 }
 
@@ -1280,13 +1298,12 @@ void CPhysicsEnvironment::PostRestore() {
 //lwss add
 void CPhysicsEnvironment::SetAlternateGravity(const Vector &gravityVector)
 {
-    //lwss hack - This is for ragdoll specific gravity. Unimplemented - it'll be the same as regular gravity.
+    ConvertPosToBull(gravityVector, m_vecRagdollGravity);
 }
 
 void CPhysicsEnvironment::GetAlternateGravity(Vector *pGravityVector) const
 {
-    //lwss hack - again, this doesn't use the alternate gravity. Seems like it's used for ragdolls, they might be messed up.
-    GetGravity( pGravityVector );
+    ConvertPosToHL( m_vecRagdollGravity, *pGravityVector );
 }
 
 float CPhysicsEnvironment::GetDeltaFrameTime(int maxTicks) const
@@ -1303,15 +1320,11 @@ float CPhysicsEnvironment::GetDeltaFrameTime(int maxTicks) const
 
 void CPhysicsEnvironment::ForceObjectsToSleep(IPhysicsObject **pList, int listCount)
 {
-    // list size up to 1024, then we dont care I guess
-    /*
-    int listEnd = MIN( listCount, 1024 );
-
-    for( int i = 0; i < listEnd; i++ )
+    //lwss: Technically this does not force the objects to sleep, but works OK.
+    for( int i = 0; i < listCount; i++ )
     {
-        IPhysicsObject *object = pList[i];
-        //TODO: finish
-    }*/
+        pList[i]->Sleep();
+    }
 }
 
 void CPhysicsEnvironment::SetPredicted(bool bPredicted)
@@ -1547,10 +1560,9 @@ void CPhysicsEnvironment::BulletTick(btScalar dt) {
 		CleanupDeleteList();
 	}
 
-	//lwss: This part of the code is used by the server to send Friction Scrape Dust and Scrape Sounds events to the clients.
-	// It currently seems OK, but before it's enabled we should fix the infinite jiggling weapons.
-	// They will spam particles/scraping noises forever. Also the ragdoll sleep detection fix should be fixed (requires GetSimulationTime())
-	// DoCollisionEvents(dt);
+	//lwss: This part of the code is used by the server to send FRICTION sounds/dust
+	// these are separate from collisions.
+	DoCollisionEvents(dt);
 	//lwss end.
 
 	if (m_pCollisionEvent)

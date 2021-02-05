@@ -56,7 +56,7 @@ bool CGCClientSharedObjectContext::BRemoveListener( ISharedObjectListener *pList
 //----------------------------------------------------------------------------
 void CGCClientSharedObjectContext::SOCreated( const CSharedObject *pObject, ESOCacheEvent eEvent ) const
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+	TM_ZONE( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 	FOR_EACH_VEC( m_vecListeners, nListener )
 	{
 		m_vecListeners[nListener]->SOCreated( m_steamIDOwner, pObject, eEvent );
@@ -65,7 +65,7 @@ void CGCClientSharedObjectContext::SOCreated( const CSharedObject *pObject, ESOC
 
 void CGCClientSharedObjectContext::PreSOUpdate( ESOCacheEvent eEvent ) const
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+    TM_ZONE( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 	FOR_EACH_VEC( m_vecListeners, nListener )
 	{
 		m_vecListeners[nListener]->PreSOUpdate( m_steamIDOwner, eEvent );
@@ -74,7 +74,7 @@ void CGCClientSharedObjectContext::PreSOUpdate( ESOCacheEvent eEvent ) const
 
 void CGCClientSharedObjectContext::SOUpdated( const CSharedObject *pObject, ESOCacheEvent eEvent ) const
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+    TM_ZONE( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 	FOR_EACH_VEC( m_vecListeners, nListener )
 	{
 		m_vecListeners[nListener]->SOUpdated( m_steamIDOwner, pObject, eEvent );
@@ -83,7 +83,7 @@ void CGCClientSharedObjectContext::SOUpdated( const CSharedObject *pObject, ESOC
 
 void CGCClientSharedObjectContext::PostSOUpdate( ESOCacheEvent eEvent ) const
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+    TM_ZONE( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 	FOR_EACH_VEC( m_vecListeners, nListener )
 	{
 		m_vecListeners[nListener]->PostSOUpdate( m_steamIDOwner, eEvent );
@@ -92,7 +92,7 @@ void CGCClientSharedObjectContext::PostSOUpdate( ESOCacheEvent eEvent ) const
 
 void CGCClientSharedObjectContext::SODestroyed( const CSharedObject *pObject, ESOCacheEvent eEvent ) const
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+    TM_ZONE( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 	FOR_EACH_VEC( m_vecListeners, nListener )
 	{
 		m_vecListeners[nListener]->SODestroyed( m_steamIDOwner, pObject, eEvent );
@@ -101,7 +101,7 @@ void CGCClientSharedObjectContext::SODestroyed( const CSharedObject *pObject, ES
 
 void CGCClientSharedObjectContext::SOCacheSubscribed( const CSteamID & steamIDOwner, ESOCacheEvent eEvent ) const
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+    TM_ZONE( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 	FOR_EACH_VEC( m_vecListeners, nListener )
 	{
 		m_vecListeners[nListener]->SOCacheSubscribed( steamIDOwner, eEvent );
@@ -110,7 +110,7 @@ void CGCClientSharedObjectContext::SOCacheSubscribed( const CSteamID & steamIDOw
 
 void CGCClientSharedObjectContext::SOCacheUnsubscribed( const CSteamID & steamIDOwner, ESOCacheEvent eEvent ) const
 {
-	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+    TM_ZONE( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
 	FOR_EACH_VEC( m_vecListeners, nListener )
 	{
 		m_vecListeners[nListener]->SOCacheUnsubscribed( steamIDOwner, eEvent );

@@ -62,7 +62,7 @@
 #pragma warning(pop)
 
 #include "vscript/ivscript.h"
-#include "tier0/vprof.h"
+//#include "tier0/vprof.h"
 
 #include "init_nut.h"
 

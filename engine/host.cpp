@@ -3100,8 +3100,10 @@ void CFrameTimer::ComputeFrameVariability()
 	variance = devSquaredFrameStartTime / ( double ) ( count );
 	m_flFPSStdDeviationFrameStartTimeSeconds = sqrt( variance );
 
-	tmPlot( TELEMETRY_LEVEL0, TMPT_NONE, 0, m_flFPSStdDeviationSeconds * 1000.0f, "m_flFPSStdDeviationSeconds(ms)" );
+#ifdef RAD_TELEMETRY_ENABLED
+    tmPlot( TELEMETRY_LEVEL0, TMPT_NONE, 0, m_flFPSStdDeviationSeconds * 1000.0f, "m_flFPSStdDeviationSeconds(ms)" );
 	tmPlot( TELEMETRY_LEVEL0, TMPT_NONE, 0, m_flFPSStdDeviationFrameStartTimeSeconds * 1000.0f, "m_flFPSStdDeviationFrameStartTimeMS(ms)" );
+#endif
 
 //	printf("var: %.2f avg:%.6f frametime:%f\n", m_flFPSStdDeviationSeconds * 1000.0f, avg, frametime);
 }
@@ -5771,7 +5773,9 @@ void Host_Init( bool bDedicated )
 	// Mark DLL as active
 	//	eng->SetNextState( InEditMode() ? IEngine::DLL_PAUSED : IEngine::DLL_ACTIVE );
 
-	TelemetryTick();
+#ifdef RAD_TELEMETRY_ENABLED
+    TelemetryTick();
+#endif
 
 	// Initialize processor subsystem, and print relevant information:
 	Host_InitProcessor();

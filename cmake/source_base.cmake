@@ -17,7 +17,13 @@ set(CSTRIKE_REL_BUILD "1")
 add_definitions(-DCSTRIKE_REL_BUILD) #without this, some weird stuff is included like fatdemos
 add_definitions(-DALLOW_DEVELOPMENT_CVARS) #let's allow development convars since this is an open source project.
 
+#Rad telemetry profiler is not enabled with kisak-strike
 set(RAD_TELEMETRY_DISABLED "1")
+add_definitions(-DRAD_TELEMETRY_DISABLED)
+#Tracy Profiler support
+if( USE_TRACY )
+    add_definitions(-DUSE_TRACY -DTRACY_ENABLE -DVPROF_LEVEL=1)
+endif()
 
 #CMAKE FILLS THESE IN BY DEFAULT. NUKE THEM!
 set(CMAKE_CXX_FLAGS_RELEASE "")
@@ -33,10 +39,3 @@ set(CMAKE_CXX_FLAGS_DEBUG "")
 #elseif( ${CSTRIKE_REL_BUILD} MATCHES "1" )
 #    message("On Branch - Release.")
 #endif()
-
-if( ${RAD_TELEMETRY_DISABLED} )
-    #message( "Telemetry Disabled." )
-    add_definitions(-DRAD_TELEMETRY_DISABLED)
-else()
-    #message( "Telemetry Enabled." )
-endif()

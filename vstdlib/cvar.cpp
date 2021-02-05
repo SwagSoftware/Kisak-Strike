@@ -1051,8 +1051,8 @@ static bool ConVarSortFunc( ConCommandBase * const &lhs, ConCommandBase * const 
 //-----------------------------------------------------------------------------
 void CCvar::Find( const CCommand &args )
 {
-	const char *search;
-	const char *subSearch;
+	const char *search = NULL;
+	const char *subSearch = NULL;
 
 	//lwss: Add support for a 2nd string in the search. I'm used to this feature in source 2, it's useful.
 	if ( args.ArgC() != 2 && args.ArgC() != 3 )

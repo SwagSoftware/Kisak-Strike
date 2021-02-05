@@ -426,7 +426,8 @@ HScheme CSchemeManager::LoadSchemeFromFileEx( VPANEL sizingPanel, const char *pF
 	pKVData->UsesEscapeSequences( true );	// VGUI uses this
 	
 	{
-		VPROF_2( "CSchemeManager::LoadSchemeFromFileEx -> LoadFromFile", VPROF_BUDGETGROUP_OTHER_VGUI, false, 0 );
+		//VPROF_2( "CSchemeManager::LoadSchemeFromFileEx -> LoadFromFile", VPROF_BUDGETGROUP_OTHER_VGUI, false, 0 );
+		VPROF( "CSchemeManager::LoadSchemeFromFileEx -> LoadFromFile" );
 
 		// look first in skins directory
 		bool bResult = pKVData->LoadFromFile( g_pFullFileSystem, pFilename, "SKIN" );
@@ -465,7 +466,8 @@ HScheme CSchemeManager::LoadSchemeFromFileEx( VPANEL sizingPanel, const char *pF
 	}
 
 	{
-		VPROF_2( "pScheme->LoadFromFile", VPROF_BUDGETGROUP_OTHER_VGUI, false, 0 );
+		//VPROF_2( "pScheme->LoadFromFile", VPROF_BUDGETGROUP_OTHER_VGUI, false, 0 );
+		VPROF( "pScheme->LoadFromFile" );
 		pScheme->SetActive( true );
 		pScheme->LoadFromFile( sizingPanel, pFilename, tag, pKVData );
 	}
@@ -1175,7 +1177,8 @@ void CScheme::AddFontHelper( const char *kvfontname, bool proportional ) // a sm
 //-----------------------------------------------------------------------------
 void CScheme::ReloadFontGlyphs( int inScreenTall )
 {
-	VPROF_2( "CScheme::ReloadFontGlyphs", VPROF_BUDGETGROUP_OTHER_VGUI, false, 0 );
+	//VPROF_2( "CScheme::ReloadFontGlyphs", VPROF_BUDGETGROUP_OTHER_VGUI, false, 0 );
+	VPROF( "CScheme::ReloadFontGlyphs" );
 
 	COM_TimestampedLog( "ReloadFontGlyphs(): Start [%s]", GetFileName() );
 

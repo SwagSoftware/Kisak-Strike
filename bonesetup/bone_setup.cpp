@@ -1,4 +1,4 @@
-//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
+//===== Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -723,7 +723,7 @@ void CBoneSetup::AccumulatePose(
 
 	VPROF( "AccumulatePose" );
 
-	SNPROF_ANIM( "CBoneSetup::AccumulatePose" );
+	//SNPROF_ANIM( "CBoneSetup::AccumulatePose" );
 
 	// Check alignment.
 	if ( cl_use_simd_bones.GetBool() && (!  (reinterpret_cast<uintp>(q) & 0x0F) == 0 ) )

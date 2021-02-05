@@ -500,7 +500,7 @@ void CEngine::Frame( void )
 		return;
 	}
 
-    TM_ZONE( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __PRETTY_FUNCTION__ );
+    TM_ZONE( TELEMETRY_LEVEL0, TMZF_NONE, __PRETTY_FUNCTION__ );
 
 	if ( ShouldSerializeAsync() )
 	{
@@ -540,9 +540,17 @@ void CEngine::Frame( void )
 	PostUpdateProfile();
 #endif
 
+#ifdef RAD_TELEMETRY_ENABLED
 	TelemetryTick();
+#endif
 
 	ETWRenderFrameMark( sv.IsDedicated() );
+
+//lwss: tracy post-frame marker
+#ifdef USE_TRACY
+    FrameMarkNamed( "Engine Frame" )
+#endif
+//lwss end
 
 	{ // profile scope
 

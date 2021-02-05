@@ -15,7 +15,11 @@
 #include "tier0/l2cache.h"
 #include "tier0/threadtools.h"
 #include "tier0/vprof_sn.h"
+#if defined( USE_TRACY )
+#include "tier0/vprof_tracy.h"
+#else
 #include "tier0/vprof_telemetry.h"
+#endif
 
 // VProf is enabled by default in all configurations -except- X360 Retail and PS3.
 #if !( defined( _GAMECONSOLE ) && defined( _CERT ) ) && !defined( _PS3 )
@@ -170,27 +174,38 @@
 
 //-------------------------------------
 
-#ifndef VPROF_LEVEL
+// PB: Vprof markers to tuner turned off
+//#ifndef VPROF_LEVEL
 //#define VPROF_LEVEL 0
-#endif
-
-#if !defined( VPROF_SN_LEVEL ) && !defined( _CERT )
-//#define VPROF_SN_LEVEL 0									// PB: Vprof markers to tuner turned off 
-#endif
+//#endif
+//#if !defined( VPROF_SN_LEVEL ) && !defined( _CERT )
+//#define VPROF_SN_LEVEL 0
+//#endif
 
 #define VPROF_SCOPE_VARIABLE_NAME( prefix, line ) prefix##line
 #define VPROF_SCOPE_VARIABLE_DECL( name, level, group, assertAccounted, budgetFlags, line ) CVProfScope VPROF_SCOPE_VARIABLE_NAME( VProf_,line )(name, level, group, assertAccounted, budgetFlags)
 
-#define	VPROF_0(name,group,assertAccounted,budgetFlags)	TM_ZONE( TELEMETRY_LEVEL2, TMZF_NONE, "(%s)%s", group, name ); VPROF_SCOPE_VARIABLE_DECL(name, 0, group, assertAccounted, budgetFlags, __LINE__ );
-
-#if VPROF_LEVEL > 0 
-#  define	VPROF_1(name,group,assertAccounted,budgetFlags)	TM_ZONE( TELEMETRY_LEVEL3, TMZF_NONE, "(%s)%s", group, name ); VPROF_SCOPE_VARIABLE_DECL(name, 1, group, assertAccounted, budgetFlags, __LINE__ );
+//lwss: swap out TM_ZONE if we are using tracy instead
+#ifdef USE_TRACY
+#define	VPROF_0(name,group,assertAccounted,budgetFlags)	TRACY_ZONE( #name ); VPROF_SCOPE_VARIABLE_DECL(name, 0, group, assertAccounted, budgetFlags, __LINE__ );
 #else
-#  if VPROF_SN_LEVEL > 0 && defined( _PS3 )
-#	 define	VPROF_1(name,group,assertAccounted,budgetFlags)	CVProfSnMarkerScope VProfSn_( name )
-#  else
-#    define	VPROF_1(name,group,assertAccounted,budgetFlags)	((void)0)
-#  endif
+#define	VPROF_0(name,group,assertAccounted,budgetFlags)	TM_ZONE( TELEMETRY_LEVEL2, TMZF_NONE, "(%s)%s", group, name ); VPROF_SCOPE_VARIABLE_DECL(name, 0, group, assertAccounted, budgetFlags, __LINE__ );
+#endif
+//lwss end
+
+#if VPROF_LEVEL > 0
+    //lwss: swap out TM_ZONE if we are using tracy instead
+    #ifdef USE_TRACY
+        #define	VPROF_1(name,group,assertAccounted,budgetFlags)	TRACY_ZONE( #name ); VPROF_SCOPE_VARIABLE_DECL(name, 1, group, assertAccounted, budgetFlags, __LINE__ );
+    #else
+        #define	VPROF_1(name,group,assertAccounted,budgetFlags)	TM_ZONE( TELEMETRY_LEVEL3, TMZF_NONE, "(%s)%s", group, name ); VPROF_SCOPE_VARIABLE_DECL(name, 1, group, assertAccounted, budgetFlags, __LINE__ );
+    #endif
+#else
+    #  if VPROF_SN_LEVEL > 0 && defined( _PS3 )
+    #	 define	VPROF_1(name,group,assertAccounted,budgetFlags)	CVProfSnMarkerScope VProfSn_( name )
+    #  else
+    #    define	VPROF_1(name,group,assertAccounted,budgetFlags)	((void)0)
+    #  endif
 #endif
 
 #if VPROF_LEVEL > 1 

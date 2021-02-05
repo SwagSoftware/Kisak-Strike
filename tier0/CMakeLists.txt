@@ -75,7 +75,11 @@ if( LINUXALL )
     #target_sources(${OUTBINNAME} PRIVATE "../tier1/pathmatch.cpp" )
 endif()
 
-
+if( USE_TRACY )
+    #target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/thirdparty/tracy-0.7.5/Tracy.hpp")
+    target_sources(${OUTBINNAME} PRIVATE "${SRCDIR}/thirdparty/tracy-0.7.5/TracyClient.cpp")
+    include_directories("${SRCDIR}/thirdparty/tracy-0.7.5")
+endif()
 #Linker
 #-$ImpLib "$LIBPUBLIC\tier0"
 #-$Lib	 "$LIBPUBLIC\tier1"

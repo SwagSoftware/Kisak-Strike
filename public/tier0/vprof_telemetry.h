@@ -64,7 +64,7 @@ inline void TelemetrySetLevel( unsigned int Level ) {}
 #define TELEMETRY_REQUIRED_REPLACE( tmRequiredCode, replacementCode ) replacementCode //in case you need to replace the code with something specific if telemetry isn't present
 
 // need some of the types even if we aren't using Telemetry
-#include "../../thirdparty/telemetry/include/tmtypes.h"
+//#include "../../thirdparty/telemetry/include/tmtypes.h"
 
 #else
 

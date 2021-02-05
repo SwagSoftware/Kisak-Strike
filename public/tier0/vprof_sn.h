@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 #ifndef TIER_V0PROF_SN_HDR
 #define TIER_V0PROF_SN_HDR
 
@@ -30,9 +30,15 @@ public:
 
 class CVProfSnMarkerScope  { public: CVProfSnMarkerScope( const char * ) {} };
 
-#define SNPROF(name) TM_ZONE( TELEMETRY_LEVEL1, TMZF_NONE, "%s", name );
-#define SNPROF_ANIM(name) TM_ZONE( TELEMETRY_LEVEL1, TMZF_NONE, "anim %s", name );
+//lwss - These are ps3 specific profiling points - going to disable
+#if defined( _PS3 )
+    #define SNPROF(name) TM_ZONE( TELEMETRY_LEVEL1, TMZF_NONE, "%s", name );
+    #define SNPROF_ANIM(name) TM_ZONE( TELEMETRY_LEVEL1, TMZF_NONE, "anim %s", name );
+#else
+    #define SNPROF(name) (void)0
+    #define SNPROF_ANIM(name) (void)0
+#endif
+//lwss end
 
 #endif
-
 #endif

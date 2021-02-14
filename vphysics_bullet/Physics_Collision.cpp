@@ -1098,8 +1098,7 @@ void CPhysicsCollision::TraceBox(const Ray_t &ray, unsigned int contentsMask, IC
 				ptr->allsolid = false;
 			//} else if (cb.m_closestHitFraction == 0.f && cb.m_penetrationDist >= -0.01f) {
 			//lwss: This threshold was too low for kisak-strike. Kept getting stuck on things.
-			// -0.03 seems to be just enough.
-			} else if (cb.m_closestHitFraction == 0.f && cb.m_penetrationDist >= -0.03f) {
+			} else if (cb.m_closestHitFraction == 0.f && cb.m_penetrationDist >= -0.05f) {
             //lwss end
 				ConvertDirectionToHL(cb.m_hitNormalWorld, ptr->plane.normal);
 

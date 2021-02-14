@@ -4185,11 +4185,15 @@ void CMaterialSystem::EndFrame( void )
 
 					if ( !m_pActiveAsyncJob->IsFinished() )
 						DevMsg( "CMaterialSystem::EndFrame - waiting on additional threaded work for MatQueuedThreaded.\n" );
-
-					if ( !IsPC() && mat_forcehardwaresync.GetBool() )
+//lwss: ifdef out this console check
+#if !IsPC()
+					//if ( !IsPC() && mat_forcehardwaresync.GetBool() )
+					if ( mat_forcehardwaresync.GetBool() )
 					{
 						g_pShaderAPI->ForceHardwareSync();
 					}
+#endif
+//lwss end
 				}
 			}
 			SafeRelease( m_pActiveAsyncJob );
@@ -4249,7 +4253,7 @@ void CMaterialSystem::EndFrame( void )
 		}
 
 
-#else
+#else // #ifndef _PS3
 
 
 	case MATERIAL_QUEUED_THREADED:

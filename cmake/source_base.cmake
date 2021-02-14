@@ -22,7 +22,7 @@ set(RAD_TELEMETRY_DISABLED "1")
 add_definitions(-DRAD_TELEMETRY_DISABLED)
 #Tracy Profiler support
 if( USE_TRACY )
-    add_definitions(-DUSE_TRACY -DTRACY_ENABLE -DVPROF_LEVEL=1)
+    add_definitions(-DUSE_TRACY -DTRACY_ENABLE -DVPROF_LEVEL=2)
     if( TRACY_STORE_LOGS )
         # Tracy will store logs throughout the lifetime of the program. When the Tracy UI connects, it will send these logs over.
         # This will eat memory pretty quick and also will only allow 1 tracy session per runtime.

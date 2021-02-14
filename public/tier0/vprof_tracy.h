@@ -11,6 +11,7 @@
 //TODO: Tracy doesn't support format-strings - they are only used about 10% of the time though
 #define TM_ZONE( level, flags, formatStr, ... ) ZoneScopedN( formatStr )
 #define TM_ZONE_DEFAULT( context ) TM_ZONE( context, 0, __FUNCTION__ )
+#define TM_ZONE_PLOT( context, name, slot ) TM_ZONE( context, 0, name )
 #define TM_ZONE_FILTERED( context, kThreshold, kFlags, kpFormat, ... ) ZoneScopedN( kpFormat )
 
 // stub out some telemetry stuff :((

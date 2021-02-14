@@ -5301,7 +5301,7 @@ void CShaderAPIDx8::ForceHardwareSync( void )
 	LOCK_SHADERAPI();
 	VPROF( "CShaderAPIDx8::ForceHardwareSync" );
 	PERF_STATS_BLOCK( "CShaderAPIDx8::ForceHardwareSync", PERF_STATS_SLOT_FORCE_HARDWARE_SYNC );
-	TM_ZONE_PLOT( TELEMETRY_LEVEL1, "ForceHardwareSync", TELEMETRY_ZONE_PLOT_SLOT_4);
+	//TM_ZONE_PLOT( TELEMETRY_LEVEL1, "ForceHardwareSync", TELEMETRY_ZONE_PLOT_SLOT_4);
 	
 #ifdef DX_TO_GL_ABSTRACTION
 	if ( true )

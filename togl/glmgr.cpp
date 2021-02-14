@@ -3153,7 +3153,7 @@ void GLMContext::BindTexToTMU( CGLMTex *pTex, int tmu )
 #if GLMDEBUG
 	GLM_FUNC;
 #endif
-
+    VPROF( "BindTextToTMU" );
 	GLMPRINTF(("--- GLMContext::BindTexToTMU tex %p GL name %d -> TMU %d ", pTex, pTex ? pTex->m_texName : -1, tmu ));
 
 	CheckCurrent();

@@ -11449,8 +11449,8 @@ void CShaderAPIDx8::AdvanceCurrentCopy( ShaderAPITextureHandle_t hTexture )
 bool CShaderAPIDx8::TexLock( int level, int cubeFaceID, int xOffset, int yOffset, 
 								int width, int height, CPixelWriter& writer )
 {
-	LOCK_SHADERAPI();
-
+    VPROF( "ShaderAPIDx8::TexLock" ); //lwss add
+    LOCK_SHADERAPI();
 	Assert( m_ModifyTextureLockedLevel < 0 );
 
 	ShaderAPITextureHandle_t hTexture = GetModifyTextureHandle();

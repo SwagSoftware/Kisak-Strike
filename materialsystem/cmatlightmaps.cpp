@@ -748,7 +748,7 @@ void CMatLightmaps::InitLightmapBits( int lightmap )
 bool CMatLightmaps::LockLightmap( int lightmap )
 {
 //	Warning( "locking lightmap page: %d\n", lightmap );
-	VPROF_INCREMENT_COUNTER( "lightmap fullpage texlock", 1 );
+	VPROF( "lightmap fullpage texlock");
 	if( m_nLockedLightmap != -1 )
 	{
 		g_pShaderAPI->TexUnlock();
@@ -2258,7 +2258,7 @@ void CMatLightmaps::UpdateLightmap( int lightmapPageID, int lightmapSize[2],
 		bLockSubRect = m_nUpdatingLightmapsStackDepth <= 0 && !bDynamic;
 		if( bLockSubRect )
 		{
-			VPROF_INCREMENT_COUNTER( "lightmap subrect texlock", 1 );
+			VPROF( "lightmap subrect texlock" );
 			g_pShaderAPI->ModifyTexture( m_LightmapPageTextureHandles[lightmapPageID] );
 			if (!g_pShaderAPI->TexLock( 0, 0, offsetIntoLightmapPage[0], offsetIntoLightmapPage[1],
 				lightmapSize[0] * uSize, lightmapSize[1], m_LightmapPixelWriter ))

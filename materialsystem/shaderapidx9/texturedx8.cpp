@@ -77,6 +77,7 @@ static HRESULT GetLevelDesc( IDirect3DBaseTexture* pBaseTexture, UINT level, D3D
 static HRESULT GetSurfaceFromTexture( IDirect3DBaseTexture* pBaseTexture, UINT level, 
 									  D3DCUBEMAP_FACES cubeFaceID, IDirect3DSurface** ppSurfLevel )
 {
+    VPROF( "GetSurfaceFromTexture" );
 	MEM_ALLOC_D3D_CREDIT();
 
 	if ( !pBaseTexture )
@@ -455,6 +456,7 @@ bool LockTexture( ShaderAPITextureHandle_t bindId, int copy, IDirect3DBaseTextur
 	D3DCUBEMAP_FACES cubeFaceID, int xOffset, int yOffset, int width, int height, bool bDiscard,
 	CPixelWriter& writer )
 {
+    VPROF( "LockTexture" );
 	Assert( !s_bInLock );
 	
 	IDirect3DSurface* pSurf;

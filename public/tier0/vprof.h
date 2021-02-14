@@ -208,8 +208,12 @@
     #  endif
 #endif
 
-#if VPROF_LEVEL > 1 
-#define	VPROF_2(name,group,assertAccounted,budgetFlags)	TM_ZONE( TELEMETRY_LEVEL4, TMZF_NONE, "(%s)%s", group, name ); VPROF_SCOPE_VARIABLE_DECL(name, 2, group, assertAccounted, budgetFlags, __LINE__);
+#if VPROF_LEVEL > 1
+    #ifdef USE_TRACY
+        #define	VPROF_2(name,group,assertAccounted,budgetFlags)	TRACY_ZONE( #name ); VPROF_SCOPE_VARIABLE_DECL(name, 1, group, assertAccounted, budgetFlags, __LINE__ );
+    #else
+        #define	VPROF_2(name,group,assertAccounted,budgetFlags)	TM_ZONE( TELEMETRY_LEVEL4, TMZF_NONE, "(%s)%s", group, name ); VPROF_SCOPE_VARIABLE_DECL(name, 2, group, assertAccounted, budgetFlags, __LINE__);
+    #endif
 #else
 #  if VPROF_SN_LEVEL > 1 && defined( _PS3 )
 #	 define	VPROF_2(name,group,assertAccounted,budgetFlags)	CVProfSnMarkerScope VProfSn_( name )

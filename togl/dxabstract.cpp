@@ -996,6 +996,7 @@ IDirect3DSurface9::~IDirect3DSurface9()
 
 HRESULT IDirect3DSurface9::LockRect(D3DLOCKED_RECT* pLockedRect,CONST RECT* pRect,DWORD Flags)
 {
+    VPROF( "IDirect3DSurface9::LockRect" );
 	GL_BATCH_PERF_CALL_TIMER;
 	GL_PUBLIC_ENTRYPOINT_CHECKS( m_device );
 	GLMTexLockParams lockreq;

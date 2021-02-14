@@ -4,6 +4,7 @@
 //
 //===============================================================================
 
+#include <vprof.h>
 #include "togl/rendermechanism.h"
 
 #include "tier0/icommandline.h"
@@ -1025,6 +1026,7 @@ int	CGLMTex::CalcSliceIndex( int face, int mip )
 
 void CGLMTex::CalcTexelDataOffsetAndStrides( int sliceIndex, int x, int y, int z, int *offsetOut, int *yStrideOut, int *zStrideOut )
 {
+    VPROF( "CGLMTex::CalcTexelDataOffsetAndStrikes" );
 	int offset = 0;
 	int yStride = 0;
 	int zStride = 0;
@@ -1086,7 +1088,7 @@ void CGLMTex::ReadTexels( GLMTexLockDesc *desc, bool readWholeSlice )
 	{
 		readBox = desc->m_req.m_region;
 	}
-	
+
 	CGLMTex *pPrevTex = m_ctx->m_samplers[0].m_pBoundTex;
 	m_ctx->BindTexToTMU( this, 0 );		// SelectTMU(n) is a side effect
 
@@ -1119,7 +1121,7 @@ void CGLMTex::ReadTexels( GLMTexLockDesc *desc, bool readWholeSlice )
 				{
 					// compressed path
 					// http://www.opengl.org/sdk/docs/man/xhtml/glGetCompressedTexImage.xml
-					
+					VPROF( "glGetCompressedTexImage" );
 					gGL->glGetCompressedTexImage(	target,					// target
 												desc->m_req.m_mip,		// level
 												sliceAddress );			// destination
@@ -1128,7 +1130,7 @@ void CGLMTex::ReadTexels( GLMTexLockDesc *desc, bool readWholeSlice )
 				{
 					// uncompressed path
 					// http://www.opengl.org/sdk/docs/man/xhtml/glGetTexImage.xml
-					
+					VPROF( "glGetTexImage" );
 					gGL->glGetTexImage(			target,						// target
 											desc->m_req.m_mip,			// level
 											format->m_glDataFormat,		// dataformat
@@ -1459,7 +1461,7 @@ void CGLMTex::Lock( GLMTexLockParams *params, char** addressOut, int* yStrideOut
 	CScopedGLMPIXEvent glmPIXEvent( "CGLMTex::Lock" );
 	g_TelemetryGPUStats.m_nTotalTexLocksAndUnlocks++;
 #endif
-
+    VPROF( "CGLMTex::Lock" );
 	// locate appropriate slice in layout record
 	int sliceIndex = CalcSliceIndex( params->m_face, params->m_mip );
 	
@@ -1580,7 +1582,7 @@ void CGLMTex::Lock( GLMTexLockParams *params, char** addressOut, int* yStrideOut
 	int offsetInSlice = 0;
 	int	yStride = 0;
 	int zStride = 0;
-	
+
 	CalcTexelDataOffsetAndStrides( sliceIndex, params->m_region.xmin, params->m_region.ymin, params->m_region.zmin, &offsetInSlice, &yStride, &zStride );
 
 	// for compressed case...
@@ -1592,6 +1594,7 @@ void CGLMTex::Lock( GLMTexLockParams *params, char** addressOut, int* yStrideOut
 
 	if (copyout)
 	{
+	    VPROF( "ReadTexels" );
 		// read the whole slice
 		// (odds are we'll never request anything but a whole slice to be read..)
 		ReadTexels( desc, true );

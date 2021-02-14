@@ -26,5 +26,6 @@ option(USE_BULLET_PHYSICS_THREADED "Use Multi-Threading for the Bullet Physics E
 # (Gamer Tip: use gdb command `b __asan::ReportGenericError` to break on ASAN errors)
 option(USE_ASAN "Enable the Address Sanitizer GCC plugin, used for finding memory errors/bugs" OFF)
 option(USE_TRACY "Enable Tracy Profiler support" OFF)
+option(TRACY_STORE_LOGS "Turn off Tracy's On-Demand mode. With this flag the profiler will store logs and send them later when the UI connects. Consumes RAM quickly! Mainly useful for profiling the application startup." OFF)
 
 #CMAKE_BUILD_TYPE is supported: RELEASE, DEBUG -- See source_posix_base.cmake for more compiler flags.

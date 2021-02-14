@@ -23,6 +23,16 @@ add_definitions(-DRAD_TELEMETRY_DISABLED)
 #Tracy Profiler support
 if( USE_TRACY )
     add_definitions(-DUSE_TRACY -DTRACY_ENABLE -DVPROF_LEVEL=1)
+    if( TRACY_STORE_LOGS )
+        # Tracy will store logs throughout the lifetime of the program. When the Tracy UI connects, it will send these logs over.
+        # This will eat memory pretty quick and also will only allow 1 tracy session per runtime.
+        # Use this if you want to profile the startup of the program.
+    else()
+        # Set Tracy to use On-Demand mode. This means you can disconnect/connect the UI whenever you want
+        # and also can be used for long periods of time without running out of memory
+        # **This mode is the Default**
+        add_definitions(-DTRACY_ON_DEMAND)
+    endif()
 endif()
 
 #CMAKE FILLS THESE IN BY DEFAULT. NUKE THEM!

@@ -5,6 +5,7 @@
 
 #include "BulletCollision/CollisionDispatch/btInternalEdgeUtility.h"
 #include "LinearMath/btConvexHull.h"
+#include "LinearMath/btGeometryUtil.h"
 
 #include "Physics_Collision.h"
 #include "Physics_Object.h"
@@ -1291,7 +1292,8 @@ static btConvexShape *LedgeToConvex(const ivpcompactledge_t *ledge) {
 
 		pConvexOut = pShape;
 #else
-		btConvexHullShape *pConvex = new btConvexHullShape;
+        btAlignedObjectArray<btVector3> vertexes;
+        btConvexHullShape *pConvex = new btConvexHullShape;
 		pConvex->setMargin(CONVEX_DISTANCE_MARGIN);
 
 		const ivpcompacttriangle_t *tris = (ivpcompacttriangle_t *)(ledge + 1);
@@ -1324,8 +1326,30 @@ static btConvexShape *LedgeToConvex(const ivpcompactledge_t *ledge) {
 
 			btVector3 vertex;
 			ConvertIVPPosToBull(ivpvert, vertex);
-			pConvex->addPoint(vertex);
+			vertexes.push_back( vertex );
 		}
+
+		// If an object is smaller than the margin, it will obviously float.
+		// Here we will check if the shape is too small for our default margin
+		// There is a way to shrink the hull according the margin, but I don't think it's needed.
+		// https://pybullet.org/Bullet/phpBB3/viewtopic.php?t=2358
+        btAlignedObjectArray<btVector3> planes;
+        btGeometryUtil::getPlaneEquationsFromVertices(vertexes, planes);
+        int sz = planes.size();
+        for (int i=0 ; i<sz ; ++i) {
+            if( planes[i][3] += pConvex->getMargin() >= 0 )
+            {
+                // object is too small for our desired Margin. Instead, we will give it a small one.
+                pConvex->setMargin( 0.005f );
+                break;
+            }
+        }
+
+        // add the vertexes to the convex hull shape
+        sz = vertexes.size();
+        for (int i=0 ; i<sz ; ++i) {
+            pConvex->addPoint(vertexes[i]);
+        }
 
 		// Optimize the convex hull
 		pConvex->optimizeConvexHull();

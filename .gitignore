@@ -70,7 +70,9 @@ lib/public/linux64/st*
 
 #lwss stashed
 hammer_qt/*
+hammer_launcher_qt/*
 public/vphysics_interfaceV32.h
 public/vphysics_bullet/*
 vphysics_bullet/*
 thirdparty/bullet3/*
+/hammer_launcher_qt/

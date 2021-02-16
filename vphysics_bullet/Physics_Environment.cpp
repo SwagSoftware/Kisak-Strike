@@ -859,15 +859,17 @@ void CPhysicsEnvironment::CreateEmptyDynamicsWorld()
 
 	m_pBulletDynamicsWorld->setInternalTickCallback(TickCallback, (void *)this);
 
-#if DEBUG_DRAW
-	m_debugdraw = new CDebugDrawer(m_pBulletDynamicsWorld);
-#endif
 
 	// HACK: Get ourselves a debug overlay on the client
 	// CreateInterfaceFn engine = Sys_GetFactory("engine");
 	// CPhysicsEnvironment::SetDebugOverlay(engine);
 	m_pDebugOverlay = g_Physics.GetPhysicsDebugOverlay();
 	g_pDebugOverlay = m_pDebugOverlay;
+
+#if DEBUG_DRAW
+    m_debugdraw = new CDebugDrawer(m_pBulletDynamicsWorld);
+    m_debugdraw->SetDebugOverlay( m_pDebugOverlay );
+#endif
 }
 
 // Don't call this directly

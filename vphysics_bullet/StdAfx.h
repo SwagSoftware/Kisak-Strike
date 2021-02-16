@@ -32,6 +32,7 @@
 //#define SLEEP_ANGULAR_THRESHOLD 0.1 // rad/s
 //lwss end
 
+#define DEBUG_DRAW 1
 #define NOT_IMPLEMENTED				DevWarning("VPhysics UNIMPLEMENTED: %s (%s:%u)\n", __FUNCTION__, __FILE__, __LINE__);
 #define NOT_IMPLEMENTED_CRITICAL	Error("VPhysics UNIMPLEMENTED: %s (%s:%u)\n", __FUNCTION__, __FILE__, __LINE__);
 

@@ -711,7 +711,7 @@ enum collisionhints
 {
 	COLLISION_HINT_DEBRIS		= 0x0001,
 	COLLISION_HINT_STATICSOLID	= 0x0002,
-	COLLISION_HINT_NOSOUND      = 0x0004,	// lwss add - disables collision sounds.
+	COLLISION_HINT_RAGDOLL      = 0x0004, // lwss add
 };
 
 class IPredictedPhysicsObject;

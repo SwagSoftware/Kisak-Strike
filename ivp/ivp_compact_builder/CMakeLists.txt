@@ -17,7 +17,7 @@ include_directories(${SRCDIR}/ivp/ivp_surface_manager)
 
 if( LINUXALL )
     target_compile_options(${OUTLIBNAME} PRIVATE -fpic -fno-semantic-interposition -fpermissive)
-    #TODO: pretty sure the valve guy made a typo here, it's supposed to be MAVOK_MOPP
+    #TODO: pretty sure the valve guy made a typo here, it's supposed to be HAVOK_MOPP
     add_definitions(-D_LIB -DIVP_VERSION_SDK -DHAVOK_MOOP -DLINUX)
 endif()
 

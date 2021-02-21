@@ -426,13 +426,18 @@ class CCollisionEventListener : public btSolveCallback {
 
             // FIXME: Find a way to track the real delta time
             // IVP tracks this delta time between object pairs
+
+            // lwss: I had a method in here to track the delta times between the pairs.
+            // I wondered what it was for, turns out it's all 95% for a sound hack
+            // in which they don't play sounds too often on 2 colliding objects.
+            // so for now, I'll just leave this as is and play all physics sounds
             m_tmpEvent.deltaCollisionTime = 10.f;
 
-			//lwss hack - I want to disable sounds on ragdolls, because currently they are very spammy.
-			// The way I will do this is by setting DeltaCollisionTime < 0.1f
-			if( pObj0->GetCollisionHints() & COLLISION_HINT_NOSOUND || pObj1->GetCollisionHints() & COLLISION_HINT_NOSOUND )
+			//lwss hack - ragdoll sounds are a bit too loud
+			if( pObj0->GetCollisionHints() & COLLISION_HINT_RAGDOLL || pObj1->GetCollisionHints() & COLLISION_HINT_RAGDOLL )
             {
-                m_tmpEvent.deltaCollisionTime = 0.0f;
+			    // value determined from testing :))
+                m_tmpEvent.collisionSpeed *= 0.4f;
             }
 			//lwss end
 

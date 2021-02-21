@@ -476,7 +476,10 @@ CPhysicsConstraint::CPhysicsConstraint(CPhysicsEnvironment *pEnv, IPhysicsConstr
 	m_bNotifyBroken = true;
 
 	if (m_type == CONSTRAINT_RAGDOLL || m_type == CONSTRAINT_BALLSOCKET || m_type == CONSTRAINT_FIXED) {
-		m_pEnv->GetBulletEnvironment()->addConstraint(m_pConstraint);
+	    //lwss: these branches were identical. I have a feeling parts of this lib were gimped before release.
+	    // but, it makes sense here to add the 2nd arg to disable collisions on linked bodies
+	    // and doing so improves the ragdoll performance by a good bit.
+		m_pEnv->GetBulletEnvironment()->addConstraint(m_pConstraint, true);
 	} else {
 		m_pEnv->GetBulletEnvironment()->addConstraint(m_pConstraint);
 	}
@@ -795,6 +798,13 @@ CPhysicsConstraint *CreateRagdollConstraint(CPhysicsEnvironment *pEnv, IPhysicsO
 	btTransform bullAFrame = ((btMassCenterMotionState *)objRef->getMotionState())->m_centerOfMassOffset.inverse() * constraintToReference;
 	btTransform bullBFrame = ((btMassCenterMotionState *)objAtt->getMotionState())->m_centerOfMassOffset.inverse() * constraintToAttached;
 
+    //lwss: Apply ragdoll gravity from csgo
+    pObjAtt->SetLocalGravity( pEnv->GetDesiredRagdollGravity() );
+    pAttachedObject->SetCollisionHints( COLLISION_HINT_RAGDOLL );
+    pObjRef->SetLocalGravity( pEnv->GetDesiredRagdollGravity() );
+    pReferenceObject->SetCollisionHints( COLLISION_HINT_RAGDOLL );
+    //lwss end
+
 	// TODO: btGeneric6DofConstraint has a bug where if y-axis is the only unlocked axis and the difference approaches pi/2, the other two axes
 	// become "undefined" and causes the constraint to explode.
 	btGeneric6DofConstraint *pConstraint = new btGeneric6DofConstraint(*objRef, *objAtt, bullAFrame, bullBFrame, true);
@@ -809,12 +819,6 @@ CPhysicsConstraint *CreateRagdollConstraint(CPhysicsEnvironment *pEnv, IPhysicsO
 		pConstraint->setAngularOnly(true);
 	}
 
-    //lwss: Apply ragdoll gravity from csgo and disable sounds on ragdolls
-    pObjRef->SetLocalGravity( pEnv->GetDesiredRagdollGravity() );
-    pReferenceObject->SetCollisionHints( COLLISION_HINT_NOSOUND );
-    pObjAtt->SetLocalGravity( pEnv->GetDesiredRagdollGravity() );
-    pAttachedObject->SetCollisionHints( COLLISION_HINT_NOSOUND );
-    //lwss end
 	return new CPhysicsConstraint(pEnv, pGroup, pObjRef, pObjAtt, pConstraint, CONSTRAINT_RAGDOLL);
 }
 

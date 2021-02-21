@@ -301,6 +301,8 @@ void CPhysicsObject::SetMass(float mass) {
 
 	m_fMass = mass;
 
+	//lwss: The rigid body should be removed and re-added to apply the mass changes.
+	m_pEnv->GetBulletEnvironment()->removeRigidBody( m_pObject );
 	btVector3 inertia(0, 0, 0);
 	m_pObject->getCollisionShape()->calculateLocalInertia(mass, inertia);
 
@@ -310,6 +312,7 @@ void CPhysicsObject::SetMass(float mass) {
 	//inertia.setZ(SAFE_DIVIDE(1.0f, inertia.z()));
 
 	m_pObject->setMassProps(mass, inertia);
+	m_pEnv->GetBulletEnvironment()->addRigidBody( m_pObject );
 }
 
 float CPhysicsObject::GetMass() const {

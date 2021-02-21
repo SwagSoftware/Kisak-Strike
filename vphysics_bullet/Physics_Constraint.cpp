@@ -848,14 +848,36 @@ CPhysicsConstraint *CreateHingeConstraint(CPhysicsEnvironment *pEnv, IPhysicsObj
 	btTransform refTransform = objRef->getWorldTransform().inverse() * worldTrans;
 	btTransform attTransform = objAtt->getWorldTransform().inverse() * worldTrans;
 
-	btHingeConstraint *pHinge = new btHingeConstraint(*pObjRef->GetObject(), *pObjAtt->GetObject(), refTransform, attTransform);
+    //lwss hack: force the hinges to start deactivated
+    // this *Could* become an issue if you have hinges that are sideways waiting to be affected by gravity at the start of each session.
+    // it is here as an optimization and also to help investigate a current bug with the swingin' sign on de_train
+    pObjAtt->GetObject()->setActivationState( WANTS_DEACTIVATION, true  );
+
+    //lwss: swinging objects need a lower tolerance to return back to their starting point.
+    // good examples include the sign on cs_assault and swingset on de_overpass.
+    pObjAtt->GetObject()->setSleepingThresholds( btScalar( 0.05 ), btScalar( 0.05 ) );
+    pObjRef->GetObject()->setSleepingThresholds( btScalar( 0.05 ), btScalar( 0.05 ) );
+
+    btHingeConstraint *pHinge = new btHingeConstraint(*pObjRef->GetObject(), *pObjAtt->GetObject(), refTransform, attTransform);
+
+    if (hinge.hingeAxis.minRotation != hinge.hingeAxis.maxRotation)
+        pHinge->setLimit(ConvertAngleToBull(hinge.hingeAxis.minRotation), ConvertAngleToBull(hinge.hingeAxis.maxRotation));
 
 	// FIXME: Are we converting the torque correctly? Bullet takes a "max motor impulse"
 	if (hinge.hingeAxis.torque)
-		pHinge->enableAngularMotor(true, ConvertAngleToBull(hinge.hingeAxis.angularVelocity), ConvertAngleToBull(HL2BULL(hinge.hingeAxis.torque)));
+    {
+	    //lwss: there is a *1000 on the hinge friction in game/server/physconstraint.cpp(CreateConstraint)
+	    // that gets applied right before this function
+	    // overpass swings: 90,000; 110,000.
+	    // de_train sign(BUGGED): 1,000
+	    // cs_militia ct-sign: 1000 - weather vane(BUGGED): 400(yes it is 0.4*1000)
+	    float torque = hinge.hingeAxis.torque / 1000;
 
-	if (hinge.hingeAxis.minRotation != hinge.hingeAxis.maxRotation)
-		pHinge->setLimit(ConvertAngleToBull(hinge.hingeAxis.minRotation), ConvertAngleToBull(hinge.hingeAxis.maxRotation));
+	    //lwss: If there's torque, set a bit of damping.
+	    // These values normally go from 0->1, this value works pretty good
+	    pHinge->getRigidBodyB().setDamping( 0.2f, 0.2f );
+        pHinge->enableAngularMotor(true, ConvertAngleToBull(hinge.hingeAxis.angularVelocity), ConvertAngleToBull( HL2BULL(torque) ));
+    }
 
 	return new CPhysicsConstraint(pEnv, pGroup, pObjRef, pObjAtt, pHinge, CONSTRAINT_HINGE);
 }

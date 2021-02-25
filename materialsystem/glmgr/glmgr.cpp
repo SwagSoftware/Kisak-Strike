@@ -1534,7 +1534,7 @@ void	GLMContext::PreloadTex( CGLMTex *tex, bool force )
 	glVertexAttribPointer( 0, 3, GL_FLOAT, 0, 0, posns );
 	GLMCheckError();
 
-	glDrawRangeElements( GL_TRIANGLES, 0, 3, 3, GL_UNSIGNED_INT, indices);
+	glDrawRangeElements( GL_TRIANGLES, 0, 2, 3, GL_UNSIGNED_INT, indices); // lwss bugfix: change 2nd arg from 3->2
 	GLMCheckError();
 
 	glDisableVertexAttribArray( 0 );

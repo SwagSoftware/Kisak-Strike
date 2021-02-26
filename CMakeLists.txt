@@ -133,3 +133,7 @@ elseif( USE_BULLET_PHYSICS )
 else()
     message("Using Valve Standard VPhysics .so blob!\n")
 endif()
+
+add_subdirectory(hammer_launcher_qt)
+add_subdirectory(hammer_qt)
+add_subdirectory(hammer)

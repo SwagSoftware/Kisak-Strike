@@ -3838,13 +3838,25 @@ void CWeaponCSBase::Recoil( CSWeaponMode weaponMode )
 {
 	/** Removed for partner depot **/
     //lwss - rebuilt this function from reversing retail bins
+    float angle;
+    float magnitude;
+    int seed;
     CCSPlayer *pPlayer = GetPlayerOwner();
+
     if ( !pPlayer )
         return;
 
-    int seed = GetPredictionRandomSeed();
-    float angle;
-    float magnitude;
+    //update: Special Thanks to PiMoNFeeD for noticing I missed an if-statement here with the vfunc IsFullAuto().
+    // The recoil was a bit wonky.
+    if( !IsFullAuto() )
+    {
+        seed = GetPredictionRandomSeed();
+    }
+    else
+    {
+        seed = (int) m_flRecoilIndex;
+    }
+
     if( weapon_legacy_recoiltable.GetBool() )
     {
         GetCSWpnData().GetRecoilOffsets( weaponMode, seed, angle, magnitude );

@@ -3065,6 +3065,7 @@ void CWeaponCSBase::Spawn()
 {
 	m_nWeaponID = WeaponIdFromString( GetClassname() );
 
+	BaseClass::InitializeAttributes();
 	BaseClass::Spawn();
 
 	// Override the bloat that our base class sets as it's a little bit bigger than we want.

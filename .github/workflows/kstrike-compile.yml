@@ -1,0 +1,35 @@
+name: CI-Workflow
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Preparing environment...
+      env:
+        DEBIAN_FRONTEND: "noninteractive"
+      run: apt update && apt upgrade -y && apt install -y git build-essential cmake libsdl2-mixer-dev libsdl2-dev libgoogle-perftools-dev libopenal-dev libcurlpp-dev libssl-dev libfontconfig1-dev libcurl4-openssl-dev net-tools wget unzip zip
+    - name: Building...
+      run: mkdir build && cd build && cmake .. && make -j2 -DUSE_KISAK_PHYSICS=1 -DUSE_ROCKETUI=1 && cd ${{env.GITHUB_WORKSPACE}}
+    - name: Preparing additional files...
+      run: git clone https://github.com/SwagSoftware/Kisak-Strike-Files && cp -r Kisak-Strike-Files/* ../game
+    - name: Compressing assets...
+      run: cd .. && zip -9 -r game-rocketui.zip game && rm -rf game && mv game-rocketui.zip ${{env.GITHUB_WORKSPACE}} && cd ${{env.GITHUB_WORKSPACE}}
+    - name: Publishing assets...
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./game-rocketui.zip
+        asset_name: Release-${{env.GITHUB_WORKSPACE}}
+        asset_content_type: application/zip

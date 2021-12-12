@@ -874,7 +874,7 @@ bool CCSPlayer::IsOtherEnemyAndPlaying( int nEntIndex )
 			return false;
 
 		nOtherTeam = pCSPR->GetTeam( nEntIndex );
-#else if
+#else
 		return false;
 #endif
 	}

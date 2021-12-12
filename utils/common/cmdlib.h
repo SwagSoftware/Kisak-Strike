@@ -88,11 +88,6 @@ char *ExpandPath (char *path);	// expand relative to gamedir
 
 char *ExpandPathAndArchive (char *path);
 
-// Fills in pOut with "X hours, Y minutes, Z seconds". Leaves out hours or minutes if they're zero.
-void GetHourMinuteSecondsString( int nInputSeconds, char *pOut, int outLen );
-
-
-
 int		CheckParm (char *check);
 
 FileHandle_t	SafeOpenWrite ( const char *filename );

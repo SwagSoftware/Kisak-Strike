@@ -913,8 +913,7 @@ BotStatement::BotStatement( BotChatterInterface *chatter, BotStatementType type,
 
 BotStatement::~BotStatement() 
 {
-	if (m_meme)
-		delete m_meme; 
+    delete m_meme;
 }
 
 

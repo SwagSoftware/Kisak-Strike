@@ -43,7 +43,7 @@ jobs:
       with:
         draft: false
         prerelease: false
-        release_name: Release-Linux
+        release_name: AutoRelease-Linux
         tag_name: ${{ github.ref }}
     - name: Publish game client artifact
       uses: actions/upload-release-asset@v1

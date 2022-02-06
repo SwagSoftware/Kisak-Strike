@@ -178,6 +178,42 @@ inline int GetCacheLineSize()
 	return g_cacheLineSize;
 }
 
+#elif CRYPTOPP_BOOL_E2K
+
+// use compiler definitions to determine e2k CPU features
+
+	#if defined(__MMX__)
+		inline bool HasMMX()	{return true;}
+	#endif
+
+	#if defined(__SSE__)
+		inline bool HasISSE()	{return true;}
+	#endif
+
+	#if defined(__SSE2__)
+		inline bool HasSSE2()	{return true;}
+	#endif
+
+	#if defined(__SSSE3__)
+		inline bool HasSSSE3()	{return true;}
+	#endif
+
+	#if defined(__AES__)
+		inline bool HasAESNI()	{return true;}
+	#endif
+
+	#if defined(__PCLMUL__)
+		inline bool HasCLMUL()	{return true;}
+	#endif
+
+inline bool IsP4()	{return false;}
+
+inline int GetCacheLineSize()
+{
+	// cache1 : level=1 type=Data scope=Private size=64K line_size=32 associativity=4
+	return 32;
+}
+
 #else
 
 inline int GetCacheLineSize()

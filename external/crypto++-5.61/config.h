@@ -128,7 +128,7 @@ const lword LWORD_MAX = W64LIT(0xffffffffffffffff);
 	typedef word64 word;
 #else
 	#define CRYPTOPP_NATIVE_DWORD_AVAILABLE
-	#if defined(__alpha__) || defined(__ia64__) || defined(_ARCH_PPC64) || defined(__x86_64__) || defined(__mips64) || defined(__sparc64__)
+	#if defined(__alpha__) || defined(__ia64__) || defined(_ARCH_PPC64) || defined(__x86_64__) || defined(__mips64) || defined(__sparc64__) || defined(__e2k__)
 		#if defined(__GNUC__) && !defined(__INTEL_COMPILER) && !(CRYPTOPP_GCC_VERSION == 40001 && defined(__APPLE__)) && CRYPTOPP_GCC_VERSION >= 30400
 			// GCC 4.0.1 on MacOS X is missing __umodti3 and __udivti3
 			// mode(TI) division broken on amd64 with GCC earlier than GCC 3.4
@@ -165,7 +165,7 @@ NAMESPACE_END
 	#if defined(_M_X64) || defined(__x86_64__)
 		#define CRYPTOPP_L1_CACHE_LINE_SIZE 64
 	#else
-		// L1 cache line size is 32 on Pentium III and earlier
+		// L1 cache line size is 32 on Pentium III and earlier, and on e2k (MCST Elbrus 2000)
 		#define CRYPTOPP_L1_CACHE_LINE_SIZE 32
 	#endif
 #endif
@@ -250,6 +250,12 @@ NAMESPACE_END
 
 #ifndef CRYPTOPP_DISABLE_UNCAUGHT_EXCEPTION
 #define CRYPTOPP_UNCAUGHT_EXCEPTION_AVAILABLE
+#endif
+
+#if defined(__e2k__)
+// disable all x86/x86-64 asm and AES on e2k
+#define CRYPTOPP_DISABLE_ASM
+#define CRYPTOPP_DISABLE_AESNI
 #endif
 
 #ifdef CRYPTOPP_DISABLE_X86ASM		// for backwards compatibility: this macro had both meanings
@@ -341,6 +347,10 @@ NAMESPACE_END
 	#define CRYPTOPP_BOOL_X64 1
 #else
 	#define CRYPTOPP_BOOL_X64 0
+#endif
+
+#if defined(__e2k__)
+	#define CRYPTOPP_BOOL_E2K 1
 #endif
 
 // see http://predef.sourceforge.net/prearch.html

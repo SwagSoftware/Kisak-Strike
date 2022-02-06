@@ -35,7 +35,7 @@
 //  __RADPPC__ means powerpc
 //  __RADX86__ means x86 or x64
 //  __RADX64__ means x64
-//  __RADX64__ means x64
+//  __RADE2K__ means e2k (MCST Elbrus 2000)
 
 // __RADNOVARARGMACROS__ means #defines can't use ...
 
@@ -205,12 +205,20 @@
   #define __RADDETECTEDPROC__ __RADCELLSPU__
   #define __RADBIGENDIAN__
 #endif
+#if defined(__e2k__)
+  #define __RADE2K__ 6
+  #if defined(__MMX__)
+    #define __RADMMX__
+  #endif
+  #define __RADDETECTEDPROC__ __RADE2K__
+  #define __RADLITTLEENDIAN__
+#endif
 
 #if !defined(__RADDETECTEDPROC__)
   #error "radtypes.h did not detect your processor type."
 #endif
 
-#if defined(__ppc64__) || defined(__aarch64__) || defined(_M_X64) || defined(__x86_64__) || defined(__x86_64)
+#if defined(__ppc64__) || defined(__aarch64__) || defined(_M_X64) || defined(__x86_64__) || defined(__x86_64) || defined(__e2k__)
   #define __RAD64__
   #define __RAD64REGS__  // need to set this for platforms that aren't 64-bit, but have 64-bit regs (xenon, ps3)
 #endif

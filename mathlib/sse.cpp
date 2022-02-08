@@ -80,7 +80,54 @@ void  __cdecl _SSE_VectorMA( const float *start, float scale, const float *direc
 // SSE implementations of optimized routines:
 //-----------------------------------------------------------------------------
 
+#ifdef POSIX
+const __m128  f3  = _mm_set_ss(3.0f);  // 3 as SSE value
+const __m128  f05 = _mm_set_ss(0.5f);  // 0.5 as SSE value
+#endif
 
+float _SSE_RSqrtAccurate(float a)
+{
+
+#ifdef _WIN32
+	float x;
+	float half = 0.5f;
+	float three = 3.f;
+
+	__asm
+	{
+		movss   xmm3, a;
+		movss   xmm1, half;
+		movss   xmm2, three;
+		rsqrtss xmm0, xmm3;
+
+		mulss   xmm3, xmm0;
+		mulss   xmm1, xmm0;
+		mulss   xmm3, xmm0;
+		subss   xmm2, xmm3;
+		mulss   xmm1, xmm2;
+
+		movss   x,    xmm1;
+	}
+
+	return x;
+#elif POSIX
+	__m128  xx = _mm_load_ss( &a );
+	__m128  xr = _mm_rsqrt_ss( xx );
+	__m128  xt;
+
+	xt = _mm_mul_ss( xr, xr );
+	xt = _mm_mul_ss( xt, xx );
+	xt = _mm_sub_ss( f3, xt );
+	xt = _mm_mul_ss( xt, f05 );
+	xr = _mm_mul_ss( xr, xt );
+
+	_mm_store_ss( &a, xr );
+	return a;
+#else
+	#error "Not Implemented"
+#endif
+
+}
 
 float FASTCALL _SSE_VectorNormalize (Vector& vec)
 {
@@ -91,7 +138,7 @@ float FASTCALL _SSE_VectorNormalize (Vector& vec)
 #ifdef _WIN32
 	__declspec(align(16)) float result[4];
 #elif POSIX
-	 float result[4] __attribute__((aligned(16)));
+	float result[4] __attribute__((aligned(16)));
 #endif
 
 	float *v = &vec[0];
@@ -133,7 +180,11 @@ float FASTCALL _SSE_VectorNormalize (Vector& vec)
 		r[ 0 ] = vec.x * recipSqrt;
 		r[ 1 ] = vec.y * recipSqrt;
 		r[ 2 ] = vec.z * recipSqrt;
-
+#elif defined __e2k__
+		float rsqrt = _SSE_RSqrtAccurate( v[0] * v[0] + v[1] * v[1] + v[2] * v[2] );
+		r[0] = v[0] * rsqrt;
+		r[1] = v[1] * rsqrt;
+		r[2] = v[2] * rsqrt;
 #elif POSIX
 		__asm__ __volatile__(
 #ifdef ALIGNED_VECTOR
@@ -451,7 +502,7 @@ float FastCos( float x )
 		movss   x,    xmm0
 		
 	}
-#elif defined( _WIN64 )
+#elif defined( _WIN64 ) || defined( __e2k__ )
 	return cosf( x );
 #elif POSIX
 	

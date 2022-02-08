@@ -178,11 +178,13 @@ float	GLMKnobToggle( char *knobname );
 #if GLMDEBUG
 inline void GLMDebugger( void )
 {
+#ifndef __e2k__
 	if (GLMDebugChannelMask() & (1<<eDebugger))
 	{
 		asm ( "int $3" );
 	}
-	
+#endif // ifndef __e2k__
+
 	if (GLMDebugChannelMask() & (1<<eGLProfiler))
 	{
 		// we call an obscure GL function which we know has been breakpointed in the OGLP function list

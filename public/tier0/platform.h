@@ -9,8 +9,12 @@
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
-#if defined(__x86_64__) || defined(_WIN64)
+#if defined(__x86_64__) || defined(_WIN64) || defined(__e2k__)
 #define PLATFORM_64BITS 1
+#endif
+
+#if defined(__e2k__)
+#define PLATFORM_E2K 1
 #endif
 
 #if defined( LINUX ) && ((__GNUC__ * 100) + __GNUC_MINOR__) >= 406
@@ -1154,7 +1158,7 @@ typedef void * HINSTANCE;
 		#endif
 	#elif defined( OSX )
 		#define DebuggerBreak()  if ( Plat_IsInDebugSession() ) asm( "int3" ); else { raise(SIGTRAP); }
-	#elif defined( PLATFORM_CYGWIN ) || defined( PLATFORM_POSIX )
+	#elif ( defined( PLATFORM_CYGWIN ) || defined( PLATFORM_POSIX ) ) && !defined( __e2k__ )
 		#define DebuggerBreak()		__asm__( "int $0x3;")
 	#else
 		#define DebuggerBreak()	raise(SIGTRAP)
@@ -1386,7 +1390,7 @@ typedef int socklen_t;
 // Works for PS3 
 	inline void SetupFPUControlWord()
 	{
-#ifdef _PS3
+#if defined ( _PS3 ) || defined ( __e2k__ )
 // TODO: PS3 compiler spits out the following errors:
 // C:/tmp/ccIN0aaa.s: Assembler messages:
 // C:/tmp/ccIN0aaa.s(80): Error: Unrecognized opcode: `fnstcw'
@@ -1829,6 +1833,10 @@ extern "C" unsigned __int64 __rdtsc();
 #pragma intrinsic(__rdtsc)
 #endif
 
+#if defined( __e2k__ )
+#include <x86intrin.h> // get __rdtsc
+#endif
+
 inline uint64 Plat_Rdtsc()
 {
 #if defined( _X360 )
@@ -1850,6 +1858,8 @@ inline uint64 Plat_Rdtsc()
 	uint32 lo, hi;
 	__asm__ __volatile__ ( "rdtsc" : "=a" (lo), "=d" (hi));
 	return ( ( ( uint64 )hi ) << 32 ) | lo;
+#elif defined( __e2k__ )
+	return ( uint64 )__rdtsc();
 #else
 #error
 #endif

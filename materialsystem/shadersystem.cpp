@@ -315,14 +315,14 @@ void CShaderSystem::LoadAllShaderDLLs( )
 #if defined( _PS3 ) || defined( _OSX )
 	LoadShaderDLL( "stdshader_dx9" DLL_EXT_STRING );
 #else // _PS3 || _OSX
-
+#ifndef __e2k__ // Don't load stdshader_dbg module on Elbrus (prevent "Module stdshader_dbg failed to load! Error: ((null))" message)
 	// 360 has the the debug shaders in its dx9 dll
 	if ( IsPC() || !IsX360() )
 	{
 		// Always need the debug shaders
 		LoadShaderDLL( "stdshader_dbg" );
 	}
-
+#endif
 	// Load up standard shader DLLs...
 	int dxSupportLevel = HardwareConfig()->GetMaxDXSupportLevel();
 	Assert( dxSupportLevel >= 60 );

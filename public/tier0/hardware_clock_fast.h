@@ -4,7 +4,7 @@
 
 #include "tier0/platform.h"
 
-#ifdef GNUC
+#if defined GNUC && !defined __e2k__
 inline int GetHardwareClockFast( void )
 {
 	unsigned long long int nRet;
@@ -35,15 +35,18 @@ inline int GetHardwareClockFast()
 }
 #else
 
+#ifdef __e2k__
+#include <x86intrin.h>
+#else
 #include <intrin.h>
-
+#endif // ifdef __e2k__
 
 inline int GetHardwareClockFast()
 {
 	return __rdtsc();
 }
-#endif
+#endif // ifdef _X360
 
-#endif
+#endif // defined GNUC && !defined __e2k__
 
-#endif
+#endif // ifndef TIER0_HARDWARE_TIMER

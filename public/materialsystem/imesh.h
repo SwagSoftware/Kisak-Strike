@@ -1324,7 +1324,7 @@ inline void CVertexBuilder::FastVertexSSE( const ModelVertexDX8_t &vertex )
 		movntps [edi + 16], xmm1
 		movntps [edi + 32], xmm2
 	}
-#elif defined(GNUC)
+#elif defined(GNUC) && !defined(__e2k__)
 	const void *pRead = &vertex;
 	void *pCurrPos = m_pCurrPosition;
 	__asm__ __volatile__ (
@@ -1335,7 +1335,7 @@ inline void CVertexBuilder::FastVertexSSE( const ModelVertexDX8_t &vertex )
 						  "movntps %%xmm0, (%1)\n"
 						  "movntps %%xmm1, 16(%1)\n"
 						  "movntps %%xmm2, 32(%1)\n"
-						  "movntps %%xmm3, 48(%1)\n"						  
+						  "movntps %%xmm3, 48(%1)\n"
 						  :: "r" (pRead), "r" (pCurrPos) : "memory");
 #else
 	Error( "Implement CMeshBuilder::FastVertexSSE((dx8)" );

@@ -42,7 +42,11 @@ if( LINUXALL AND NOT DEDICATED )
     if( LINUX64 )
         #target_link_libraries(${OUTBINNAME} "${SRCDIR}/thirdparty/gperftools-2.0/.libs/x86_64/libtcmalloc_minimal.so")# [$LINUX64]
         #SWITCH BACK to a new version in /thirdparty. Unfortunately ASAN detects a false positive in this library and we need to edit the source.
-        target_link_libraries(${OUTBINNAME} tcmalloc_minimal)
+        if(CMAKE_SYSTEM_PROCESSOR STREQUAL "e2k")
+            target_link_libraries(${OUTBINNAME} "/usr/lib/libtcmalloc_minimal.so.4.3.0") # use sustem gperftools-2.5 on OS Elbrus
+        else()
+            target_link_libraries(${OUTBINNAME} tcmalloc_minimal)
+        endif()
     else()
         #$ImpLibExternal	"$SRCDIR/thirdparty/gperftools-2.0/.libs/tcmalloc_minimal" [$LINUX32]
         message(FATAL_ERROR "linux32 not supported in cmake")

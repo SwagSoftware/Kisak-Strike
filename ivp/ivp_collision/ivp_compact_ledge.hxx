@@ -255,7 +255,7 @@ const IVP_Compact_Triangle *IVP_Compact_Edge::get_triangle() const
     //lwss - x64 fixes ( original is x86 )
 #if defined(__i386__)
     return (IVP_Compact_Triangle *)(((unsigned int)this) & 0xfffffff0);
-#elif defined( __x86_64__ )
+#elif defined(__x86_64__) || defined(__e2k__)
     return (IVP_Compact_Triangle *)(((unsigned long int)this) & 0xFFFFFFFFFFFFFFF0);
 #else
 #error fix this for your platform

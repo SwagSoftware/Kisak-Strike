@@ -532,7 +532,7 @@ void inline SinCos( float radians, float * RESTRICT sine, float * RESTRICT cosin
 		fstp DWORD PTR [edx]
 		fstp DWORD PTR [eax]
 	}
-#elif defined( GNUC )
+#elif defined( GNUC ) && !defined( __e2k__ )
     //lwss - remove 'register' keyword
 	//register double __cosr, __sinr;
 	double __cosr, __sinr;
@@ -1682,7 +1682,7 @@ FORCEINLINE int RoundFloatToInt(float f)
 		fld f
 		fistp nResult
 	}
-#elif GNUC
+#elif defined( GNUC ) && !defined( __e2k__ )
 	__asm __volatile__ (
 		"fistpl %0;": "=m" (nResult): "t" (f) : "st"
 	);
@@ -1729,7 +1729,7 @@ FORCEINLINE unsigned char RoundFloatToByte(float f)
 		fld f
 		fistp nResult
 	}
-#elif GNUC
+#elif defined( GNUC ) && !defined( __e2k__ )
 	__asm __volatile__ (
 		"fistpl %0;": "=m" (nResult): "t" (f) : "st"
 	);
@@ -1767,7 +1767,7 @@ FORCEINLINE unsigned long RoundFloatToUnsignedLong(float f)
 	return __fctiw( f );
 #endif
 #else  // !X360
-	
+
 #if defined( COMPILER_MSVC32 )
 	unsigned char nResult[8];
 	__asm
@@ -1776,7 +1776,7 @@ FORCEINLINE unsigned long RoundFloatToUnsignedLong(float f)
 		fistp       qword ptr nResult
 	}
 	return *((unsigned long*)nResult);
-#elif defined( COMPILER_GCC )
+#elif defined( COMPILER_GCC ) && !defined( __e2k__ )
 	unsigned char nResult[8];
 	__asm __volatile__ (
 		"fistpl %0;": "=m" (nResult): "t" (f) : "st"

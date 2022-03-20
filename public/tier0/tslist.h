@@ -34,9 +34,9 @@
 
 //-----------------------------------------------------------------------------
 
-#if defined( PLATFORM_64BITS )
+#if defined( PLATFORM_64BITS ) && !defined( PLATFORM_E2K )
 
-#if defined (PLATFORM_WINDOWS) 
+#if defined (PLATFORM_WINDOWS)
 //typedef __m128i int128;
 //inline int128 int128_zero()	{ return _mm_setzero_si128(); }
 #else  // PLATFORM_WINDOWS
@@ -129,7 +129,7 @@ union TSLIST_HEAD_ALIGN TSLHead_t
 		int16   Depth;
 		int16	Sequence;
 #endif
-#ifdef PLATFORM_64BITS
+#if defined( PLATFORM_64BITS ) && !defined( PLATFORM_E2K )
 		int32   Padding;
 #endif
 	} value;
@@ -140,7 +140,7 @@ union TSLIST_HEAD_ALIGN TSLHead_t
 		int32   DepthAndSequence;
 	} value32;
 
-#ifdef PLATFORM_64BITS
+#if defined( PLATFORM_64BITS ) && !defined( PLATFORM_E2K )
 	int128 value64x128;
 #else
 	int64 value64x128;
@@ -194,7 +194,7 @@ public:
 
 #ifdef USE_NATIVE_SLIST
 		InitializeSListHead( &m_Head );
-#elif defined(PLATFORM_64BITS)
+#elif defined(PLATFORM_64BITS) && !defined(PLATFORM_E2K)
 		m_Head.value64x128 = int128_zero();
 #else
 		m_Head.value64x128 = (int64)0;
@@ -231,7 +231,7 @@ public:
 		__lwsync(); // write-release barrier
 #endif
 
-#ifdef PLATFORM_64BITS
+#if defined( PLATFORM_64BITS ) && !defined( PLATFORM_E2K )
 		newHead.value.Padding = 0;
 #endif
 		for ( ;; )
@@ -268,7 +268,7 @@ public:
 		TSLHead_t oldHead;
 		TSLHead_t newHead;
 
-#ifdef PLATFORM_64BITS
+#if defined( PLATFORM_64BITS ) && !defined( PLATFORM_E2K )
 		newHead.value.Padding = 0;
 #endif
 		for ( ;; )
@@ -307,7 +307,7 @@ public:
 		TSLHead_t oldHead;
 		TSLHead_t newHead;
 
-#ifdef PLATFORM_64BITS
+#if defined( PLATFORM_64BITS ) && !defined( PLATFORM_E2K )
 		newHead.value.Padding = 0;
 #endif
 		do
@@ -719,7 +719,7 @@ public:
 			intp	sequence;
 		} value;
 
-#ifdef PLATFORM_64BITS
+#if defined( PLATFORM_64BITS ) && !defined( PLATFORM_E2K )
 		int128 value64x128;
 #else
 		int64 value64x128;

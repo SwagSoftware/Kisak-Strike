@@ -26,8 +26,11 @@ PLATFORM_INTERFACE int64 GetHardwareClockReliably();
 #include <intrin.h>	// get __rdtsc
 #endif
 
+#ifdef __e2k__
+#include <x86intrin.h>
+#endif
 
-#if defined(_LINUX) || defined( OSX )
+#if (defined(_LINUX) || defined( OSX )) && !defined(__e2k__)
 inline unsigned long long GetTimebaseRegister( void )
 {
 #ifdef PLATFORM_64BITS

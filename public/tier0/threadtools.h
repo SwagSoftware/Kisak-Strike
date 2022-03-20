@@ -235,7 +235,11 @@ inline void ThreadPause()
 #if defined( COMPILER_PS3 )
 	__db16cyc();
 #elif defined( COMPILER_GCC )
-	__asm __volatile( "pause" );
+	#ifdef __e2k__
+		__asm__ __volatile__ ("nop" : : );
+	#else
+		__asm __volatile( "pause" );
+	#endif
 #elif defined ( COMPILER_MSVC64 )
 	_mm_pause();
 #elif defined( COMPILER_MSVC32 )
@@ -306,6 +310,9 @@ inline int32 ThreadInterlockedDecrement( int32 volatile *p )
 inline int32 ThreadInterlockedExchange( int32 volatile *p, int32 value )
 {
 	Assert( (size_t)p % 4 == 0 );
+#ifdef __e2k__
+	return __sync_lock_test_and_set( p, value );
+#else
 	int32 nRet;
 
 	// Note: The LOCK instruction prefix is assumed on the XCHG instruction and GCC gets very confused on the Mac when we use it.
@@ -315,6 +322,7 @@ inline int32 ThreadInterlockedExchange( int32 volatile *p, int32 value )
 		: "r" (p), "0" (value)
 		: "memory");
 	return nRet;
+#endif // ifdef __e2k__
 }
 
 inline int32 ThreadInterlockedExchangeAdd( int32 volatile *p, int32 value )

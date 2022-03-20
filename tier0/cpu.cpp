@@ -45,7 +45,7 @@ struct CpuIdResult_t
 
 static bool cpuid( unsigned long function, CpuIdResult_t &out )
 {
-#if defined( _X360 ) || defined( _PS3 )
+#if defined( _X360 ) || defined( _PS3 ) || defined( __e2k__ )
 	return false;
 #elif defined(GNUC)
 	unsigned long out_eax,out_ebx,out_ecx,out_edx;
@@ -124,7 +124,7 @@ static bool cpuid( unsigned long function, CpuIdResult_t &out )
 
 static bool cpuidex( unsigned long function, unsigned long subfunction, CpuIdResult_t &out )
 {
-#if defined( _X360 ) || defined( _PS3 )
+#if defined( _X360 ) || defined( _PS3 ) || defined( __e2k__ )
 	return false;
 #elif defined(GNUC)
 	unsigned long out_eax, out_ebx, out_ecx, out_edx;
@@ -218,7 +218,7 @@ static CpuIdResult_t cpuidex( unsigned long function, unsigned long subfunction 
 //-----------------------------------------------------------------------------
 static bool IsWin98OrOlder()
 {
-#if defined( _X360 ) || defined( _PS3 ) || defined( POSIX )
+#if defined( _X360 ) || defined( _PS3 ) || defined( __e2k__ ) || defined( POSIX )
 	return false;
 #else
 	bool retval = false;
@@ -260,18 +260,38 @@ static bool IsWin98OrOlder()
 #endif
 }
 
+static bool CheckMMXTechnology(void)
+{
+#if defined( _X360 ) || defined( _PS3 )
+	return false;
+#elif defined( __e2k__ )
+	#if defined( __MMX__ )
+		return true;
+	#else
+		return false;
+	#endif
+#else
+	return ( cpuid( 1 ).edx & 0x800000 ) != 0;	// bit 23 of EDX
+#endif
+}
 
 static bool CheckSSETechnology(void)
 {
 #if defined( _X360 ) || defined( _PS3 )
 	return true;
+#elif defined( __e2k__ )
+	#if defined( __SSE__ )
+		return true;
+	#else
+		return false;
+	#endif
 #else
 	if ( IsWin98OrOlder() )
 	{
 		return false;
 	}
 
-    return ( cpuid( 1 ).edx & 0x2000000L ) != 0;
+	return ( cpuid( 1 ).edx & 0x2000000L ) != 0;	// bit 25 of EDX
 #endif
 }
 
@@ -279,8 +299,14 @@ static bool CheckSSE2Technology(void)
 {
 #if defined( _X360 ) || defined( _PS3 )
 	return false;
+#elif defined( __e2k__ )
+	#if defined( __SSE2__ )
+		return true;
+	#else
+		return false;
+	#endif
 #else
-    return ( cpuid( 1 ).edx & 0x04000000 ) != 0;
+	return ( cpuid( 1 ).edx & 0x04000000 ) != 0;	// bit 26 of EDX
 #endif
 }
 
@@ -288,6 +314,12 @@ bool CheckSSE3Technology(void)
 {
 #if defined( _X360 ) || defined( _PS3 )
 	return false;
+#elif defined(__e2k__ )
+	#if defined( __SSE3__ )
+		return true;
+	#else
+		return false;
+	#endif
 #else
 	return ( cpuid( 1 ).ecx & 0x00000001 ) != 0;	// bit 1 of ECX
 #endif
@@ -297,6 +329,12 @@ bool CheckSSSE3Technology(void)
 {
 #if defined( _X360 ) || defined( _PS3 )
 	return false;
+#elif defined( __e2k__ )
+	#if defined( __SSSE3__ )
+		return true;
+	#else
+		return false;
+	#endif
 #else
 	// SSSE 3 is implemented by both Intel and AMD
 	// detection is done the same way for both vendors
@@ -308,6 +346,12 @@ bool CheckSSE41Technology(void)
 {
 #if defined( _X360 ) || defined( _PS3 )
 	return false;
+#elif defined( __e2k__ )
+	#if defined( __SSE4_1__ )
+		return true;
+	#else
+		return false;
+	#endif
 #else
 	// SSE 4.1 is implemented by both Intel and AMD
 	// detection is done the same way for both vendors
@@ -320,6 +364,12 @@ bool CheckSSE42Technology(void)
 {
 #if defined( _X360 ) || defined( _PS3 )
 	return false;
+#elif defined( __e2k__ )
+	#if defined( __SSE4_2__ )
+		return true;
+	#else
+		return false;
+	#endif
 #else
 	// SSE4.2 is an Intel-only feature
 
@@ -331,11 +381,31 @@ bool CheckSSE42Technology(void)
 #endif
 }
 
-
-bool CheckSSE4aTechnology( void )
+bool CheckAVXTechnology(void)
 {
 #if defined( _X360 ) || defined( _PS3 )
 	return false;
+#elif defined( __e2k__ )
+	#if defined( __AVX__ )
+		return true;
+	#else
+		return false;
+	#endif
+#else
+	return ( cpuid( 1 ).ecx & ( 1 << 28 ) ) != 0;	// bit 28 of ECX
+#endif
+}
+
+bool CheckSSE4aTechnology(void)
+{
+#if defined( _X360 ) || defined( _PS3 )
+	return false;
+#elif defined( __e2k__ )
+	#if defined( __SSE4A__ )
+		return true;
+	#else
+		return false;
+	#endif
 #else
 	// SSE 4a is an AMD-only feature
 
@@ -347,11 +417,16 @@ bool CheckSSE4aTechnology( void )
 #endif
 }
 
-
 static bool Check3DNowTechnology(void)
 {
 #if defined( _X360 ) || defined( _PS3 )
 	return false;
+#elif defined( __e2k__ )
+	#if defined( __3dNOW__ )
+		return true;
+	#else
+		return false;
+	#endif
 #else
 	if ( cpuid( 0x80000000 ).eax > 0x80000000L )
     {
@@ -361,9 +436,9 @@ static bool Check3DNowTechnology(void)
 #endif
 }
 
-static bool CheckCMOVTechnology()
+static bool CheckCMOVTechnology(void)
 {
-#if defined( _X360 ) || defined( _PS3 )
+#if defined( _X360 ) || defined( _PS3 ) || defined( __e2k__ )
 	return false;
 #else
 	return ( cpuid( 1 ).edx & ( 1 << 15 ) ) != 0;
@@ -372,7 +447,7 @@ static bool CheckCMOVTechnology()
 
 static bool CheckFCMOVTechnology(void)
 {
-#if defined( _X360 ) || defined( _PS3 )
+#if defined( _X360 ) || defined( _PS3 ) || defined( __e2k__ )
 	return false;
 #else
 	return ( cpuid( 1 ).edx & ( 1 << 16 ) ) != 0;
@@ -383,6 +458,8 @@ static bool CheckRDTSCTechnology(void)
 {
 #if defined( _X360 ) || defined( _PS3 )
 	return false;
+#elif defined( __e2k__ )
+	return true;
 #else
 	return ( cpuid( 1 ).edx & 0x10 ) != 0;
 #endif
@@ -407,6 +484,8 @@ const tchar* GetProcessorVendorId()
 {
 #if defined( _X360 ) || defined( _PS3 )
 	return "PPC";
+#elif defined( __e2k__ )
+	return "MCST";
 #else
 	if ( s_bCpuVendorIdInitialized )
 	{
@@ -448,6 +527,9 @@ const tchar* GetProcessorBrand()
 	return "Xenon";
 #elif defined( _PS3 )
 	return "Cell Broadband Engine";
+#elif defined( __e2k__ )
+	return __builtin_cpu_name();
+	// e.g. "elbrus-8c"
 #else
 	if ( s_bCpuBrandInitialized )
 	{
@@ -483,6 +565,8 @@ static bool HTSupported(void)
 	// not entirtely sure about the semantic of HT support, it being an intel name
 	// are we asking about HW threads or HT?
 	return true;
+#elif defined( __e2k__ )
+	return false;
 #else
 	enum {
 		HT_BIT		 = 0x10000000,  // EDX[28] - Bit 28 set indicates Hyper-Threading Technology is supported in hardware.
@@ -515,6 +599,27 @@ static uint8 LogicalProcessorsPerPackage(void)
 {
 #if defined( _X360 )
 	return 2;
+#elif defined( __e2k__ )
+	if( __builtin_cpu_is("elbrus-16c") )
+	{
+		return 16;
+	}
+	else if( __builtin_cpu_is("elbrus-12c") )
+	{
+		return 12;
+	}
+	else if( __builtin_cpu_is("elbrus-8c") || __builtin_cpu_is("elbrus-8c2") )
+	{
+		return 8;
+	}
+	else if( __builtin_cpu_is("elbrus-2c3") )
+	{
+		return 2;
+	}
+	else
+	{
+		return 1;
+	}
 #else
 	// EBX[23:16] indicate number of logical processors per package
 	const unsigned NUM_LOGICAL_BITS = 0x00FF0000;
@@ -540,7 +645,7 @@ static int64 CalculateClockSpeed()
 #if defined( _X360 ) || defined(_PS3)
 	// Xbox360 and PS3 have the same clock speed and share a lot of characteristics on PPU
 	return 3200000000LL;
-#else	
+#else
 #if defined( _WIN32 )
 	LARGE_INTEGER waitTime, startCount, curCount;
 	CCycleCount start, end;
@@ -745,6 +850,21 @@ const CPUInformation& GetCPUInformation()
 		pi.m_nLogicalProcessors  = 1;
 	}
 #elif defined(LINUX)
+#if defined(__e2k__) // MCST Elbrus 2000
+	pi.m_nLogicalProcessors = 1;
+	pi.m_nPhysicalProcessors = 1;
+	// e2k CPU don't have "core id" and "physical id" in "/proc/cpuinfo" (but have "processor")
+	// and don't have Hyper-Threading (HT) technology 
+	// used sysconf() to count CPU cores
+	//pi.m_nLogicalProcessors = sysconf( _SC_NPROCESSORS_CONF ); // _SC_NPROCESSORS_ONLN may not be reliable on ARM/Android
+	//pi.m_nPhysicalProcessors = pi.m_nLogicalProcessors; // hack for CPU without Hyper-Threading (HT) technology
+
+	// FIXME
+	// have to use m_nLogicalProcessors = 1 and m_nPhysicalProcessors = 1 (no matter how many core e2k CPU has)
+	// because otherwise there will be problems with creating threads (CThreadSafeMultiMemoryPool::Alloc(unsigned int))
+	// and with render (CMeshBuilder::Begin(IMesh*, MaterialPrimitiveType_t, int, int, MeshBuffersAllocationSettings_t*))
+
+#else // x86/x86-64
 	pi.m_nLogicalProcessors = 0;
 	pi.m_nPhysicalProcessors = 0;
 	const int k_cMaxProcessors = 256;
@@ -798,7 +918,7 @@ const CPUInformation& GetCPUInformation()
 		pi.m_nPhysicalProcessors = 1;
 		Assert( !"couldn't read cpu information from /proc/cpuinfo" );
 	}
-
+#endif // ifdef __e2k__
 #elif defined(OSX)
 
 	int num_phys_cpu = 1, num_log_cpu = 1;
@@ -810,6 +930,27 @@ const CPUInformation& GetCPUInformation()
 
 #endif
 
+#if defined(__e2k__)
+	// e2k CPU don't have CPUID
+
+	// Determine Processor Features:
+	pi.m_bRDTSC = CheckRDTSCTechnology();
+	pi.m_bCMOV = CheckCMOVTechnology();
+	pi.m_bFCMOV = CheckFCMOVTechnology();
+	pi.m_bMMX = CheckMMXTechnology();
+	pi.m_bSSE = CheckSSETechnology();
+	pi.m_bSSE2 = CheckSSE2Technology();
+	pi.m_bSSE3 = CheckSSE3Technology();
+	pi.m_bSSSE3 = CheckSSSE3Technology();
+	pi.m_bSSE4a = CheckSSE4aTechnology();
+	pi.m_bSSE41 = CheckSSE41Technology();
+	pi.m_bSSE42 = CheckSSE42Technology();
+	pi.m_b3DNow = Check3DNowTechnology();
+	pi.m_bAVX	= CheckAVXTechnology();
+	pi.m_szProcessorID = ( tchar* )GetProcessorVendorId(); // MCST
+	pi.m_szProcessorBrand = ( tchar* )GetProcessorBrand(); // e.g. "elbrus-8c"
+	pi.m_bHT = HTSupported();
+#else // x86/x86-64
 	CpuIdResult_t cpuid0 = cpuid( 0 );
 	if ( cpuid0.eax >= 1 )
 	{
@@ -920,6 +1061,7 @@ const CPUInformation& GetCPUInformation()
 			pi.m_nL2CacheSizeKb = ( cpuid( 0x80000006 ).ecx >> 16 );
 		}
 	}
+#endif
 	return pi;
 }
 

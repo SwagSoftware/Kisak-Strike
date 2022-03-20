@@ -50,7 +50,11 @@ if( LINUXALL AND (NOT DEDICATED) )
     target_link_libraries(${OUTBINNAME} SDL2 rt openal)
 endif()
 if( LINUXALL )
-    target_link_options(${OUTBINNAME} PRIVATE -L/usr/lib32 -L/usr/lib)
+    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "e2k")
+        target_link_options(${OUTBINNAME} PRIVATE -L/usr/lib)
+    else()
+        target_link_options(${OUTBINNAME} PRIVATE -L/usr/lib32 -L/usr/lib)
+    endif()
     target_compile_options(${OUTBINNAME} PRIVATE -Wno-narrowing -fpermissive) #downgrade some errors to fix build
 endif()
 

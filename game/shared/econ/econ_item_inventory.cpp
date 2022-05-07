@@ -1364,8 +1364,6 @@ void CPlayerInventory::SOUpdated( const CSteamID & steamIDOwner, const GCSDK::CS
 {
 #ifdef _DEBUG
 	{
-		CSteamID steamIDOwner( owner.ID() );
-
 		static CSteamID spewSteamID;
 		static GCSDK::ESOCacheEvent spewEvent;
 		static double spewTime = 0;

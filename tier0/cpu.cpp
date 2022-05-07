@@ -851,19 +851,11 @@ const CPUInformation& GetCPUInformation()
 	}
 #elif defined(LINUX)
 #if defined(__e2k__) // MCST Elbrus 2000
-	pi.m_nLogicalProcessors = 1;
-	pi.m_nPhysicalProcessors = 1;
 	// e2k CPU don't have "core id" and "physical id" in "/proc/cpuinfo" (but have "processor")
 	// and don't have Hyper-Threading (HT) technology 
 	// used sysconf() to count CPU cores
-	//pi.m_nLogicalProcessors = sysconf( _SC_NPROCESSORS_CONF ); // _SC_NPROCESSORS_ONLN may not be reliable on ARM/Android
-	//pi.m_nPhysicalProcessors = pi.m_nLogicalProcessors; // hack for CPU without Hyper-Threading (HT) technology
-
-	// FIXME
-	// have to use m_nLogicalProcessors = 1 and m_nPhysicalProcessors = 1 (no matter how many core e2k CPU has)
-	// because otherwise there will be problems with creating threads (CThreadSafeMultiMemoryPool::Alloc(unsigned int))
-	// and with render (CMeshBuilder::Begin(IMesh*, MaterialPrimitiveType_t, int, int, MeshBuffersAllocationSettings_t*))
-
+    pi.m_nLogicalProcessors = sysconf( _SC_NPROCESSORS_CONF ); // _SC_NPROCESSORS_ONLN may not be reliable on ARM/Android
+    pi.m_nPhysicalProcessors = pi.m_nLogicalProcessors; // So far, Elbrus doesn't have any kind of superthreading
 #else // x86/x86-64
 	pi.m_nLogicalProcessors = 0;
 	pi.m_nPhysicalProcessors = 0;

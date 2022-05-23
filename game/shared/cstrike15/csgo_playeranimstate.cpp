@@ -1,4 +1,4 @@
- //========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+ //========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -2377,7 +2377,7 @@ void CCSGOPlayerAnimState::SetUpVelocity( void )
 	}
 
 #ifndef CLIENT_DLL
-	if ( m_flVelocityLengthXY <= CS_PLAYER_SPEED_STOPPED && m_bOnGround && !m_bOnLadder && !m_bLanding && m_flLastUpdateIncrement > 0 && abs( AngleDiff( m_flFootYawLast, m_flFootYaw ) / m_flLastUpdateIncrement > CSGO_ANIM_READJUST_THRESHOLD ) )
+	if ( m_flVelocityLengthXY <= CS_PLAYER_SPEED_STOPPED && m_bOnGround && !m_bOnLadder && !m_bLanding && m_flLastUpdateIncrement > 0 && abs( AngleDiff( m_flFootYawLast, m_flFootYaw ) / m_flLastUpdateIncrement ) > CSGO_ANIM_READJUST_THRESHOLD )
 	{
 		SetLayerSequence( ANIMATION_LAYER_ADJUST, SelectSequenceFromActMods( ACT_CSGO_IDLE_TURN_BALANCEADJUST ) );
 		m_bAdjustStarted = true;

@@ -202,12 +202,12 @@ class TSLIST_HEAD_ALIGN CTSSimpleList : public CTSListBase
 public:
         void Push( T *pNode )
         {
-                CTSListBase::Push( pNode );
+                CTSListBase::Push( reinterpret_cast<TSLNodeBase_t*>(pNode) );
         }
 
         T *Pop()
         {
-                return static_cast<T*>( CTSListBase::Pop() );
+                return reinterpret_cast<T*>( CTSListBase::Pop() );
         }
 } TSLIST_HEAD_ALIGN_POST;
 

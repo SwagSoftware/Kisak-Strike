@@ -35,7 +35,7 @@ sdl2 sdl2_mixer gperftools openal libcurl-compat openssl fontconfig freetype2 me
 
 #### Gentoo
 ```
-TODO
+media-libs/libsdl2 media-libs/sdl2-mixer dev-util/google-perftools media-libs/openal net-misc/curl dev-libs/openssl media-libs/fontconfig media-libs/freetype media-libs/mesa dev-util/cmake sys-devel/gcc
 ```
 
 ## BUILD - cmake/make

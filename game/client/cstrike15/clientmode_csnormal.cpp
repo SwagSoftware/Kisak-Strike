@@ -3742,8 +3742,8 @@ bool __MsgFunc_PlayerDecalDigitalSignature( const CCSUsrMsg_PlayerDecalDigitalSi
 	g_CSClientGameStats.AddClientCSGOGameEvent( k_CSClientCsgoGameEventType_SprayApplication, vecCheck, pLocalPlayer->EyeAngles(), ( uint64( unStickerKitID ) << 32 ) | uint64( unTintID ) );
 
 #ifdef _DEBUG
-	DevMsg( "Client decal signature (%llu) @(%.2f,%.2f,%.2f) T%u requested\n", cl2gc.Body().itemid(),
-		msg.data().endpos( 0 ), msg.data().endpos( 1 ), msg.data().endpos( 2 ), msg.data().rtime() );
+	//DevMsg( "Client decal signature (%llu) @(%.2f,%.2f,%.2f) T%u requested\n", cl2gc.Body().itemid(), msg.data().endpos( 0 ), msg.data().endpos( 1 ), msg.data().endpos( 2 ), msg.data().rtime() );
+	DevMsg( "Client decal signature @(%.2f,%.2f,%.2f) T%u requested\n", msg.data().endpos( 0 ), msg.data().endpos( 1 ), msg.data().endpos( 2 ), msg.data().rtime() );
 #endif
 
 	return true;

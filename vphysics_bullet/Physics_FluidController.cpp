@@ -204,11 +204,11 @@ void CPhysicsFluidController::Tick(float dt) {
 		if (pOverlay) {
 			Vector pos;
 			ConvertPosToHL(surfPos, pos);
-			pOverlay->AddBoxOverlay(pos, Vector(-8), Vector(8), QAngle(0, 0, 0), 255, 0, 0, 255, 0.f);
+			pOverlay->AddBoxOverlay(pos, Vector(-8,-8,-8), Vector(8,8,8), QAngle(0, 0, 0), 255, 0, 0, 255, 0.f);
 			pOverlay->AddLineOverlay(pos, pos + m_vSurfacePlane.AsVector3D() * 32, 255, 0, 0, false, 0.f);
 
 			ConvertPosToHL(center, pos);
-			pOverlay->AddBoxOverlay(pos, Vector(-8), Vector(8), QAngle(0, 0, 0), 0, 0, 255, 255, 0.f);
+			pOverlay->AddBoxOverlay(pos, Vector(-8,-8,-8), Vector(8,8,8), QAngle(0, 0, 0), 0, 0, 255, 255, 0.f);
 
 			if (submerged < 0) {
 				pOverlay->AddTextOverlay(pos, 0.f, "submerged %+04.2f", submerged);

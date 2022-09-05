@@ -53,7 +53,8 @@
 
 
 // Define the LT_ASSERT and RMLUI_VERIFY macros.
-#if !defined RMLUI_DEBUG
+//#if !defined RMLUI_DEBUG
+#if 1 //lwss
 #define RMLUI_ASSERT(x)
 #define RMLUI_ASSERTMSG(x, m)
 #define RMLUI_ERROR

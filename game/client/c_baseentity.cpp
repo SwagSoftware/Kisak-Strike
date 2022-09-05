@@ -5396,16 +5396,44 @@ CON_COMMAND( cl_sizeof, "Determines the size of the specified client class." )
 
 CON_COMMAND_F( dlight_debug, "Creates a dlight in front of the player", FCVAR_CHEAT )
 {
-	dlight_t *el = effects->CL_AllocDlight( 1 );
 	C_BasePlayer *player = C_BasePlayer::GetLocalPlayer();
 	if ( !player )
 		return;
+
+    //lwss: added 3 more dlights to test 4x(MAX) on 1 surface
+    dlight_t *el = effects->CL_AllocDlight( 1 );
+    dlight_t *el2 = effects->CL_AllocDlight( 2 );
+    dlight_t *el3 = effects->CL_AllocDlight( 3 );
+    dlight_t *el4 = effects->CL_AllocDlight( 4 );
+
 	Vector start = player->EyePosition();
 	Vector forward;
 	player->EyeVectors( &forward );
-	Vector end = start + forward * MAX_TRACE_LENGTH;
+	// sloppy but works
+    Vector forward2 = forward;
+    forward2.x += 0.10f;
+    forward2.NormalizeInPlace();
+    Vector forward3 = forward;
+    forward3.x -= 0.10f;
+    forward2.NormalizeInPlace();
+    Vector forward4 = forward;
+    forward4.y += 0.10f;
+    forward4.NormalizeInPlace();
+
+    Vector end = start + forward * MAX_TRACE_LENGTH;
+	Vector end2 = start + forward2 * MAX_TRACE_LENGTH;
+	Vector end3 = start + forward3 * MAX_TRACE_LENGTH;
+	Vector end4 = start + forward4 * MAX_TRACE_LENGTH;
+
 	trace_t tr;
+	trace_t tr2;
+	trace_t tr3;
+	trace_t tr4;
 	UTIL_TraceLine( start, end, MASK_SHOT_HULL & (~CONTENTS_GRATE), player, COLLISION_GROUP_NONE, &tr );
+	UTIL_TraceLine( start, end2, MASK_SHOT_HULL & (~CONTENTS_GRATE), player, COLLISION_GROUP_NONE, &tr2 );
+	UTIL_TraceLine( start, end3, MASK_SHOT_HULL & (~CONTENTS_GRATE), player, COLLISION_GROUP_NONE, &tr3 );
+	UTIL_TraceLine( start, end4, MASK_SHOT_HULL & (~CONTENTS_GRATE), player, COLLISION_GROUP_NONE, &tr4 );
+
 	el->origin = tr.endpos - forward * 12.0f;
 	el->radius = 200; 
 	el->decay = el->radius / 5.0f;
@@ -5415,6 +5443,32 @@ CON_COMMAND_F( dlight_debug, "Creates a dlight in front of the player", FCVAR_CH
 	el->color.b = 64;
 	el->color.exponent = 5;
 
+    el2->origin = tr2.endpos - forward2 * 12.0f;
+    el2->radius = 200;
+    el2->decay = el2->radius / 5.0f;
+    el2->die = gpGlobals->curtime + 5.0f;
+    el2->color.r = 55;
+    el2->color.g = 50;
+    el2->color.b = 255;
+    el2->color.exponent = 5;
+
+    el3->origin = tr3.endpos - forward3 * 12.0f;
+    el3->radius = 200;
+    el3->decay = el3->radius / 5.0f;
+    el3->die = gpGlobals->curtime + 5.0f;
+    el3->color.r = 5;
+    el3->color.g = 220;
+    el3->color.b = 10;
+    el3->color.exponent = 5;
+
+    el4->origin = tr4.endpos - forward4 * 12.0f;
+    el4->radius = 200;
+    el4->decay = el4->radius / 5.0f;
+    el4->die = gpGlobals->curtime + 5.0f;
+    el4->color.r = 225;
+    el4->color.g = 22;
+    el4->color.b = 22;
+    el4->color.exponent = 5;
 }
 //-----------------------------------------------------------------------------
 // Purpose: 

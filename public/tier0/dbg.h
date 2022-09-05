@@ -261,6 +261,11 @@ PLATFORM_INTERFACE struct SDL_Window * GetAssertDialogParent();
 // Assert is used to detect an important but survivable error.
 // It's only turned on when DBGFLAG_ASSERT is true.
 
+// lwss hack: force on asserts for the debug build
+#ifdef _DEBUG
+#define  DBGFLAG_ASSERT
+#endif
+// lwss end
 #ifdef DBGFLAG_ASSERT
 
 #define  Assert( _exp )           							_AssertMsg( _exp, _T("Assertion Failed: ") _T(#_exp), ((void)0), false )

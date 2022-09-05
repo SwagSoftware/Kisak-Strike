@@ -5,6 +5,7 @@
 //=============================================================================
 
 #include "stdafx.h"
+#include "dbg.h"
 #include "thirdparty/JSON_parser/JSON_parser.h"
 
 using namespace GCSDK;
@@ -1192,7 +1193,7 @@ CWebAPIValues * CWebAPIValues::CreateChildInternal( const char *pchName, EWebAPI
 		{
 			if ( Q_stricmp( pCurLastChild->GetName(), pchName ) == 0 )
 			{
-				AssertMsg( false, "Trying to create CWebAPIValues child with name %s that conflicts with existing child.  Breaks JSON output!", pchName );
+				AssertMsg1( false, "Trying to create CWebAPIValues child with name %s that conflicts with existing child.  Breaks JSON output!", pchName );
 			}
 		}
 
@@ -1203,7 +1204,7 @@ CWebAPIValues * CWebAPIValues::CreateChildInternal( const char *pchName, EWebAPI
 			{
 				if ( Q_stricmp( pCurLastChild->GetName(), pchName ) == 0 )
 				{
-					AssertMsg( false, "Trying to create CWebAPIValues child with name %s that conflicts with existing child.  Breaks JSON output!", pchName );
+					AssertMsg1( false, "Trying to create CWebAPIValues child with name %s that conflicts with existing child.  Breaks JSON output!", pchName );
 				}
 			}
 		}

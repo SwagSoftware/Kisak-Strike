@@ -1308,7 +1308,8 @@ bool CPlayerInventory::AddEconDefaultEquippedDefinition( CEconDefaultEquippedDef
 void CPlayerInventory::SOCreated( const CSteamID & steamIDOwner, const GCSDK::CSharedObject *pObject, GCSDK::ESOCacheEvent eEvent )
 {
 #ifdef _DEBUG
-	Msg("CPlayerInventory::SOCreated %s [event = %u]\n", CSteamID( owner.ID() ).Render(), eEvent );
+	//Msg("CPlayerInventory::SOCreated %s [event = %u]\n", CSteamID( owner.ID() ).Render(), eEvent );
+	Msg("CPlayerInventory::SOCreated [event = %u]\n", eEvent );
 #endif
     GCSDK::SOID_t owner( steamIDOwner ); //lwss hack
 	if ( owner != m_OwnerID )
@@ -1492,7 +1493,8 @@ void CPlayerInventory::PostSOUpdate(const CSteamID &steamIDOwner, GCSDK::ESOCach
 void CPlayerInventory::SODestroyed( const CSteamID & steamIDOwner, const GCSDK::CSharedObject *pObject, GCSDK::ESOCacheEvent eEvent )
 {
 #ifdef _DEBUG
-	Msg("CPlayerInventory::SODestroyed %s [event = %u]\n", CSteamID( owner.ID() ).Render(), eEvent );
+	//Msg("CPlayerInventory::SODestroyed %s [event = %u]\n", CSteamID( owner.ID() ).Render(), eEvent );
+	Msg("CPlayerInventory::SODestroyed [event = %u]\n", eEvent );
 #endif
     GCSDK::SOID_t owner( steamIDOwner ); //lwss hack
 
@@ -1607,7 +1609,8 @@ void CPlayerInventory::MarkSetItemDescriptionsDirty( int nItemSetIndex )
 void CPlayerInventory::SOCacheUnsubscribed( const CSteamID & steamIDOwner, GCSDK::ESOCacheEvent eEvent )
 {
 #ifdef _DEBUG
-	Msg("CPlayerInventory::SOCacheUnsubscribed %s [event = %u]\n", CSteamID( ID.ID() ).Render(), eEvent );
+	//Msg("CPlayerInventory::SOCacheUnsubscribed %s [event = %u]\n", CSteamID( ID.ID() ).Render(), eEvent );
+	Msg("CPlayerInventory::SOCacheUnsubscribed [event = %u]\n", eEvent );
 #endif
     GCSDK::SOID_t owner( steamIDOwner ); //lwss hack
 

@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -1594,16 +1594,21 @@ unsigned int R_UpdateDlightState( dlight_t *pLights, SurfaceHandle_t surfID, con
 	if ( !bOnlyUseLightStyles )
 	{
 		// add all the dynamic lights
-		if( bLightmap && ( pLighting->m_nDLightFrame == r_framecount ) )
+        // lwss add: hack this so we can restore 32-byte alignment
+        //if( bLightmap && ( pLighting->m_nDLightFrame == r_framecount ) )
+        if( bLightmap && ( pLighting->m_wantsDlightThisFrame) )
 		{
 			dlightMask = R_ComputeDynamicLightMask( pLights, surfID, pLighting, entityToWorld );
 		}
 
+		// if there was no dlight after adding, remove/disable
 		if ( !dlightMask || !pLighting->m_fDLightBits )
 		{
 			pLighting->m_fDLightBits = 0;
 			MSurf_Flags(surfID) &= ~SURFDRAW_HASDLIGHT;
 		}
+        // lwss add: turn this off after computing the lightmask
+		pLighting->m_wantsDlightThisFrame = false;
 	}
 	return dlightMask;
 }
@@ -2081,9 +2086,9 @@ void GL_RebuildLightmaps( void )
 // Input  : *fa - surface pointer
 //-----------------------------------------------------------------------------
 
-#ifdef UPDATE_LIGHTSTYLES_EVERY_FRAME
+//#ifdef UPDATE_LIGHTSTYLES_EVERY_FRAME
 ConVar mat_updatelightstyleseveryframe( "mat_updatelightstyleseveryframe", "0" );
-#endif
+//#endif
 
 int __cdecl LightmapPageCompareFunc( const void *pElem0, const void *pElem1 )
 {
@@ -2132,74 +2137,80 @@ void R_BuildLightmapUpdateList()
 void R_CheckForLightmapUpdates( SurfaceHandle_t surfID, int nTransformIndex )
 {
 	msurfacelighting_t *pLighting = SurfaceLighting( surfID );
-	if ( pLighting->m_nLastComputedFrame != r_framecount )
-	{
-		int nFlags = MSurf_Flags( surfID );
+	if ( pLighting->m_nLastComputedFrame == r_framecount )
+        return;
 
-		if( nFlags & SURFDRAW_NOLIGHT )
-			return;
+    int nFlags = MSurf_Flags( surfID );
 
-		// check for lightmap modification
-		bool bChanged = false;
-		if( nFlags & SURFDRAW_HASLIGHTSYTLES )
-		{
-#ifdef UPDATE_LIGHTSTYLES_EVERY_FRAME
-			if( mat_updatelightstyleseveryframe.GetBool() && ( pLighting->m_nStyles[0] != 0 || pLighting->m_nStyles[1] != 255 ) )
-			{
-				bChanged = true;
-			}
-#endif
-			for( int maps = 0; maps < MAXLIGHTMAPS && pLighting->m_nStyles[maps] != 255; maps++ )
-			{
-				if( d_lightstyleframe[pLighting->m_nStyles[maps]] > pLighting->m_nLastComputedFrame )
-				{
-					bChanged = true;
-					break;
-				}
-			}
-		}
+    if( nFlags & SURFDRAW_NOLIGHT )
+        return;
 
-		// was it dynamic this frame (pLighting->m_nDLightFrame == r_framecount) 
-		// or dynamic previously (pLighting->m_fDLightBits)
-		bool bDLightChanged = ( pLighting->m_nDLightFrame == r_framecount ) || pLighting->m_fDLightBits;
-		bool bOnlyUseLightStyles = false;
-		if ( r_dynamic.GetInt() == 0 || r_keepstyledlightmapsonly.GetBool() )
-		{
-			bOnlyUseLightStyles = true;
-		}
-		else
-		{
-			bChanged |= bDLightChanged;
-		}
+    // check for lightmap modification
+    bool bChanged = false;
+    if( nFlags & SURFDRAW_HASLIGHTSYTLES )
+    {
+//#ifdef UPDATE_LIGHTSTYLES_EVERY_FRAME //lwss: enable this
+        if( mat_updatelightstyleseveryframe.GetBool() && ( pLighting->m_nStyles[0] != 0 || pLighting->m_nStyles[1] != 255 ) )
+        {
+            bChanged = true;
+        }
+        else
+//#endif
+        {
+            for( int maps = 0; maps < MAXLIGHTMAPS && pLighting->m_nStyles[maps] != 255; maps++ )
+            {
+                if( d_lightstyleframe[pLighting->m_nStyles[maps]] > pLighting->m_nLastComputedFrame )
+                {
+                    bChanged = true;
+                    break;
+                }
+            }
+        }
+    }
 
-		if ( bChanged )
-		{
-			bool bNeedsBumpmap = SurfNeedsBumpedLightmaps( surfID );
-			bool bNeedsLightmap = SurfNeedsLightmap( surfID );
+    // was it dynamic this frame (pLighting->m_nDLightFrame == r_framecount)
+    // or dynamic previously (pLighting->m_fDLightBits)
+    // lwss add: hack this so we can restore 32-byte alignment
+    //bool bDLightChanged = ( pLighting->m_nDLightFrame == r_framecount ) || pLighting->m_fDLightBits;
+    bool bDLightChanged = pLighting->m_wantsDlightThisFrame || pLighting->m_fDLightBits;
 
-			if( !bNeedsBumpmap && !bNeedsLightmap )
-				return;
+    bool bOnlyUseLightStyles = false;
+    if ( r_dynamic.GetInt() == 0 || r_keepstyledlightmapsonly.GetBool() )
+    {
+        bOnlyUseLightStyles = true;
+    }
+    else
+    {
+        bChanged |= bDLightChanged;
+    }
 
-			if( materialSortInfoArray )
-			{
-				int nSortID = MSurf_MaterialSortID( surfID );
-				Assert( nSortID >= 0 && nSortID < g_WorldStaticMeshes.Count() );
-				if (( materialSortInfoArray[nSortID].lightmapPageID == MATERIAL_SYSTEM_LIGHTMAP_PAGE_WHITE )	||
-					( materialSortInfoArray[nSortID].lightmapPageID == MATERIAL_SYSTEM_LIGHTMAP_PAGE_WHITE_BUMP ) )
-				{
-					return;
-				}
-			}
-			bool bDlightsInLightmap = bNeedsLightmap || bNeedsBumpmap;
-			unsigned int nDlightMask = R_UpdateDlightState( cl_dlights, surfID, g_LightmapTransformList[nTransformIndex].xform, bOnlyUseLightStyles, bDlightsInLightmap );
+    if ( bChanged )
+    {
+        bool bNeedsBumpmap = SurfNeedsBumpedLightmaps( surfID );
+        bool bNeedsLightmap = SurfNeedsLightmap( surfID );
+
+        if( !bNeedsBumpmap && !bNeedsLightmap )
+            return;
+
+        if( materialSortInfoArray )
+        {
+            int nSortID = MSurf_MaterialSortID( surfID );
+            Assert( nSortID >= 0 && nSortID < g_WorldStaticMeshes.Count() );
+            if (( materialSortInfoArray[nSortID].lightmapPageID == MATERIAL_SYSTEM_LIGHTMAP_PAGE_WHITE )	||
+                ( materialSortInfoArray[nSortID].lightmapPageID == MATERIAL_SYSTEM_LIGHTMAP_PAGE_WHITE_BUMP ) )
+            {
+                return;
+            }
+        }
+        bool bDlightsInLightmap = bNeedsLightmap || bNeedsBumpmap;
+        unsigned int nDlightMask = R_UpdateDlightState( cl_dlights, surfID, g_LightmapTransformList[nTransformIndex].xform, bOnlyUseLightStyles, bDlightsInLightmap );
 
 
-			int nIndex = g_LightmapUpdateList.AddToTail();
-			g_LightmapUpdateList[nIndex].m_SurfHandle = surfID;
-			g_LightmapUpdateList[nIndex].m_nTransformIndex = nTransformIndex;
-			g_LightmapUpdateList[nIndex].m_nDlightMask= nDlightMask;
-			g_LightmapUpdateList[nIndex].m_bNeedsLightmap = bNeedsLightmap;
-			g_LightmapUpdateList[nIndex].m_bNeedsBumpmap = bNeedsBumpmap;
-		}
-	}
+        int nIndex = g_LightmapUpdateList.AddToTail();
+        g_LightmapUpdateList[nIndex].m_SurfHandle = surfID;
+        g_LightmapUpdateList[nIndex].m_nTransformIndex = nTransformIndex;
+        g_LightmapUpdateList[nIndex].m_nDlightMask= nDlightMask;
+        g_LightmapUpdateList[nIndex].m_bNeedsLightmap = bNeedsLightmap;
+        g_LightmapUpdateList[nIndex].m_bNeedsBumpmap = bNeedsBumpmap;
+    }
 }

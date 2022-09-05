@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -118,14 +118,18 @@ DYNAMIC LIGHTS
 // Returns true if the surface has the specified dlight already set on it for this frame.
 inline bool R_IsDLightAlreadyMarked( msurfacelighting_t *pLighting, int bit )
 {
-	return (pLighting->m_nDLightFrame == r_framecount) && (pLighting->m_fDLightBits & bit);
+    // lwss add: hack this so we can restore 32-byte alignment
+	//return (pLighting->m_nDLightFrame == r_framecount) && (pLighting->m_fDLightBits & bit);
+	return (pLighting->m_wantsDlightThisFrame) && (pLighting->m_fDLightBits & bit);
 }
 
 // Mark the surface as changed by the specified dlight (so its texture gets updated when 
 // it comes time to render).
 inline void R_MarkSurfaceDLight( SurfaceHandle_t surfID, msurfacelighting_t *pLighting, int bit)
 {
-	pLighting->m_nDLightFrame = r_framecount;
+	//pLighting->m_nDLightFrame = r_framecount;
+    // lwss add: hack this so we can restore 32-byte alignment
+	pLighting->m_wantsDlightThisFrame = true;
 	pLighting->m_fDLightBits |= bit;
 	MSurf_Flags( surfID ) |= SURFDRAW_HASDLIGHT;
 }

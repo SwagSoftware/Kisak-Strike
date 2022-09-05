@@ -26,7 +26,7 @@ set(LINUX_DEBUG_FLAGS " -ggdb -g3 -fno-eliminate-unused-debug-symbols ")
 #$Configuration "Debug"
 if (CMAKE_BUILD_TYPE STREQUAL "DEBUG")
     message(STATUS "Building in Debug mode")
-    add_definitions(-DBASE -DDEBUG -D_DEBUG)
+    add_definitions(-DBASE -DDEBUG -D_DEBUG -DDBGFLAG_ASSERT)
     if( OSXALL )
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gdwarf-2 -g2 -Og -march=native")
     elseif( LINUXALL )

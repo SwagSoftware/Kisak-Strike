@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -501,9 +501,10 @@ struct msurfacelighting_t
 	short m_LightmapExtents[2];
 	short m_OffsetIntoLightmapPage[2];
 
-	int m_nLastComputedFrame;	// last frame the surface's lightmap was recomputed
+	bool m_wantsDlightThisFrame : 1; // lwss add: hack this so we can restore 32-byte alignment
+    unsigned int m_nLastComputedFrame : 31;	// last frame the surface's lightmap was recomputed
 	int m_fDLightBits;			// Indicates which dlights illuminates this surface.
-	int m_nDLightFrame;			// Indicates the last frame in which dlights illuminated this surface
+	//int m_nDLightFrame;			// Indicates the last frame in which dlights illuminated this surface
 
 	unsigned char m_nStyles[MAXLIGHTMAPS];	// index into d_lightstylevalue[] for animated lights 
 											// no one surface can be effected by more than 4 
@@ -522,6 +523,7 @@ const int WORLD_DECAL_HANDLE_INVALID = 0xFFFF;
 typedef unsigned short WorldDecalHandle_t;
 
 // NOTE: 32-bytes.  Aligned/indexed often
+// KISAKTODO: Align this struct back to 32-bytes (good luck)
 struct msurface2_t
 {
 	unsigned int			flags;			// see SURFDRAW_ #defines (only 22-bits right now)
@@ -534,9 +536,9 @@ struct msurface2_t
 	cplane_t*				plane;			// pointer to shared plane
 #endif
 	int						firstvertindex;	// look up in model->vertindices[] (only uses 17-18 bits?)
-	WorldDecalHandle_t		decals;
+	WorldDecalHandle_t		decals;         // unsigned short
 	ShadowDecalHandle_t		m_ShadowDecals; // unsigned short
-	OverlayFragmentHandle_t m_nFirstOverlayFragment;	// First overlay fragment on the surface (short)
+	OverlayFragmentHandle_t m_nFirstOverlayFragment;	// First overlay fragment on the surface (unsigned short)
 	short					materialSortID;
 	unsigned short			vertBufferIndex;
 

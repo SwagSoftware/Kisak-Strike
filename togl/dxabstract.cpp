@@ -1018,7 +1018,9 @@ HRESULT IDirect3DSurface9::LockRect(D3DLOCKED_RECT* pLockedRect,CONST RECT* pRec
 		// smells like readback, force texel readout
 		lockreq.m_readback = true;
 	}
-	
+
+	lockreq.m_readonly = Flags & D3DLOCK_READONLY;
+
 	char	*lockAddress;
 	int		yStride;
 	int		zStride;

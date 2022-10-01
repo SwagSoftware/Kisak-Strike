@@ -744,7 +744,7 @@ CGLMTex::CGLMTex( GLMContext *ctx, GLMTexLayout *layout, uint levels, const char
 	{
 		gGL->glGenBuffersARB(1, &m_pbo);
 		gGL->glBindBufferARB(GL_PIXEL_UNPACK_BUFFER, m_pbo);
-		gGL->glBufferDataARB(GL_PIXEL_UNPACK_BUFFER, m_layout->m_storageTotalSize, 0, GL_STREAM_DRAW);
+		gGL->glBufferDataARB(GL_PIXEL_UNPACK_BUFFER, m_layout->m_storageTotalSize, 0, GL_STATIC_DRAW);
 		gGL->glBindBufferARB(GL_PIXEL_UNPACK_BUFFER, 0);
 	}
 
@@ -1085,7 +1085,7 @@ void CGLMTex::CalcTexelDataOffsetAndStrides( int sliceIndex, int x, int y, int z
 	*zStrideOut	= zStride;
 }
 
-GLubyte *CGLMTex::ReadTexels( GLMTexLockDesc *desc, bool readWholeSlice )
+GLubyte *CGLMTex::ReadTexels( GLMTexLockDesc *desc, bool readWholeSlice, bool readOnly )
 {
 	GLMRegion	readBox;
 	GLubyte* data = NULL;
@@ -1115,8 +1115,50 @@ GLubyte *CGLMTex::ReadTexels( GLMTexLockDesc *desc, bool readWholeSlice )
 		GLMTexFormatDesc *format = m_layout->m_format;
 		GLenum target = m_layout->m_key.m_texGLTarget;
 
-		gGL->glBindBufferARB(GL_PIXEL_UNPACK_BUFFER, m_pbo);
-		data = (GLubyte*)gGL->glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, m_layout->m_slices[ desc->m_sliceIndex ].m_storageSize, GL_MAP_WRITE_BIT);
+		if( readOnly )
+		{
+			data = (GLubyte*)(m_backing + m_layout->m_slices[ desc->m_sliceIndex ].m_storageOffset);	// this would change for PBO
+			//int sliceSize = m_layout->m_slices[ desc->m_sliceIndex ].m_storageSize;
+
+			// interestingly enough, we can use the same path for both 2D and 3D fetch
+
+			switch( target )
+			{
+				case GL_TEXTURE_CUBE_MAP:
+
+					// adjust target to steer to the proper face, then fall through to the 2D texture path.
+					target = GL_TEXTURE_CUBE_MAP_POSITIVE_X + desc->m_req.m_face;
+				case GL_TEXTURE_2D:
+				case GL_TEXTURE_3D:
+				{
+					// check compressed or not
+					if (format->m_chunkSize != 1)
+					{
+						// compressed path
+						// http://www.opengl.org/sdk/docs/man/xhtml/glGetCompressedTexImage.xml
+						gGL->glGetCompressedTexImage(	target,					// target
+												desc->m_req.m_mip,		// level
+													(char*)data );			// destination
+					}
+					else
+					{
+						// uncompressed path
+						// http://www.opengl.org/sdk/docs/man/xhtml/glGetTexImage.xml
+						gGL->glGetTexImage(			target,						// target
+											desc->m_req.m_mip,			// level
+											format->m_glDataFormat,		// dataformat
+											format->m_glDataType,		// datatype
+											(char*)data );				// destination
+					}
+				}
+				break;
+			}
+		}
+		else
+		{
+			gGL->glBindBufferARB(GL_PIXEL_UNPACK_BUFFER, m_pbo);
+			data = (GLubyte*)gGL->glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, m_layout->m_slices[ desc->m_sliceIndex ].m_storageSize, GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+		}
 	}
 	else
 	{
@@ -1576,12 +1618,12 @@ void CGLMTex::Lock( GLMTexLockParams *params, char** addressOut, int* yStrideOut
 
 	desc->m_sliceRegionOffset = offsetInSlice + desc->m_sliceBaseOffset;
 
-	if ( copyout && (m_layout->m_key.m_texFlags & kGLMTexDynamic) )
+	if ( copyout && ( (m_layout->m_key.m_texFlags & kGLMTexDynamic) || params->m_readonly ) )
 	{
-		// read the whole slice
-		// (odds are we'll never request anything but a whole slice to be read..)
-		m_mapped = ReadTexels( desc, true );
-		*addressOut = (char*)m_mapped;
+		*addressOut = (char*)ReadTexels( desc, true, params->m_readonly );
+
+		if( !params->m_readonly )
+			m_mapped = (GLubyte*)*addressOut;
 	}
 	else
 	{

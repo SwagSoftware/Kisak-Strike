@@ -183,6 +183,7 @@ struct GLMTexLockParams
 	// tells GLM to force re-read of the texels back from GL
 	// i.e. "I know I stepped on those texels with a draw or blit - the GLM copy is stale"
 	bool		m_readback;
+	bool		m_readonly;
 };
 
 struct GLMTexLockDesc
@@ -453,7 +454,7 @@ protected:
 	int						CalcSliceIndex( int face, int mip );
 	void					CalcTexelDataOffsetAndStrides( int sliceIndex, int x, int y, int z, int *offsetOut, int *yStrideOut, int *zStrideOut );
 		
-	GLubyte*					ReadTexels( GLMTexLockDesc *desc, bool readWholeSlice=true );
+	GLubyte*					ReadTexels( GLMTexLockDesc *desc, bool readWholeSlice=true, bool readOnly=false );
 	void					WriteTexels( GLMTexLockDesc *desc, bool writeWholeSlice=true, bool noDataWrite=false );
 		// last param lets us send NULL data ptr (only legal with uncompressed formats, beware)
 		// this helps out ResetSRGB.

@@ -381,7 +381,7 @@ HRESULT IDirect3DDevice9::CreateTexture(UINT Width,UINT Height,UINT Levels,DWORD
 	
 	if (Usage & D3DUSAGE_DYNAMIC)
 	{
-		// GLMPRINTF(("-X- DYNAMIC tex usage ignored.."));	//FIXME
+		key.m_texFlags |= kGLMTexDynamic;
 	}
 	
 	if (Usage & D3DUSAGE_TEXTURE_SRGB)
@@ -594,7 +594,7 @@ HRESULT IDirect3DDevice9::CreateCubeTexture(UINT EdgeLength,UINT Levels,DWORD Us
 		
 	if (Usage & D3DUSAGE_DYNAMIC)
 	{
-		//GLMPRINTF(("-X- DYNAMIC tex usage ignored.."));	//FIXME
+		key.m_texFlags |= kGLMTexDynamic;
 	}
 	
 	if (Usage & D3DUSAGE_TEXTURE_SRGB)
@@ -800,7 +800,7 @@ HRESULT IDirect3DDevice9::CreateVolumeTexture(UINT Width,UINT Height,UINT Depth,
 	
 	if (Usage & D3DUSAGE_DYNAMIC)
 	{
-		GLMPRINTF(("-X- DYNAMIC tex usage ignored.."));	//FIXME
+		key.m_texFlags |= kGLMTexDynamic;
 	}
 	
 	if (Usage & D3DUSAGE_TEXTURE_SRGB)

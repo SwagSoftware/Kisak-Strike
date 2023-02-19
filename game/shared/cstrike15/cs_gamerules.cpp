@@ -18321,7 +18321,8 @@ public:
         }
         delete s_pCompetitiveConvars; 
         s_pCompetitiveConvars = 0;
-        s_pConVarBackups->deleteThis(); 
+        if (s_pConVarBackups != nullptr)
+            s_pConVarBackups->deleteThis();
         s_pConVarBackups = 0;
     }
 

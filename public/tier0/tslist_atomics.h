@@ -94,11 +94,6 @@ inline bool ThreadInterlockedAssignIf64x128( volatile int64 *pDest, const int64 
 #endif
 
 //-----------------------------------------------------------------------------
-
-PLATFORM_INTERFACE bool RunTSQueueTests( int nListSize = 10000, int nTests = 1 );
-PLATFORM_INTERFACE bool RunTSListTests( int nListSize = 10000, int nTests = 1 );
-
-//-----------------------------------------------------------------------------
 // Lock free list.
 //-----------------------------------------------------------------------------
 //#define USE_NATIVE_SLIST

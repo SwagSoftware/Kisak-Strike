@@ -532,6 +532,8 @@ bool RunTSListTests( int nListSize, int nTests )
 	int maxSize = ( 1 << (sizeof( ((TSLHead_t *)(0))->Depth ) * 8) ) - 1;
 #endif
 
+#elif defined(PLATFORM_E2K)
+    int maxSize = ( 1 << (sizeof( ((TSLHead_t *)(0))->Depth ) * 8) ) - 1;
 #else
 	int maxSize = ( 1 << (sizeof( ((TSLHead_t *)(0))->value.Depth ) * 8) ) - 1;
 #endif

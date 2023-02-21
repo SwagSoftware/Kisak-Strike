@@ -1,4 +1,4 @@
-//===== Copyright (c) 1996-2005, Valve Corporation, All rights reserved. ======//
+﻿//===== Copyright (c) 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // models are the only shared resource between a client and server running
 // on the same machine.
@@ -51,6 +51,8 @@
 #include "tier1/lzmaDecoder.h"
 #include "ipooledvballocator.h"
 #include "tier3/tier3.h"
+
+#include <memory>
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -906,7 +908,7 @@ private:
 	void DrawModelExecute( IMatRenderContext *pRenderContext, const DrawModelState_t &state, const ModelRenderInfo_t &pInfo, matrix3x4_t *pCustomBoneToWorld = NULL );
 
 	void InitColormeshParams( ModelInstance_t &instance, studiohwdata_t *pStudioHWData, colormeshparams_t *pColorMeshParams );
-	CColorMeshData *FindOrCreateStaticPropColorData( ModelInstanceHandle_t handle );
+    std::shared_ptr<CColorMeshData> FindOrCreateStaticPropColorData( ModelInstanceHandle_t handle );
 	void DestroyStaticPropColorData( ModelInstanceHandle_t handle );
 	bool UpdateStaticPropColorData( IHandleEntity *pEnt, ModelInstanceHandle_t handle );
 	void ProtectColorDataIfQueued( DataCacheHandle_t );
@@ -3867,7 +3869,7 @@ void CModelRender::InitColormeshParams( ModelInstance_t &instance, studiohwdata_
 // Allocates the static prop color data meshes
 //-----------------------------------------------------------------------------
 // FIXME? : Move this to StudioRender?
-CColorMeshData *CModelRender::FindOrCreateStaticPropColorData( ModelInstanceHandle_t handle )
+std::shared_ptr<CColorMeshData> CModelRender::FindOrCreateStaticPropColorData( ModelInstanceHandle_t handle )
 {
 	if ( handle == MODEL_INSTANCE_INVALID )
 	{
@@ -3876,9 +3878,10 @@ CColorMeshData *CModelRender::FindOrCreateStaticPropColorData( ModelInstanceHand
 	}
 
 	ModelInstance_t& instance = m_ModelInstances[handle];
-	CColorMeshData *pColorMeshData = CacheGet( instance.m_ColorMeshHandle );
-	if ( pColorMeshData )
-	{
+
+    auto pColorMeshData = std::shared_ptr<CColorMeshData>(CacheLock( instance.m_ColorMeshHandle ), [this, handle = instance.m_ColorMeshHandle] (CColorMeshData* ptr) { if (ptr) CacheUnlock(handle); });
+    if ( pColorMeshData  )
+    {
 		// found in cache
 		return pColorMeshData;
 	}
@@ -3911,9 +3914,9 @@ CColorMeshData *CModelRender::FindOrCreateStaticPropColorData( ModelInstanceHand
 
 	// create the meshes
 	params.m_fnHandle = instance.m_pModel->fnHandle;
-	instance.m_ColorMeshHandle = CacheCreate( params );
+    instance.m_ColorMeshHandle = CacheCreate( params, DCAF_LOCK );
 	ProtectColorDataIfQueued( instance.m_ColorMeshHandle );
-	pColorMeshData = CacheGet( instance.m_ColorMeshHandle );
+    pColorMeshData = std::shared_ptr<CColorMeshData>(CacheGet( instance.m_ColorMeshHandle ), [this, handle = instance.m_ColorMeshHandle] (CColorMeshData* ptr) { if (ptr) CacheUnlock(handle); });
 
 	return pColorMeshData;
 }
@@ -4643,7 +4646,7 @@ bool CModelRender::UpdateStaticPropColorData( IHandleEntity *pProp, ModelInstanc
 
 #ifndef DEDICATED
 	// find or allocate color meshes
-	CColorMeshData *pColorMeshData = FindOrCreateStaticPropColorData( handle );
+    const auto pColorMeshData = FindOrCreateStaticPropColorData( handle );
 	if ( !pColorMeshData )
 	{
 		return false;
@@ -4654,7 +4657,7 @@ bool CModelRender::UpdateStaticPropColorData( IHandleEntity *pProp, ModelInstanc
 	{
 		// Don't retry until color data is flushed by device restore
 		pColorMeshData->m_bColorMeshValid = false;
-		pColorMeshData->m_bNeedsRetry = false;
+        pColorMeshData->m_bNeedsRetry = false;
 		return false;
 	}
 

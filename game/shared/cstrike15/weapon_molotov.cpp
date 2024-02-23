@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright Â© 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -81,7 +81,7 @@ void CMolotovGrenade::UpdateParticles( void )
 
 	if ( iWeaponId == WEAPON_MOLOTOV )
 	{
-		bool bIsFirstOrThirdpersonMolotovVisible = pCSWeapon->IsWeaponVisible();
+		bool bIsFirstOrThirdpersonMolotovVisible = !pCSWeapon->IsWeaponVisible(); // Added ! for fix.
 		
 		CBaseAnimating *pWeaponBaseAnimating = pCSWeapon->GetBaseAnimating();
 

@@ -551,6 +551,9 @@ private:
 	#define DEFINE_SCRIPTDESC_FUNCTION( className, baseClass ) \
 		template <> ScriptClassDesc_t * GetScriptDesc<baseClass>( baseClass *); \
 		template <> ScriptClassDesc_t * GetScriptDesc<className>( className *)
+
+#define DEFINE_SCRIPTDESC_FUNCTION_NO_BASE( className ) \
+    template <> ScriptClassDesc_t * GetScriptDesc<className>( className *)
 #endif
 
 struct ScriptNoBase_t;
@@ -569,6 +572,16 @@ inline IScriptInstanceHelper *GetScriptInstanceHelper_ScriptNoBase_t()
 {
 	return NULL;
 }
+
+template <typename T> ScriptClassDesc_t *GetScriptDesc(T *);
+
+template <>
+#ifdef _PS3
+static
+#endif
+inline ScriptClassDesc_t *GetScriptDesc<ScriptNoBase_t>( ScriptNoBase_t *) { return NULL; }
+
+#define GetScriptDescForClass( className ) GetScriptDesc( ( className *)NULL )
 
 #define BEGIN_SCRIPTDESC_NAMED( className, baseClass, scriptName, description ) \
 	IScriptInstanceHelper *GetScriptInstanceHelper_##baseClass(); \
@@ -599,9 +612,38 @@ inline IScriptInstanceHelper *GetScriptInstanceHelper_ScriptNoBase_t()
 		ScriptInitClassDescNamed( pDesc, className, GetScriptDescForClass( baseClass ), scriptName ); \
 		pDesc->pHelper = GetScriptInstanceHelper_##className();
 
+#define BEGIN_SCRIPTDESC_NAMED_NO_BASE( className, baseClass, scriptName, description ) \
+    IScriptInstanceHelper *GetScriptInstanceHelper_##baseClass(); \
+    IScriptInstanceHelper *GetScriptInstanceHelper_##className() \
+    { \
+        return GetScriptInstanceHelperOverride< className >( GetScriptInstanceHelper_##baseClass() ); \
+    }; \
+    extern void Init##className##ScriptDesc(); \
+    ScriptClassDesc_t g_##className##_ScriptDesc( &Init##className##ScriptDesc ); \
+    DEFINE_SCRIPTDESC_FUNCTION_NO_BASE( className ) \
+    { \
+        return &g_##className##_ScriptDesc; \
+    } \
+    \
+    void Init##className##ScriptDesc() \
+    { \
+        static bool bInitialized; \
+        if ( bInitialized ) \
+        { \
+            return; \
+        } \
+        \
+        bInitialized = true; \
+        \
+        typedef className _className; \
+        ScriptClassDesc_t *pDesc = &g_##className##_ScriptDesc; \
+        pDesc->m_pszDescription = description; \
+        ScriptInitClassDescNamed( pDesc, className, GetScriptDescForClass( baseClass ), scriptName ); \
+        pDesc->pHelper = GetScriptInstanceHelper_##className();
+
 
 #define BEGIN_SCRIPTDESC_ROOT_NAMED( className, scriptName, description ) \
-	BEGIN_SCRIPTDESC_NAMED( className, ScriptNoBase_t, scriptName, description )
+    BEGIN_SCRIPTDESC_NAMED_NO_BASE( className, ScriptNoBase_t, scriptName, description )
 
 #define END_SCRIPTDESC() \
 		return; \
@@ -612,15 +654,7 @@ inline IScriptInstanceHelper *GetScriptInstanceHelper_ScriptNoBase_t()
 #define DEFINE_SCRIPT_CONSTRUCTOR()															ScriptAddConstructorToClassDesc( pDesc, _className );
 #define DEFINE_SCRIPT_INSTANCE_HELPER( className, p )										template <> IScriptInstanceHelper *GetScriptInstanceHelperOverride< className >( IScriptInstanceHelper * ) { return p; }
 								
-template <typename T> ScriptClassDesc_t *GetScriptDesc(T *);
 
-template <>
-#ifdef _PS3
-static
-#endif
-inline ScriptClassDesc_t *GetScriptDesc<ScriptNoBase_t>( ScriptNoBase_t *) { return NULL; }
-
-#define GetScriptDescForClass( className ) GetScriptDesc( ( className *)NULL )
 
 //-----------------------------------------------------------------------------
 // 

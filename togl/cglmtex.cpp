@@ -737,6 +737,17 @@ CGLMTex::CGLMTex( GLMContext *ctx, GLMTexLayout *layout, uint levels, const char
 	m_pBlitSrcFBO = NULL;
 	m_pBlitDstFBO = NULL;
 
+	m_mapped = NULL;
+	m_pbo = 0;
+
+	if( m_layout->m_key.m_texFlags & kGLMTexDynamic )
+	{
+		gGL->glGenBuffersARB(1, &m_pbo);
+		gGL->glBindBufferARB(GL_PIXEL_UNPACK_BUFFER, m_pbo);
+		gGL->glBufferDataARB(GL_PIXEL_UNPACK_BUFFER, m_layout->m_storageTotalSize, 0, GL_STATIC_DRAW);
+		gGL->glBindBufferARB(GL_PIXEL_UNPACK_BUFFER, 0);
+	}
+
 	// Sense whether to try and apply client storage upon teximage/subimage.
 	//  This should only be true if we're running on OSX 10.6 or it was explicitly
 	//  enabled with -gl_texclientstorage on the command line.
@@ -796,12 +807,11 @@ CGLMTex::CGLMTex( GLMContext *ctx, GLMTexLayout *layout, uint levels, const char
 	
 	// OK, our texture now exists and is bound on the active TMU.  Not drawable yet though.
 		
-	// if not an RT, create backing storage and fill it
-	if ( !(layout->m_key.m_texFlags & kGLMTexRenderable) )
+	// Create backing storage and fill it
+	if ( !(layout->m_key.m_texFlags & kGLMTexRenderable) && m_texClientStorage )
 	{
 		m_backing = (char *)malloc( m_layout->m_storageTotalSize );
-		memset( m_backing, 0, m_layout->m_storageTotalSize );
-		
+
 		// track bytes allocated for non-RT's
 		int formindex = sEncodeLayoutAsIndex( &layout->m_key );
 		
@@ -1012,7 +1022,10 @@ CGLMTex::~CGLMTex( )
 		free( m_debugLabel );
 		m_debugLabel = NULL;
 	}
-	
+
+	if( m_pbo )
+		gGL->glDeleteBuffersARB( 1, &m_pbo );
+
 	m_ctx = NULL;
 }
 
@@ -1072,10 +1085,11 @@ void CGLMTex::CalcTexelDataOffsetAndStrides( int sliceIndex, int x, int y, int z
 	*zStrideOut	= zStride;
 }
 
-void CGLMTex::ReadTexels( GLMTexLockDesc *desc, bool readWholeSlice )
+GLubyte *CGLMTex::ReadTexels( GLMTexLockDesc *desc, bool readWholeSlice, bool readOnly )
 {
 	GLMRegion	readBox;
-	
+	GLubyte* data = NULL;
+
 	if (readWholeSlice)
 	{
 		readBox.xmin = readBox.ymin = readBox.zmin = 0;
@@ -1088,7 +1102,7 @@ void CGLMTex::ReadTexels( GLMTexLockDesc *desc, bool readWholeSlice )
 	{
 		readBox = desc->m_req.m_region;
 	}
-
+	
 	CGLMTex *pPrevTex = m_ctx->m_samplers[0].m_pBoundTex;
 	m_ctx->BindTexToTMU( this, 0 );		// SelectTMU(n) is a side effect
 
@@ -1100,45 +1114,50 @@ void CGLMTex::ReadTexels( GLMTexLockDesc *desc, bool readWholeSlice )
 
 		GLMTexFormatDesc *format = m_layout->m_format;
 		GLenum target = m_layout->m_key.m_texGLTarget;
-		
-		void *sliceAddress = m_backing + m_layout->m_slices[ desc->m_sliceIndex ].m_storageOffset;	// this would change for PBO
-		//int sliceSize = m_layout->m_slices[ desc->m_sliceIndex ].m_storageSize;
-		
-		// interestingly enough, we can use the same path for both 2D and 3D fetch
-		
-		switch( target )
-		{
-			case GL_TEXTURE_CUBE_MAP:
 
-				// adjust target to steer to the proper face, then fall through to the 2D texture path.
-				target = GL_TEXTURE_CUBE_MAP_POSITIVE_X + desc->m_req.m_face;
-				
-			case GL_TEXTURE_2D:
-			case GL_TEXTURE_3D:
+		if( readOnly )
+		{
+			data = (GLubyte*)(m_backing + m_layout->m_slices[ desc->m_sliceIndex ].m_storageOffset);	// this would change for PBO
+			//int sliceSize = m_layout->m_slices[ desc->m_sliceIndex ].m_storageSize;
+
+			// interestingly enough, we can use the same path for both 2D and 3D fetch
+
+			switch( target )
 			{
-				// check compressed or not
-				if (format->m_chunkSize != 1)
+				case GL_TEXTURE_CUBE_MAP:
+
+					// adjust target to steer to the proper face, then fall through to the 2D texture path.
+					target = GL_TEXTURE_CUBE_MAP_POSITIVE_X + desc->m_req.m_face;
+				case GL_TEXTURE_2D:
+				case GL_TEXTURE_3D:
 				{
-					// compressed path
-					// http://www.opengl.org/sdk/docs/man/xhtml/glGetCompressedTexImage.xml
-					VPROF( "glGetCompressedTexImage" );
-					gGL->glGetCompressedTexImage(	target,					// target
+					// check compressed or not
+					if (format->m_chunkSize != 1)
+					{
+						// compressed path
+						// http://www.opengl.org/sdk/docs/man/xhtml/glGetCompressedTexImage.xml
+						gGL->glGetCompressedTexImage(	target,					// target
 												desc->m_req.m_mip,		// level
-												sliceAddress );			// destination
-				}
-				else
-				{
-					// uncompressed path
-					// http://www.opengl.org/sdk/docs/man/xhtml/glGetTexImage.xml
-					VPROF( "glGetTexImage" );
-					gGL->glGetTexImage(			target,						// target
+													(char*)data );			// destination
+					}
+					else
+					{
+						// uncompressed path
+						// http://www.opengl.org/sdk/docs/man/xhtml/glGetTexImage.xml
+						gGL->glGetTexImage(			target,						// target
 											desc->m_req.m_mip,			// level
 											format->m_glDataFormat,		// dataformat
 											format->m_glDataType,		// datatype
-											sliceAddress );				// destination
+											(char*)data );				// destination
+					}
 				}
+				break;
 			}
-			break;				
+		}
+		else
+		{
+			gGL->glBindBufferARB(GL_PIXEL_UNPACK_BUFFER, m_pbo);
+			data = (GLubyte*)gGL->glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, m_layout->m_slices[ desc->m_sliceIndex ].m_storageSize, GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
 		}
 	}
 	else
@@ -1147,6 +1166,8 @@ void CGLMTex::ReadTexels( GLMTexLockDesc *desc, bool readWholeSlice )
 	}
 
 	m_ctx->BindTexToTMU( pPrevTex, 0 );
+
+	return data;
 }
 
 // TexSubImage should work properly on every driver stack and GPU--enabling by default.
@@ -1201,8 +1222,14 @@ void CGLMTex::WriteTexels( GLMTexLockDesc *desc, bool writeWholeSlice, bool noDa
 	GLenum glDataFormat	= format->m_glDataFormat;				// this could change if expansion kicks in 
 	GLenum glDataType	= format->m_glDataType;
 	
-	GLMTexLayoutSlice *slice = &m_layout->m_slices[ desc->m_sliceIndex ];		
-	void *sliceAddress = m_backing ? (m_backing + slice->m_storageOffset) : NULL;	// this would change for PBO
+	GLMTexLayoutSlice *slice = &m_layout->m_slices[ desc->m_sliceIndex ];
+
+	void *sliceAddress = NULL;
+
+	if( m_mapped )
+		sliceAddress = m_mapped;
+	else if( m_backing )
+		sliceAddress = m_backing + slice->m_storageOffset;
 
 	// allow use of subimage if the target is texture2D and it has already been teximage'd
 	bool mayUseSubImage = false;
@@ -1249,7 +1276,7 @@ void CGLMTex::WriteTexels( GLMTexLockDesc *desc, bool writeWholeSlice, bool noDa
 		//gGL->glTexParameteri( target, GL_TEXTURE_BASE_LEVEL, desc->m_req.m_mip);
 	}
 
-	if (needsExpand)
+	if (needsExpand && !m_mapped)
 	{
 		int expandSize = 0;
 		
@@ -1329,12 +1356,13 @@ void CGLMTex::WriteTexels( GLMTexLockDesc *desc, bool writeWholeSlice, bool noDa
 				{
 					// go subimage2D if it's a replacement, not a creation
 
+					if( !m_mapped )
+					{
+						gGL->glPixelStorei( GL_UNPACK_ROW_LENGTH, slice->m_xSize );			// in pixels
+						gGL->glPixelStorei( GL_UNPACK_SKIP_PIXELS, writeBox.xmin );		// in pixels
+						gGL->glPixelStorei( GL_UNPACK_SKIP_ROWS, writeBox.ymin );		// in pixels
 
-					gGL->glPixelStorei( GL_UNPACK_ROW_LENGTH, slice->m_xSize );			// in pixels
-					gGL->glPixelStorei( GL_UNPACK_SKIP_PIXELS, writeBox.xmin );		// in pixels
-					gGL->glPixelStorei( GL_UNPACK_SKIP_ROWS, writeBox.ymin );		// in pixels
-
-					gGL->glTexSubImage2D(	target,
+						gGL->glTexSubImage2D(	target,
 										desc->m_req.m_mip,				// level
 										writeBox.xmin,					// xoffset into dest
 										writeBox.ymin,					// yoffset into dest
@@ -1343,25 +1371,25 @@ void CGLMTex::WriteTexels( GLMTexLockDesc *desc, bool writeWholeSlice, bool noDa
 										glDataFormat,					// format
 										glDataType,						// type
 										sliceAddress					// data (will be offsetted by the SKIP_PIXELS and SKIP_ROWS - let GL do the math to find the first source texel)
-										);					
+										);
 
-					gGL->glPixelStorei( GL_UNPACK_ROW_LENGTH, 0 );
-					gGL->glPixelStorei( GL_UNPACK_SKIP_PIXELS, 0 );
-					gGL->glPixelStorei( GL_UNPACK_SKIP_ROWS, 0 );
-
-						/*
-							//http://www.opengl.org/sdk/docs/man/xhtml/glTexSubImage2D.xml
-							glTexSubImage2D(	target,
-												desc->m_req.m_mip,			// level
-												0,							// xoffset
-												0,							// yoffset
-												slice->m_xSize,				// width
-												slice->m_ySize,				// height
-												glDataFormat,				// format
-												glDataType,					// type
-												sliceAddress				// data
-												);					
-						*/				
+						gGL->glPixelStorei( GL_UNPACK_ROW_LENGTH, 0 );
+						gGL->glPixelStorei( GL_UNPACK_SKIP_PIXELS, 0 );
+						gGL->glPixelStorei( GL_UNPACK_SKIP_ROWS, 0 );
+					}
+					else
+					{
+						gGL->glTexSubImage2D(	target,
+										desc->m_req.m_mip,				// level
+										writeBox.xmin,					// xoffset into dest
+										writeBox.ymin,					// yoffset into dest
+										writeBox.xmax - writeBox.xmin,	// width	(was slice->m_xSize)
+										writeBox.ymax - writeBox.ymin,	// height	(was slice->m_ySize)
+										glDataFormat,					// format
+										glDataType,						// type
+										0
+										);
+					}
 				}
 				else
 				{
@@ -1376,7 +1404,7 @@ void CGLMTex::WriteTexels( GLMTexLockDesc *desc, bool writeWholeSlice, bool noDa
 							}
 						}
 					}
-					
+
 					// uncompressed path
 					// http://www.opengl.org/documentation/specs/man_pages/hardcopy/GL/html/gl/teximage2d.html
 					gGL->glTexImage2D(			target,						// target
@@ -1424,8 +1452,6 @@ void CGLMTex::WriteTexels( GLMTexLockDesc *desc, bool writeWholeSlice, bool noDa
 			}
 			else
 			{
-				// uncompressed path
-				// http://www.opengl.org/sdk/docs/man/xhtml/glTexImage3D.xml
 				gGL->glTexImage3D(			target,						// target
 										desc->m_req.m_mip,			// level
 										intformat,					// internalformat
@@ -1592,15 +1618,18 @@ void CGLMTex::Lock( GLMTexLockParams *params, char** addressOut, int* yStrideOut
 
 	desc->m_sliceRegionOffset = offsetInSlice + desc->m_sliceBaseOffset;
 
-	if (copyout)
+	if ( copyout && ( (m_layout->m_key.m_texFlags & kGLMTexDynamic) || params->m_readonly ) )
 	{
-	    VPROF( "ReadTexels" );
-		// read the whole slice
-		// (odds are we'll never request anything but a whole slice to be read..)
-		ReadTexels( desc, true );
-	}	// this would be a good place to fill with scrub value if in debug...
-	
-	*addressOut = m_backing + desc->m_sliceRegionOffset;
+		*addressOut = (char*)ReadTexels( desc, true, params->m_readonly );
+
+		if( !params->m_readonly )
+			m_mapped = (GLubyte*)*addressOut;
+	}
+	else
+	{
+		*addressOut = m_backing + desc->m_sliceRegionOffset;
+	}
+
 	*yStrideOut = yStride;
 	*zStrideOut = zStride;
 
@@ -1686,7 +1715,16 @@ void CGLMTex::Unlock( GLMTexLockParams *params )
 				
 				// fullyDirty |= (m_sliceFlags[ desc->m_sliceIndex ] & kSliceStorageValid);
 				
-				WriteTexels( desc, fullyDirty  );
+				if( m_layout->m_key.m_texFlags & kGLMTexDynamic )
+				{
+					gGL->glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+
+					WriteTexels( desc, fullyDirty );
+					m_mapped = NULL;
+					gGL->glBindBufferARB(GL_PIXEL_UNPACK_BUFFER, 0);
+				}
+				else
+					WriteTexels( desc, fullyDirty  );
 
 				// logical place to trigger preloading
 				// only do it for an RT tex, if it is not yet attached to any FBO.

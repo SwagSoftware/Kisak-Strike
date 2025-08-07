@@ -104,6 +104,7 @@ enum EGLMTexFlags
 	kGLMTexMultisampled	=	0x40,		// has an RBO backing it.  Cannot combine with Mipped, MippedAuto.  One slice maximum, only targeting GL_TEXTURE_2D.
 										// actually not 100% positive on the mipmapping, the RBO itself can't be mipped, but the resulting texture could
 										// have mipmaps generated.
+	kGLMTexDynamic		=	0x80
 };
 
 //===============================================================================
@@ -182,6 +183,7 @@ struct GLMTexLockParams
 	// tells GLM to force re-read of the texels back from GL
 	// i.e. "I know I stepped on those texels with a draw or blit - the GLM copy is stale"
 	bool		m_readback;
+	bool		m_readonly;
 };
 
 struct GLMTexLockDesc
@@ -452,7 +454,7 @@ protected:
 	int						CalcSliceIndex( int face, int mip );
 	void					CalcTexelDataOffsetAndStrides( int sliceIndex, int x, int y, int z, int *offsetOut, int *yStrideOut, int *zStrideOut );
 		
-	void					ReadTexels( GLMTexLockDesc *desc, bool readWholeSlice=true );
+	GLubyte*					ReadTexels( GLMTexLockDesc *desc, bool readWholeSlice=true, bool readOnly=false );
 	void					WriteTexels( GLMTexLockDesc *desc, bool writeWholeSlice=true, bool noDataWrite=false );
 		// last param lets us send NULL data ptr (only legal with uncompressed formats, beware)
 		// this helps out ResetSRGB.
@@ -472,6 +474,9 @@ protected:
 		// noWrite means send NULL for texel source addresses instead of actual data - ideal for RT's
 
 	GLuint					m_texName;			// name of this texture in the context
+	GLubyte					*m_mapped;
+	GLuint					m_pbo;
+
 	GLenum					m_texGLTarget;
 	uint					m_nSamplerType;		// SAMPLER_2D, etc.
 	
